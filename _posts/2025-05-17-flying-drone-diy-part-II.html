@@ -1,0 +1,430 @@
+---
+layout: post
+title: 'Flying drone DIY, part II: configuration for the 1st version'
+date: '2025-05-17'
+author: Gelassen
+tags: 
+modified_time: '2025-05-17'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flying drone DIY, part II: configuration for the 1st version</title>
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Intro</h3>
+            <p>
+                I resume work on the project which had been hold on a while ago. 
+                This publication covers splitting a project on several versions 
+                and process of configuration and ordering components for the 
+                1st version of drone.
+            </p>
+            <p>
+                Two years ago <a href="https://gelassen.github.io/blog/2023/03/19/case-study-flying-drone-diy.html">I worked on the project</a> 
+                which aim was to build a drone from ordered components and write 
+                own or flash existing firmware.
+            </p>
+            <p>
+                Research phase helped to rised up and clarified questions to 
+                build a drone. The next pilot phase should help to verify 
+                assumptions and come to production ready solution. <br> 
+                At that moment the further work has been hold on due the decisions 
+                to go at first by the different way. Two years later I got some 
+                time and budget to continue work on this by my own.
+            </p>
+        </section>
+        <section>
+            <h3>Versioning</h3>
+            <p>
+                Given budget constraints and the need to acquire a broad range of new knowledge and skills,
+                the project will be developed iteratively from version to version. Each new version will expand on the previous one,
+                following best practices from LEAN and Agile methodologies.
+            </p>
+            <p>Below is a preliminary work plan based on the collected requirements.</p>
+            
+            <h4>Table: Components vs Versions (V1 → V4)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th class="left-align">Component</th>
+                  <th>Version 1</th>
+                  <th>Version 2</th>
+                  <th>Version 3</th>
+                  <th>Version 4</th>
+                  <th class="left-align">Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="left-align">Frame (type 450–500 mm)</td>
+                  <td>✔</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Must support 5–6 kg, modular</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Motors + propellers</td>
+                  <td>✔</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">12–15" propellers, thrust 1.5× weight</td>
+                </tr>
+                <tr>
+                  <td class="left-align">ESC x4</td>
+                  <td>✔</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">30–60A, BLHeli, ArduPilot compatible</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Cube Orange + Carrier board</td>
+                  <td>✔</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Control center, ArduPilot compatible</td>
+                </tr>
+                <tr>
+                  <td class="left-align">GPS (Here 2/3, Ublox)</td>
+                  <td>✔ (opt.)</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Required for autonomy and return</td>
+                </tr>
+                <tr>
+                  <td class="left-align">RC controller (FrSky / FlySky)</td>
+                  <td>✔</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Used even with autonomous flight</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Battery (LiPo 4S–6S)</td>
+                  <td>✔</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Capacity depends on weight, e.g. 6000mAh</td>
+                </tr>
+                <tr>
+                  <td class="left-align">FPV camera + VTx + VRx</td>
+                  <td>✖</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Video to controller/goggles, analog or digital</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Jetson Nano / Orange Pi</td>
+                  <td>✖</td><td>✖</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Video processing, ML inference</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Additional camera (CSI/USB)</td>
+                  <td>✖</td><td>✖</td><td>✔</td><td>✔</td>
+                  <td class="left-align">For transmission/target recognition</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Stabilized video TX (HDZero, DJI)</td>
+                  <td>✖</td><td>✖ (opt.)</td><td>✔</td><td>✔</td>
+                  <td class="left-align">Quality for ML/analysis</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Lidar / depth camera</td>
+                  <td>✖</td><td>✖</td><td>✖</td><td>✔</td>
+                  <td class="left-align">For obstacle avoidance (optional)</td>
+                </tr>
+                <tr>
+                  <td class="left-align">Modem/Telemetry (433/915 MHz)</td>
+                  <td>✖</td><td>✔</td><td>✔</td><td>✔</td>
+                  <td class="left-align">MAVLink/RTPS to ground, + RTMP video</td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <h4>Step-by-step LEAN Build Checklist</h4>
+            <h5>Version 1: Minimal RC Drone</h5>
+            <ul>
+              <li>Buy frame (500 mm) and assemble the body</li>
+              <li>Install 4 motors and 4 ESCs</li>
+              <li>Install Cube Orange + power module + GPS</li>
+              <li>Configure ArduPilot (stabilization, RC binding)</li>
+              <li>Test arm/disarm, Stabilize and AltHold modes</li>
+              <li>Conduct first flight without FPV</li>
+            </ul>
+            
+            <h5>Version 2: Video Transmission to Controller</h5>
+            <ul>
+              <li>Install analog FPV camera + VTx</li>
+              <li>Install video receiver (to controller or external screen/goggles)</li>
+              <li>Verify video signal and stability</li>
+              <li>Optional — install telemetry for OSD</li>
+            </ul>
+            
+            <h5>Version 3: ML Integration</h5>
+            <ul>
+              <li>Install Jetson Nano/Orange Pi + CSI camera</li>
+              <li>Run ML inference on video (YOLOv5n/8n)</li>
+              <li>Send results to ground station via MAVLink (custom messages)</li>
+              <li>Duplicate video stream for ground analysis</li>
+            </ul>
+            
+            <h5>Version 4: Automation and Analysis</h5>
+            <ul>
+              <li>Install depth camera / lidar (if required)</li>
+              <li>Enable navigation based on SLAM (e.g., RTAB-Map or PX4 avoidance)</li>
+              <li>Implement target filtering and display only relevant ones</li>
+              <li>Create a control interface (QGroundControl, web panel, etc.)</li>
+            </ul>
+            
+            <h4>Additionally: Software and Protocols</h4>
+            <ul>
+              <li>ArduPilot: firmware for Cube Orange</li>
+              <li>Mission Planner / QGroundControl: configuration and control</li>
+              <li>MAVLink: drone-to-ground communication</li>
+              <li>GStreamer / RTMP / UDP: video transmission to ground</li>
+              <li>YOLOv5 / YOLOv8: lightweight object detection models</li>
+              <li>ROS2 + MAVROS: for automation</li>
+            </ul>
+        </section>
+        <section>
+            <h3>Configuration for the 1st version</h3>
+            <p>
+                Work on the first version showed that within the available budget (around $1000 USD), it is not feasible to build a cargo drone.
+                While it is possible to find motors capable of lifting 10 kg (5 kg own weight plus 5 kg for sufficient thrust to ensure stable flight and maneuverability), the real issue lies in the battery — it is difficult, if not impossible, to find a battery with the necessary instantaneous current output and charge capacity to support over 30 minutes of flight.
+            </p>
+            <p>
+                There are motors on the market with lower power consumption, but they are significantly more expensive. The battery alone would also end up being quite costly.
+            </p>
+            <p>
+                Based on this, it was decided to pivot the project toward building an FPV drone as an alternative to the DJI Mavic.
+            </p>
+            
+            <h4>Component List for Version 1</h4>
+            <p>
+                <img src="/blog/assets/images/2025-05-17/bill-of-materials.png"/>
+            </p> <br><br>
+            
+            <p>There was a strong desire to use domestically manufactured components from the following producers:</p>
+            <ul>
+              <li><a href="https://geoscan.ru" target="_blank">Geoscan</a></li>
+              <li><a href="https://alb.aero" target="_blank">Albatros</a></li>
+              <li><a href="https://tb-drone.ru" target="_blank">Transport of the Future</a></li>
+              <li><a href="https://idronex.ru" target="_blank">IDronex</a></li>
+              <li><a href="https://kulon.ru" target="_blank">Kulon</a></li>
+              <li><a href="https://npc-samara.ru" target="_blank">NPC BAS "Samara"</a></li>
+            </ul>
+            
+            <p>
+                However, not a single one of them responded to my inquiries. I conclude that retail implementation is not of interest to them.
+                Albatros and Geoscan offer complete solutions, but their prices are far beyond the budget (around 1,000,000 RUB in the case of Albatros solutions).
+            </p>
+            <p>
+                As a result, the components were sourced through mass-market platforms.
+            </p>
+        </section>
+        <section>
+            <h4>Thrust Calculation and Motor Selection</h4>
+            <p>
+              The initial requirement was to lift <strong>5&nbsp;kg</strong>.  
+              In practice, motors should be chosen with thrust that is <em>one‑and‑a‑half to two times</em> the weight of the drone they are lifting.
+            </p>
+            <p>
+              Thrust depends not only on motor power but also on the <strong>size and number of propellers</strong>; these factors will be discussed separately.
+            </p>
+          
+            <p>
+              At first, the motors that met the needed thrust were far beyond my budget—<abbr title="United States dollars">USD</abbr>&nbsp;100 – 150 instead of the targeted USD&nbsp;30 – 40.  
+              Motors with the desired specifications do exist in the lower price bracket, but their combined <strong>maximum current draw is 160 A</strong>, which is excessive and makes sourcing a suitable battery difficult—not to mention expensive.
+            </p>
+          
+            <p>
+              These budget constraints led to a pivot: instead of a cargo platform, the product shifted toward a drone carrying only a small extra payload for <strong>area inspection</strong>—an affordable alternative to the DJI Mavic.
+            </p>
+          
+            <p>
+              Once the technology is refined, we can revisit the development of a <strong>more heavy‑lift version</strong>.
+            </p>
+        </section>
+        <section>
+            <h4>Propeller Selection</h4>
+          
+            <p>
+              Propellers generate thrust by accelerating airflow. However, the higher the rotational speed and diameter of a propeller, the greater the <strong>aerodynamic losses</strong> and the <strong>power demands on the motor</strong>.  
+              This does not always result in the expected increase in thrust—especially if it also increases the system’s weight (notably the battery).
+            </p>
+          
+            <p>
+              What does this mean?  
+              It means that the seemingly logical idea of using more powerful motors and longer propellers to increase thrust <strong>won’t necessarily yield better—or even workable—results</strong>.
+            </p>
+          
+            <p>
+              Moreover, more powerful motors consume more energy, which requires higher-capacity batteries.  
+              In most cases, such batteries are also <strong>heavier</strong>. As a result, any gain in thrust may be offset by the increased battery weight.
+            </p>
+          
+            <p>
+              Propeller selection happens <strong>in parallel with motor selection</strong>.  
+              Suppliers usually provide summary tables showing motor thrust capacity and power consumption with different propellers.
+            </p>
+          
+            <p>
+              There are also two types of propellers: <strong>standard (CW)</strong> and <strong>pusher (CCW)</strong>.  
+              These spin clockwise and counterclockwise, respectively, and are structurally different.  
+              The reason is to <strong>counteract torque</strong>; otherwise, the drone would spin uncontrollably around its own axis.
+            </p>
+          
+            <p>
+              A quadcopter requires a <strong>pair of each type</strong>, installed opposite each other—CW across from CW, and CCW across from CCW—to maintain flight stability.
+              I’ll need to study their dynamics in more depth, but for now, this basic knowledge is sufficient for the current development phase.
+            </p>
+        </section>
+        <section>
+            <h4>Electronic Speed Controllers (ESCs)</h4>
+          
+            <p>
+              Power and control signals are not delivered to the motors directly—they pass through <strong>Electronic Speed Controllers (ESCs)</strong>.  
+              Each ESC must be selected based on the <strong>maximum current</strong it will carry to the motor, with an added safety margin to avoid overload.
+            </p>
+          
+            <p>
+              There are distribution boards available that route power to multiple motors simultaneously.  
+              Initially, I considered using such a board. However, further analysis showed that the selected four motors would draw up to <strong>120 A at full thrust</strong>—a dangerously high current.  
+              Without a dedicated cooling system, such a board would likely fail under that load.
+            </p>
+          
+            <p>
+              As a result, I opted for a more robust and modular approach: using <strong>a separate ESC for each motor</strong>.
+            </p>
+          
+            <p>
+              It is also important to <strong>check compatibility</strong> between the ESCs and the flight controller, particularly regarding <strong>voltage levels</strong> and the <strong>signal protocol</strong> used (e.g., DShot, BLHeli, etc.).
+            </p>
+        </section>
+        <section>
+            <h4>Battery Selection</h4>
+          
+            <p>
+              The battery is a critical component and deserves special attention. Its key parameters include:
+              <ul>
+                <li><strong>Output voltage</strong></li>
+                <li><strong>Capacity (mAh)</strong></li>
+                <li><strong>Maximum continuous discharge current</strong> (often expressed as a C-rating, e.g., 25C)</li>
+                <li><strong>Number of cells</strong> in series (e.g., 6S, 12S)</li>
+                <li><strong>Connector type</strong>, such as XT60 for power and a separate one for cell balancing during charging</li>
+              </ul>
+            </p>
+          
+            <p>
+              Unfortunately, my multi-day search on Wildberries and AliExpress revealed that the <strong>advertised specifications</strong> (especially discharge current) often do not match the actual capabilities of the battery, based on analysis of the available data. 
+              Selecting a <strong>reliable battery and trusted supplier</strong> remains one of the key current challenges.
+            </p>
+          
+            <h5>Case Study #1</h5>
+            <p>
+              A supplier provided detailed specifications and even named the exact cells used—a rare level of transparency.  
+              However, checking the manufacturer’s datasheet revealed that the cells only deliver <strong>22–25 A</strong> each, meaning the total output would be around <strong>75 A instead of the claimed 120 A</strong>.
+            </p>
+          
+            <h5>Case Study #2</h5>
+            <p>
+              A battery labeled as <code>6S3P</code> with <strong>12,000 mAh</strong> capacity and a discharge rating of <strong>135 A</strong> implies that each cell must deliver 45 A.  
+              Only high-end cells like <strong>Molicel</strong> can provide that current—and only with active cooling. The next best, such as <strong>Samsung</strong>, deliver around <strong>35 A</strong> under similar conditions.  
+              Given current wholesale prices, Molicel cells cannot cost less than <strong>500 RUB</strong> each, meaning the total battery cost alone exceeds the seller's listed price by about 10%, even before accounting for wires, connectors, assembly, and margin.
+            </p>
+          
+            <p>
+              These issues may explain why major Russian drone manufacturers like <strong>Geoscan</strong> purchase only the battery cells and assemble their own packs in-house—likely to maintain quality control.
+            </p>
+          
+            <p>
+              <strong>Long-term solutions</strong> could include:
+              <ul>
+                <li>Establishing direct relationships with reputable battery manufacturers</li>
+                <li>Assembling battery packs independently using verified components, which would simplify quality assurance</li>
+              </ul>
+            </p>
+        </section>
+        <section>
+            <h42>Flight Controller</h4>
+          
+            <p>
+              The flight controller is the <strong>brain and heart</strong> of the drone. It serves as the central hub to which all peripheral devices connect, including:
+              <ul>
+                <li>GPS navigation systems</li>
+                <li>Radio receiver and transmitter</li>
+                <li>Other onboard sensors and modules</li>
+              </ul>
+              It is responsible for processing inputs and sending control signals to the motors and ESCs (Electronic Speed Controllers).
+            </p>
+          
+            <p>
+              The market offers a wide range of flight controllers, varying in price and features. During my initial research, I found the <strong>Cube Orange</strong> flight controller particularly appealing. It offers sufficient functionality for the first version of the drone, while still leaving room for future upgrades and enhancements.
+            </p>
+          
+            <p>
+              At this stage, it's important to check:
+              <ul>
+                <li><strong>Power compatibility</strong>: Voltage and current requirements</li>
+                <li><strong>Signal protocol compatibility</strong>: Ensure the controller supports the same motor and ESC communication protocols (e.g., DShot, PWM, etc.)</li>
+                <li><strong>Radio system compatibility</strong>: Confirm that the controller is compatible with the radio communication protocols used by your transmitter and receiver</li>
+              </ul>
+            </p>
+        </section>
+        <section>
+            <h4>Radio Control System</h4>
+          
+            <p>
+              For a drone that needs to operate reliably at distances over <strong>10 km</strong> in complex environments (forests, suburbs, dense urban areas), selecting a robust and long-range radio control system is critical. Standard protocols like FlySky or FrSky often lack the required range and signal stability.
+            </p>
+          
+            <h5>Chosen Configuration</h5>
+            <p>
+              After reviewing available options, I chose the <strong>Radiomaster TX16S</strong> transmitter with an external <strong>TBS Crossfire Nano SE V2</strong> module. This setup offers:
+            </p>
+            <ul>
+              <li><strong>Support for CRSF protocol</strong> – known for minimal latency and high signal reliability</li>
+              <li><strong>Compatibility</strong> with the Cube Orange flight controller</li>
+              <li><strong>Proven reliability</strong> in FPV and industrial use cases</li>
+              <li><strong>Excellent value</strong> for its feature set</li>
+            </ul>
+          
+            <h5>Why Crossfire?</h5>
+            <ul>
+              <li>Operates on <strong>868/915 MHz</strong> – better penetration through obstacles like trees and buildings compared to 2.4 GHz</li>
+              <li>Ideal for flights below treetops or rooflines</li>
+              <li>Supports <strong>bidirectional telemetry</strong>: real-time signal quality, GPS data, battery voltage, speed, altitude, etc.</li>
+            </ul>
+          
+            <h5>Why TX16S?</h5>
+            <ul>
+              <li>Modern <strong>multi-protocol transmitter</strong> with external module support (ELRS, Crossfire, Tracer, Ghost, etc.)</li>
+              <li>Runs on <strong>EdgeTX firmware</strong> – highly customizable interface for channels, functions, telemetry</li>
+              <li>One of the most popular and trusted transmitters in the RC community</li>
+            </ul>
+          
+            <h5>Antennas and Signal Reliability</h5>
+            <ul>
+              <li>Drone antenna should be <strong>placed away</strong> from ESCs, battery, and carbon frame components to avoid interference</li>
+              <li><strong>Diversity setup</strong> (two antennas) is recommended for greater link stability</li>
+              <li>Correct <strong>polarization and orientation</strong> of antennas is essential, especially for long-range flights</li>
+            </ul>
+          
+            <h5>Regulatory Considerations</h5>
+            <p>
+              Use of <strong>868/915 MHz frequencies</strong> may be subject to regulations in certain countries (including Russia). Equipment might require certification or adherence to power limits (e.g., max 25–100 mW). Always ensure your gear is compliant with local laws.
+            </p>
+        </section>
+        <section>
+            <h4>Power Distribution Board (PDB)</h4>
+          
+            <p>
+              Due to the large number of components that require power from the main battery (motors, ESCs, flight controller, GPS, etc.), an intermediate <strong>Power Distribution Board (PDB)</strong> is necessary to properly route and manage electrical power.
+            </p>
+          
+            <h5>Selection Criteria</h5>
+            <ul>
+              <li>Must support the required <strong>current load</strong> for all connected components</li>
+              <li>Should be compatible with the <strong>number of motors</strong> and other peripherals in the system</li>
+              <li>Needs to have the correct <strong>connectors</strong> or pads for clean and safe wiring</li>
+            </ul>
+          
+            <h5>Practical Considerations</h5>
+            <p>
+              Some PDBs, including the one I selected, do <strong>not include the power connector</strong> by default. In such cases, you’ll need to <strong>order the connector separately</strong> and <strong>solder it manually</strong>.
+            </p>
+          
+            <p>
+              Attention to detail during selection and installation ensures safe and efficient power distribution to all systems.
+            </p>
+        </section>
+                    
+    </article>
+</body>
