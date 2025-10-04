@@ -1,0 +1,157 @@
+---
+layout: post
+title: 'Developing Mobile Application for Aurora OS: investigating build errors or how to add a library the right way'
+date: '2025-08-23'
+author: Gelassen
+tags: 
+modified_time: '2025-08-23'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developing Mobile Application for Aurora OS: investigating build errors or how to add a library the right way</title>
+    <link rel="stylesheet" href="./css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Intro</h3>
+            <p>
+                This post continues the exploration of developing mobile applications 
+                for Aurora OS. This time, I investigate the case of building and deploying 
+                a mobile app, focusing on build errors that occur when a new library 
+                appears to be added correctly. This example illustrates nuances of 
+                <strong>CMake</strong> and <strong>RPM</strong> workflows.  
+            </p>
+        </section>
+        <section>
+            <h3>Adding a New Library</h3>
+            <p>
+                Our team needed to enable WebView in our application. Research showed that 
+                the WebView engine varies across the versions we target: on 5.1.3 
+                and above, it uses Chromium, while on 5.1.1 it uses Gecko. This difference 
+                affects the API, supported features, and the choice of the correct library package. 
+            </p>
+            <p>
+                We switched from <strong>qmake</strong> to <strong>CMake</strong> for more flexibility. 
+                While qmake hides some of CMake's complexity, it also imposes limits that 
+                eventually become problematic. Using CMake requires identifying the correct 
+                library and declaring it properly in the <code>CMakeLists.txt</code> file. 
+            </p>
+            <p>
+                Before that, we had to decide whether to include the library inside the RPM package 
+                or declare a dependency on the existing system library.  
+                The first approach guarantees the library exists but significantly increases the 
+                package size, making it less preferable. The second approach declares a dependency 
+                on the system library in the target device environment.  
+            </p>
+            <h4>How to Find the Actual Package Name and Check Its Existence</h4>
+            <p>
+                In general, the following commands can help identify possible packages: <br>
+                <pre><code>
+$ zypper se webview
+$ pkcon search name webview  # alternative
+                </code></pre>
+                These commands are not available in the standard development environment and 
+                should be run under the <strong>PSDK</strong>.
+            </p>
+            <p>
+                Since the library name can often be guessed from its key component, I first searched 
+                the target device for shared libraries: <br>
+                <pre><code>
+$ find /usr/lib /lib -name "*webview*.so*"
+                </code></pre>
+                This provides candidate libraries. To find the RPM package that provides a specific library:
+                <br>
+                <pre><code>
+$ rpm -qf /usr/lib/libaurorawebview.so
+                </code></pre>
+                In this case, however, neither the .so nor the RPM names matched our requirements.
+            </p>
+            <p>
+                If the library is included in the RPM package, it usually has a <strong>pkg-config</strong> file: <br>
+                <pre><code>
+$ pkg-config --list-all | grep webview
+                </code></pre>
+                This command is only available in the PSDK. Since the target environment already has the 
+                necessary library, it is sufficient to declare a dependency in the CMake file using the 
+                RPM package name discovered in the previous step.
+            </p>
+            <h4>Declaring the Dependency in CMake</h4>
+            <p>
+                It is possible to hardcode the library path in <code>CMakeLists.txt</code>, but it is better 
+                to search for it. This allows vendors to customize library locations in future releases 
+                and makes the app more robust across different versions: <br>
+                <pre><code>
+find_library(WEBVIEW_LIB aurorawebview REQUIRED)
+                </code></pre>
+            </p>
+            <p>
+                Since <code>find_library()</code> does not guarantee the correct library is returned, 
+                an extra verification step is required: <br>
+                <pre><code>
+find_library(WEBVIEW_LIB aurorawebview REQUIRED)
+
+if (WEBVIEW_LIB)
+    execute_process(
+        COMMAND rpm -qf ${WEBVIEW_LIB}
+        OUTPUT_VARIABLE WEBVIEW_RPM
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+    message(STATUS "Library found: ${WEBVIEW_LIB}")
+    message(STATUS "Provided by package: ${WEBVIEW_RPM}")
+
+    if (NOT WEBVIEW_RPM MATCHES "ru\\.auroraos\\.webview")
+        message(FATAL_ERROR "Incorrect library found: ${WEBVIEW_LIB} (${WEBVIEW_RPM})")
+    endif()
+endif()
+                </code></pre>
+            </p>
+            <p>
+                In practice, launching the app showed that WebView could not find a dependency 
+                on another library. As a workaround, the library was included inside the RPM package 
+                and the <strong>RPATH</strong> was adjusted: <br>
+                <pre><code>
+set(CMAKE_SKIP_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../lib/cef")
+
+install(FILES /usr/lib/cef/libcef.so DESTINATION share/${PROJECT_NAME}/lib/cef)
+                </code></pre>
+            </p>
+            <h4>The Role of the Spec File</h4>
+            <p>
+                When CMake builds the application, the spec file defines the necessary dependencies. 
+                Dependencies are divided into two groups: required for build and required at runtime.
+                <br>
+                <pre><code>
+BuildRequires:  pkgconfig(aurorawebview)
+Requires:       ru.auroraos.webview
+                </code></pre>
+                It was discovered that <code>pkgconfig()</code> can sometimes return the wrong library. 
+                Using the exact RPM name is preferable: <br>
+                <pre><code>
+BuildRequires:  ru.auroraos.webview-devel
+                </code></pre>
+                It is important to note the difference between runtime libraries and <code>-devel</code> packages. 
+                Some libraries are only needed for building and not at runtime, so their <code>-devel</code> packages 
+                are required during the build stage.
+            </p>
+        </section>
+        <section>
+            <h3>Summary</h3>
+            <p>
+                In this post, I have shown the process of investigating build errors and 
+                choosing the right library. <br><br>
+
+                It sheds light on internal details of the CMake build system 
+                and Linux package management, helping developers better understand, use, 
+                and build programs in C and on Linux. 
+            </p>
+        </section>
+    </article>
+</body>
+</html>
