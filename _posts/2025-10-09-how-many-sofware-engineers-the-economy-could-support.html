@@ -1,0 +1,276 @@
+---
+layout: post
+title: 'How many software engineers the economy could support?'
+date: '2025-10-09'
+author: Gelassen
+tags: software-engineers, economy, thoughts, limits-of-growth
+modified_time: '2025-10-09'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How many software engineers the economy could support?</title>
+    <link rel="stylesheet" href="./css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Summary</h3>
+            <p>
+                This publication shares my thoughts on the question in title. As 
+                a software engineer I could not do my job if some more important 
+                duties would not be done: I need a food for a breakfast and a dinner, 
+                I need a water in my pipes, an electricity in my apartment and so on. 
+                Obviously, if I have decided to specialize in software development, 
+                someone else should do this for me. It brings us to the question 
+                how many people do we need to open a position for one software 
+                engineer? How many software engineers a single country could 
+                support at all?    
+            </p>
+            <p>
+                With some assumptions, my conclusions are 125–150 people for one 
+                software engineer, with a limit for the country (Russia) of 
+                about 500k–700k software engineers per nation. This is roughly 
+                the current number of software engineers in Russia, and there are 
+                signals that the Russian economy needs to double (×2) this number. 
+                If we have already reached the natural limits, is it possible to 
+                achieve this goal?  
+            </p>
+            <p>
+                Software products and digital services significantly accelerate 
+                business processes and boost performance. Software solutions are 
+                the key driver of the modern industrial revolution. That's why there 
+                has been a decades-long growing demand for experienced software 
+                engineers. However, it’s important to note that solutions created 
+                by software engineers themselves increase the overall effectiveness 
+                of the economy — and, in theory, should raise the natural limits 
+                on how many software engineers society can sustain. If so, is there 
+                a way to estimate this effect?    
+            </p>
+            <p>
+                I asked ChatGPT to help me build a mathematical model describing 
+                this dynamic. I asked it to include several key parameters: 
+                <ul>
+                    <li>Natural ratio of software engineers to population (↦ engineers per capita)</li>
+                    <li>Time to invest in developing new products (development time, T_dev)</li>
+                    <li>Time for adoption of new products into the economy (adoption delay / diffusion)</li>
+                    <li>Percent of successful product creation & adoption (success rate s)</li>
+                    <li>Economic gain that increases capacity for software engineers (feedback from gain → more engineers)</li>
+                </ul>
+                Here is the final formula we came to: <br>
+            </p>
+
+            <p>
+                <img src="/blog/assets/images/2025-10-09/math-model-software-engineers-limits-plain.png"/>
+            </p> 
+            <p>
+                <img src="/blog/assets/images/2025-10-09/math-model-software-engineers-limits-with-feedback.png"/>
+            </p>
+
+            <p>
+                It shows these key aspects:
+            </p>
+
+            <p>
+                1️⃣ <b>Increase Base Productivity (K₀)</b><br>
+                Investments in real industries, automation, and IT–production synergy.<br>
+                To double <b>D</b> solely through higher <b>K₀</b>, it’s necessary to nearly double <b>(K₀ + E)</b> — a very ambitious target.
+            </p>
+
+            <p>
+                2️⃣ <b>Strengthen Feedback (α)</b><br>
+                Enhance success rate (<b>s</b>), implementation speed (<b>a</b>), and infrastructure quality (<b>α_raw</b>).<br>
+                In practice: commercialization programs, integration standards, and investments in implementation.<br>
+                Even a moderate increase in <b>α</b> has a strong effect thanks to the denominator <b>(1−t)</b>.
+            </p>
+
+            <p>
+                3️⃣ <b>Increase Export (E)</b><br>
+                More developers working for external markets, without burdening the domestic economy.<br>
+                Raising <b>E</b> from 0.2 to 0.6 can almost double <b>D</b>, but it requires demand, language proficiency, and proper legal and financial conditions.
+            </p>
+
+            <p>
+                4️⃣ <b>Reduce R</b><br>
+                Automation, low-code platforms, and centralized DevOps solutions.<br>
+                Reducing <b>R</b> by half (from 125 to 62) formally doubles <b>D</b>, though in practice it’s a slow process.
+            </p>
+
+            <p>
+                5️⃣ <b>Combined Strategy</b><br>
+                Moderate increase in <b>K₀</b> (+20–50% over 5–10 years),<br>
+                Expansion of <b>E</b> (to 30–40%),<br>
+                Improvement of <b>s</b> and <b>a</b> (through adoption and scaling).<br>
+                This approach can achieve a 2× increase without extreme <b>α</b> parameters.
+            </p>
+
+            <p>
+                As a post scriptum, it’s worth remembering: all models are wrong, 
+                but some are useful — because they help us see things that would 
+                otherwise remain hidden. Keep this in mind when you read this 
+                and any other model.
+            </p>
+        </section>
+        <section>
+            <h3>Basic assumptions</h3>
+            <p>
+                <strong>1. Current data (2025)</strong><br>
+                <table>
+                    <tr><th>Indicator</th><th>Estimate</th></tr>
+                    <tr><td>Population of Russia</td><td>≈ 146 million</td></tr>
+                    <tr><td>Population aged 20–55</td><td>≈ 76–78 million</td></tr>
+                    <tr><td>Total IT specialists</td><td>≈ 1 million</td></tr>
+                    <tr><td>Developers</td><td>≈ 500–700 thousand</td></tr>
+                    <tr><td>Developers with 5+ years experience</td><td>≈ 250–400 thousand</td></tr>
+                    <tr><td>Reported deficit</td><td>Up to 1 million IT specialists (all fields)</td></tr>
+                </table>
+            </p>
+
+            <p>
+                <strong>2. Theoretical limit — “1 developer per 125 working-age people”</strong><br>
+                For a population of 76 million aged 20–55:<br>
+                \[
+                76{,}000{,}000 / 125 = 608{,}000
+                \]<br>
+                That means approximately <b>600,000 developers</b> represent the demographic maximum — 
+                the level at which society can sustain and provide them with sufficient workload without drawing resources from other sectors.
+            </p>
+
+            <p>
+                <strong>3. Why 1 : 125 can be considered the lower threshold of stability</strong><br>
+                At this ratio, the economy already covers its internal IT needs — digital infrastructure, public sector, banking, retail, and industry. <br>
+                Increasing the share of developers beyond this level requires strong IT export capacity; otherwise, there simply isn’t enough domestic demand to employ them effectively. <br>
+                Therefore, <b>1 : 125</b> represents a sustainable minimum for a developed country, but not a ceiling — it is rather the point at which internal demand becomes saturated.
+            </p>
+
+            <p>
+                <strong>4. Indirect confirmation of the upper boundary</strong><br>
+                If we take the U.S. or Israel as benchmarks and scale their ratios to Russia’s demographics:<br><br>
+                1 : 65 → ~1.1–1.2 million developers<br>
+                1 : 80 → ~950 thousand<br>
+                1 : 125 → ~600 thousand<br><br>
+                ➡️ Even the most technologically advanced economies in the world rarely exceed a ratio of <b>1 : 50–60</b>, while most stable ones fall between <b>1 : 80 and 1 : 150</b>.<br>
+                Thus, <b>1 : 125</b> is a well-supported lower bound, while the upper range likely lies around <b>1 : 70–100</b> — achievable when a country actively exports IT services or undergoes large-scale automation.
+            </p>
+        </section>
+        <section>
+            <h3>Building a model</h3>
+            <p>
+                <strong>1. Base model</strong><br>
+                Without feedback:<br>
+                \[
+                D = \frac{P \cdot (K_0 + E)}{R}
+                \]<br>
+                where:<br>
+                – <b>P</b> — population size,<br>
+                – <b>K₀</b> — initial productivity coefficient (e.g., 1.1),<br>
+                – <b>E</b> — share of developers working for export (as a fraction, not %),<br>
+                – <b>R</b> — support ratio (number of people per developer).
+            </p>
+
+            <p>
+                <strong>2. Feedback effect</strong><br>
+                Developers increase overall productivity, creating a positive loop:<br>
+                \[
+                K = K_0 \big(1 + \alpha \cdot \frac{D}{P}\big)
+                \]<br>
+                where <b>α</b> — the effective contribution of one developer to relative productivity growth.<br>
+                Substituting and solving for D gives:<br>
+                \[
+                t = \frac{K_0 \alpha}{R}, \qquad
+                D = \frac{P \cdot (K_0 + E)}{R(1 - t)}, \qquad (t < 1)
+                \]<br>
+                Interpretation:<br>
+                – <b>t → 0</b>: weak feedback, close to the base case;<br>
+                – <b>t</b> increases: stronger feedback and higher D;<br>
+                – <b>t → 1</b>: nonlinear “explosive” growth (requires natural limits).
+            </p>
+
+            <p>
+                <strong>3. Components of α</strong><br>
+                \[
+                \alpha = \alpha_{raw} \cdot s \cdot a
+                \]<br>
+                where:<br>
+                – <b>α_raw</b> — technical potential (maximum contribution per developer),<br>
+                – <b>s</b> — share of successfully scaled solutions (success rate),<br>
+                – <b>a</b> — share of adopted implementations (adoption fraction).<br>
+                Low <b>s</b> or <b>a</b> values sharply reduce total effect.
+            </p>
+
+            <p>
+                <strong>4. Time and investment factors</strong><br>
+                Time and investments are not explicitly in the formula but are reflected via parameters:<br>
+                – <b>a(t)</b>: adoption rate grows slowly if implementation cycles are long;<br>
+                – <b>s(t)</b>: depends on investment level and market access;<br>
+                – <b>α_raw</b>: infrastructure and technical readiness.<br>
+                A discrete dynamic model can be added to simulate annual changes.
+            </p>
+
+            <p>
+                <strong>5. Example calculation</strong><br>
+                Input parameters:<br>
+                \[
+                P = 76{,}000{,}000,\quad R = 125,\quad K_0 = 1.1,\quad E = 0.20
+                \]<br>
+                Base value (no feedback):<br>
+                \[
+                D_{base} = \frac{P \cdot (K_0 + E)}{R}
+                \]<br>
+                Scenarios calculated for:<br>
+                \[
+                \alpha_{raw} \in \{0, 0.1, 0.2, 0.4, 0.6\},\quad
+                s \in \{0.2, 0.5, 0.8\},\quad
+                a \in \{0.3, 0.6, 1.0\}
+                \]
+            </p>
+
+            <p>
+                <strong>6. How to achieve 2× growth in developers (D)</strong><br>
+                <b>1️⃣ Increase K₀ (base productivity)</b> — invest in real sectors, automation, and IT–industry synergy.<br>
+                <b>2️⃣ Strengthen feedback (α)</b> — improve scaling (s), adoption (a), and infrastructure (α_raw).<br>
+                <b>3️⃣ Expand export (E)</b> — increase the share of developers working for foreign markets.<br>
+                <b>4️⃣ Reduce R</b> — automation, low-code, and centralized DevOps reduce support burden.<br>
+                <b>5️⃣ Combined approach</b> — moderate growth in K₀ (+20–50%), E (to 30–40%), and higher s, a lead to sustainable 2× growth.
+            </p>
+
+            <p>
+                <strong>7. Sample scenario</strong><br>
+                Example:<br>
+                \[
+                \alpha_{raw}=0.4,\ s=0.5,\ a=0.6 \Rightarrow \alpha = 0.12
+                \]
+                \[
+                t = \frac{1.1 \times 0.12}{125} \approx 0.001056
+                \]
+                The resulting D is only slightly higher than D_base (≈+0.1%).<br>
+                To double D, E or K₀ must increase significantly, or α must reach 0.5–1.0, which requires systemic measures.
+            </p>
+
+            <p>
+                <strong>8. Practical roadmap</strong><br>
+                1. <b>Export (E):</b> support SaaS, freelancing, export platforms, and currency regulation.<br>
+                2. <b>Success rate (s):</b> promote accelerators, pilot programs, and IT adoption in industry.<br>
+                3. <b>Adoption (a):</b> provide incentives and credits for IT integration.<br>
+                4. <b>Infrastructure (α_raw):</b> invest in DevOps, education, and cloud ecosystems.<br>
+                5. <b>Support ratio (R):</b> automate routine roles, expand low-code tools where applicable.
+            </p>
+        </section>
+
+        <section>
+            <p>
+                A few related publications:
+            </p>
+            <p>
+                <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">Broad vs Narrow specialization</a> <br><br>
+
+                <a href="https://gelassen.github.io/blog/2023/03/31/essay-regarding-elites.html">Essay regarding elites</a> <br><br>
+
+                <a href="https://gelassen.github.io/blog/2024/06/23/the-modern-education-and-place-of-ai-here.html">The modern education and place of AI here</a> 
+            </p>
+        </section>
+    </article>
+
+</body>
