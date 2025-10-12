@@ -1,0 +1,188 @@
+---
+layout: post
+title: 'Flying drone DIY, part III: assembling and tunning'
+date: '2025-10-12'
+author: Gelassen
+tags: drones, copters, DIY, ArduPilot, development, engineering, research
+modified_time: '2025-10-09'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flying drone DIY, part III: assembling and tunning</title>
+    <link rel="stylesheet" href="./css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Intro</h3>
+            <p>
+                This publication describes assembling and tuning drone which 
+                design and configuration has been covered in the previous publications.
+            </p>
+            <p>
+                The process is quite straightforward, but still sophisticated -- 
+                you need to have domain specific knowledge to get this done. <br>
+                ArduPilot team made a good job to describe this process, but there are 
+                still a room to bridge the gaps.   
+            </p>
+        </section>
+        <section>
+            <h3>Hardware part</h3>
+            <p>
+
+            </p>
+            <h4>Soldering connectors</h4>
+            <p>
+
+            </p>
+            <h4>Soldering PDB and cope with EMI</h4>
+            <p>
+                // positioning across flight controller
+                // positioning across metall sirfaces (EMI context)
+            </p>
+            <h4>Engines: CV vs CCV</h4>
+            <p>
+                // engines ordering
+                // props ordering
+                // hardware and software sync with MAIN OUT on the board
+            </p>
+            <h4>Flight controller: setup RC</h4>
+            <p>
+                // cables issues: misleading colors, messed up pin orders
+                // positioning to cope with EMI
+            </p>
+            <h4>Flight controller: connect engines over ESC</h4>
+            <p>
+                // turn off power supply from BEC (remove red cable)
+                // positioning on the board (pin outs)
+            </p>
+        </section>
+        <section>
+        <section>
+            <h3>Software part</h3>
+            <p>
+                Below is the full list of configuration and calibration steps 
+                performed during the flight controller setup.  
+                Step 15 (Telemetry setup) has been postponed since the GCS modem is currently unavailable.
+            </p>
+
+            <h4>Configuration steps</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Step</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Firmware installation</td>
+                        <td>✅</td>
+                        <td>ArduCopter firmware successfully installed</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Frame type selection</td>
+                        <td>✅</td>
+                        <td>Configured as Quad / X type</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Accelerometer calibration</td>
+                        <td>✅</td>
+                        <td>Completed via Mission Planner</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>RC transmitter calibration</td>
+                        <td>✅</td>
+                        <td>Radiomaster TX16S + CRSF receiver</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Compass calibration</td>
+                        <td>✅</td>
+                        <td>Performed after final assembly</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>ESC and motor calibration</td>
+                        <td>✅</td>
+                        <td>ESCs configured on PWM</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Motor and propeller direction check</td>
+                        <td>⏳</td>
+                        <td>Pending — to verify propeller rotation</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Flight mode setup</td>
+                        <td>✅</td>
+                        <td>Stabilize / AltHold / Loiter configured</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Failsafe configuration</td>
+                        <td>✅</td>
+                        <td>Radio, battery, and GCS failsafes configured</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Power module and battery levels</td>
+                        <td>✅</td>
+                        <td>Voltage-only mode set for Cube Orange HV PM</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>OSD configuration</td>
+                        <td>➖</td>
+                        <td>Not used (no camera installed)</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>Voltage/current sensor calibration</td>
+                        <td>✅</td>
+                        <td>Completed; current via ADC not measured</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>AutoTune or manual PID tuning</td>
+                        <td>⬜</td>
+                        <td>Planned after first hover test</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>Logging configuration</td>
+                        <td>⏳</td>
+                        <td>Postponed — logs cannot yet be read from device</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>Telemetry (GCS) setup</td>
+                        <td>⏳</td>
+                        <td>Postponed — GCS modem not available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        </section>
+        <section>
+            <p>
+                A few related posts:
+            </p>
+            <p>
+                <a href="https://gelassen.github.io/blog/2025/05/17/flying-drone-diy-part-II.html">Flying drone DIY, part II: configuration for the 1st version</a> <br><br>
+
+                <a href="https://gelassen.github.io/blog/2023/03/19/case-study-flying-drone-diy.html">Flying drone DIY, part I: discovery phase</a> <br><br>
+            </p>
+        </section>
+    </article>
+</body>
