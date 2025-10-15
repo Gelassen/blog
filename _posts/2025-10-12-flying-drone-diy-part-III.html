@@ -32,32 +32,168 @@ modified_time: '2025-10-09'
         <section>
             <h3>Hardware part</h3>
             <p>
-
+                <!-- link on the photo -->
             </p>
             <h4>Soldering connectors</h4>
             <p>
-
+                ESCs and motors comes without soldered connectors, so you have 
+                to solder them by yourself. <br>
+                Due soldering I faced with issues to bold the solder and metall of 
+                the connectors. By using colophony and several attempts to couple 
+                solder and metall I achieved satsfactory results. <br>
+                My skills in soldering are basic, may be due research you will 
+                find more superior techniques. 
             </p>
             <h4>Soldering PDB and cope with EMI</h4>
             <p>
-                // positioning across flight controller
-                // positioning across metall sirfaces (EMI context)
+                The next phase is soldering ESCs to power distribution board. 
+                There are similar issues with soldering to PDB which increasing 
+                demand in accuracy to avoid overheating the circuit and burnout 
+                traces and elements around. <br>
+                Another issue was to adjust ESC cables to the PDB. Chosen ESC 
+                supports 80 Ampers of current and used quite bold cables (12 awg). 
+                The choosen PDB in this way should support at least 320 A (sic!) of 
+                current and it does (at least by specification)! However, places\holes 
+                to solder wires are twice as less than neccessary. Adjusting diameter 
+                of the cables or finding right extra connectors are solution for it.   
+            </p>
+            <p>
+                In all cases I saw the PDB has open structure and open surface. 
+                Keeping in mind how much current power comes through this it is 
+                important to protect it from accidental touch as well as from 
+                unexpected rain.
+            </p>
+            <p>
+                Another issue is EMI. Current which goes over wires creates 
+                a electromagnetic field around itself which affect the current 
+                (and signal!) in another wires around. Higher the current - the 
+                higher the impact. In this way it is crucial to put far away from 
+                each other a battery, PDB, flight controller and RC receiver. <br>
+                Aluminum foil could give extra protection from EMI, especially 
+                on the high fequency current. In my case I used for layer between 
+                FC and PDB.  
             </p>
             <h4>Engines: CV vs CCV</h4>
             <p>
-                // engines ordering
-                // props ordering
-                // hardware and software sync with MAIN OUT on the board
+                <img src="/blog/assets/images/2025-10-12/ardupilot-motors-ordering.png"/>
+            </p> 
+            <p>
+                If you use ArduPilot, then you should pay extra attention to 
+                motors ordering. ArduPilot expects motors ordering 
+                on the frame and on the each frame type it would be 
+                <a href="https://ardupilot.org/copter/docs/connect-escs-and-motors.html">its own ordering</a>.  
+            </p>
+            <p>
+                The order of motors depends on the direction in which engine 
+                works - clockwise (CW) and counter clockwise (CCW). It was done 
+                to stabilize the drone movement, otherwise the torque of the 
+                working engines will force copter to move over its circle. To 
+                cope with it CV and CVV motors are setup by pair - one pair on a 
+                single axis, - and goes one-by-one. <br>
+                The direction in which motor spinning around could be changed by 
+                interchaning any two from three cables which goes to ESC.   
+            </p>
+            <p>
+                Not only engines ordering, but also propellers ordering matters. 
+                Props are made with one and opposite directions in which they 
+                are screwed to grasp the air. By observing it you will easily 
+                understand in which direction they should move to effectively 
+                create a thurst. After launch it neccessary to check in which 
+                direction motor moves and does it have an appropriate prop!
+            </p>
+            <p>
+                Pixhawk board has a set of pins targeted to connect with 
+                ESCs. MAIN OUT panel has numbered order. Reference documentation 
+                menitioned above to figure out the right number for each engine. 
             </p>
             <h4>Flight controller: setup RC</h4>
             <p>
-                // cables issues: misleading colors, messed up pin orders
-                // positioning to cope with EMI
+                Radio receiver also came disassembled. Using documentation you 
+                have to figure the right pins for your configuration and solder 
+                right wires.
+            </p>
+            <p>
+                I have to order a new cable to solder it and meet with Pixhawk 
+                connectors. Pixhawk supports JST-GH connectors (6 pins, 2mm) and 
+                and you have to pay extra attention to *exact* name, because 
+                under JST prefix there are sveral models on the market.  
+            </p>
+            <p>
+                Another interesting point to be aware of is wires coloring. 
+                Beccause JST-GH is standart you could expect the unified color 
+                ordering, however in this case it was not -- black doesn't mean 
+                GROUND and red doesn't mean POWER. Alawys refer to documentation 
+                and pins descriptions there, otherwise you could damage your 
+                circuit.
+            </p>
+            <p>
+                The final thing is pin ordering. Pixhawk text labels were 
+                somewhat misleading -- I mixed up the 1st pin for 6th and vice 
+                versa. More experience with JST-GH and plain mulitemeter check 
+                should secure you from this pitfall. 
+            </p>
+            <p>
+                Mitigate EMI. The primary source of EMI is the battery itself, 
+                key power lines - PCB and ESCs - and radio reciver. FC should be 
+                positioned as far as possible from each of them to avoid negative 
+                influence of EMI caused by them. <br>
+                In the current configuration it was put as a second layer on top 
+                of the battery and the PCB additionally protected by a layer of 
+                aluminium foil.
             </p>
             <h4>Flight controller: connect engines over ESC</h4>
             <p>
-                // turn off power supply from BEC (remove red cable)
-                // positioning on the board (pin outs)
+                ESCs could be powered at least in two ways: directly from PCB 
+                and from FC itself over BEC. <br>
+                Because in this configuration they have been powered from the 
+                PCB, it is important to turn off power supply from the BEC. It 
+                should be done from removing red wire from the connector which 
+                goes to FC.  
+            </p>
+            <p>
+                All of them is connected to MAIN OUT of the board and nuances of 
+                doing this right has been described above. 
+            </p>
+            <h4>Handmade frame</h4>
+            <p>
+                For the 1st version I decided to go with hadnmade frame: it is 
+                R&D project, the configuration is not finalized and frame should 
+                support extension and reconfiguration. As an afforable material 
+                I decided to use particleboard, but plastic could be even better
+                -- it is lighter, still robust and is also convenient for 
+                drilling and sawing. 
+            </p>
+            <p>
+                The main question I should answer first which thikness of frame 
+                and the length of  axis would support 2kg of thurst on each axis? 
+            </p>
+            <p>
+                To answer this question you have to solve the classical problem 
+                of a cantilever beam in bending. ChatGpt helped with this, but I 
+                wasn't sure about stiffness coefficient of my material or 
+                calculations by itself wasn't fully correct and practice shown 
+                the final frame doesn't satisfy full requirements. I solved this 
+                issue by made a second frame and fastened it to the first one, 
+                the rigidity was now sufficient to withstand the traction with 
+                a reserve.   
+            </p>
+            <p>
+                Another key aspect is put center of masses in the center of 
+                copter. Otherwise you have to do a black magic on software part 
+                to adjust thurst of motors to compensate center of masses 
+                somewhere else rather than in the center of copter. 
+            </p>
+            <p>
+                In the case of the 1st version it was easy, because the main battery 
+                give ~85% of the weight and putting it in the center was a 
+                naturally caused decision. Couping with EMI also narrowed down 
+                possible options and each EMI sensitive part was put on a 
+                separate layer.   
+            </p>
+            <p>
+                The production ready solution should covered elegant decision 
+                within all constraints mentioned above. Significant investments 
+                into ergonomic R&D is a task of the 2nd version of copter. 
             </p>
         </section>
         <section>
