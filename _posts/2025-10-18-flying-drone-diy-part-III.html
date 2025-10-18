@@ -1,10 +1,10 @@
 ---
 layout: post
 title: 'Flying drone DIY, part III: assembling and tunning'
-date: '2025-10-12'
+date: '2025-10-18'
 author: Gelassen
 tags: drones, copters, DIY, ArduPilot, development, engineering, research
-modified_time: '2025-10-09'
+modified_time: '2025-10-18'
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -32,7 +32,7 @@ modified_time: '2025-10-09'
         <section>
             <h3>Hardware part</h3>
             <p>
-               <img src="/blog/assets/images/2025-10-12/drone-diy-collage.png"/>
+               <img src="/blog/assets/images/2025-10-18/drone-diy-collage.png"/>
             </p>
             <h4>Soldering connectors</h4>
             <p>
@@ -75,7 +75,7 @@ modified_time: '2025-10-09'
             </p>
             <h4>Engines: CV vs CCV</h4>
             <p>
-                <img src="/blog/assets/images/2025-10-12/ardupilot-motors-ordering.png"/>
+                <img src="/blog/assets/images/2025-10-18/ardupilot-motors-ordering.png"/>
             </p> 
             <p>
                 If you use ArduPilot, then you should pay extra attention to 
@@ -151,7 +151,7 @@ modified_time: '2025-10-09'
                 goes to FC.  
             </p>
             <p>
-                All of them is connected to MAIN OUT of the board and nuances of 
+                All of them are connected to MAIN OUT of the board and nuances of 
                 doing this right has been described above. 
             </p>
             <h4>Handmade frame</h4>
@@ -195,12 +195,86 @@ modified_time: '2025-10-09'
                 within all constraints mentioned above. Significant investments 
                 into ergonomic R&D is a task of the 2nd version of copter. 
             </p>
+            <h4>Importance of motor's KV</h4>
+            <p>
+                <table border="1" cellspacing="0" cellpadding="6">
+                    <thead>
+                        <tr>
+                            <th>KV (rpm/V)</th>
+                            <th>Typical Propellers</th>
+                            <th>Battery Type</th>
+                            <th>Drone Type / Application</th>
+                            <th>Characteristics</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>&lt; 400 KV</td>
+                            <td>18" – 32" (46–80 cm)</td>
+                            <td>6S–12S</td>
+                            <td>Heavy-lift, long-range, industrial drones</td>
+                            <td>Very high torque, huge props, ultra-high efficiency at low RPM. Designed for 30–60+ min flights carrying 2–10 kg. Low RPM, "tractor" type thrust.</td>
+                        </tr>
+                        <tr>
+                            <td>400–600 KV</td>
+                            <td>15" – 18"</td>
+                            <td>6S–8S</td>
+                            <td>Medium-lift, aerial photography, mapping drones</td>
+                            <td>Sweet spot between efficiency and thrust. Works well with 6S/8S setups, smooth thrust, moderate noise. Optimal for 20–40 min endurance flights.</td>
+                        </tr>
+                        <tr>
+                            <td>600–900 KV</td>
+                            <td>12" – 15"</td>
+                            <td>4S–6S</td>
+                            <td>General-purpose drones, heavy FPV, filming drones</td>
+                            <td>Balanced performance: good torque but increased consumption. Common for professional filming drones (5–8 kg takeoff weight).</td>
+                        </tr>
+                        <tr>
+                            <td>900–1200 KV</td>
+                            <td>9" – 12"</td>
+                            <td>3S–4S</td>
+                            <td>FPV / Freestyle / GoPro drones</td>
+                            <td>High RPM, responsive control. Efficiency drops and noise increases, but dynamics are excellent.</td>
+                        </tr>
+                        <tr>
+                            <td>1200–1800 KV</td>
+                            <td>5" – 8"</td>
+                            <td>3S–4S</td>
+                            <td>Racing FPV drones</td>
+                            <td>Extreme RPM, very high current draw during acceleration. Flight time 3–7 min, but incredible agility.</td>
+                        </tr>
+                        <tr>
+                            <td>&gt; 1800 KV</td>
+                            <td>3" – 6"</td>
+                            <td>2S–4S</td>
+                            <td>Mini drones, TinyWhoop, training drones</td>
+                            <td>Small and fast. Very high speed but power-hungry and noisy. Low efficiency.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                Choosing motors with right KV vs props vs drone's target is important 
+                for get right results. The table above should assists in 
+                making right choice. 
+            </p>
+            <h4>Choosing right ESC</h4>
+            <p>
+                The max current consumed by choosen motor is 28A. However, there 
+                are also a chance of short burst 1.8 x 28A = 50A and short spike 
+                2.5 x 28A = 70A. So ESC should support 70A or at least 60A with 
+                some protection from burst (there are such thing like burst rating). 
+            </p>
+            <p>
+                However such current requires specific wires and wires of delivered 
+                ESC become twice as larger rather than wires of motors and PDB 
+                soldering contacts! Something which you should take under 
+                consideration on design phase.  
+            </p>
         </section>
-        <section>
         <section>
             <h3>Software part</h3>
             <p>
-               <img src="/blog/assets/images/2025-10-12/drone-software-part.jpg"/>
+               <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"/>
             </p>
             <p>
                 Below is the full list of configuration and calibration steps 
@@ -311,7 +385,135 @@ modified_time: '2025-10-09'
                     </tr>
                 </tbody>
             </table>
+            <h4>Flashing firmware and choosing the frame</h4>
+            <p>
+                FC is connected to PC over mini usb. ArduPilot team provides 
+                MissionPlanner -- software which allows to configure software 
+                part of the copter over GUI as well as to plan automatic missions. <br>
+                As a first steps you have to choose your type of vehicle and 
+                frame. <br><br>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-loading-firmware-onto-pixhawk.html">official documentation.</a>
+            </p>
+            <h4>Accelerometer calibration</h4>
+            <p>
+                You have to put your copter on all 6 posiible positions. It is 
+                important to keep it in the one position for a few seconds until 
+                the confirmation to let FC correctly get&write params. <br><br>  
+
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-accelerometer-calibration.html">official documentation.</a>
+            </p>
+            <h4>Compass calibration</h4>
+            <p>
+                You have to rotate your copter in different directions until 
+                receiving a sound confirmation from your FC about the end of 
+                configuration. <br><br>
+
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-compass-calibration-in-mission-planner.html">official documentation.</a>
+            </p>
+            <h4>Radio calibration</h4>
+            <p>
+                Radio controls calibration is neccessary to let FC understanding 
+                which values are max and min of the passing signal. It has several 
+                tricky nuances you have to pay attention to.<br><br>  
+                
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-radio-control-calibration.html">official documentation.</a> <br><br>
+
+                Also in my case of ELRS I have to buy & install extra module 
+                for my RC transmitter to support ELRS. This step also requires 
+                updating firmware on the pult. Another interesting point is 
+                option to adjust controlling signals on the pult over software 
+                for more precise control of drone movement. 
+            </p>
+            <h4>ESC & motors calibration</h4>
+            <p>
+                <video controls width="640" height="360">
+                  <source src="/blog/assets/images/2025-10-18/drone-working-engines.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                Electronic speed controllers also have to be configured to run 
+                motors according to percent of power passed to them. Modern 
+                protocols doesn't require it, but basic one like PWM still need 
+                this. 
+            </p>
+            <p>
+                Till this moment the chain RC transmitter -> RC receiver -> FC 
+                should be already installed and tested. One particular issue which 
+                remains hidden at start is a safety switch. <br>
+                Safety switch is a hardware protector from passing the power to 
+                the motoros. Carbon propellers and running motors could severely 
+                damage your tissues and muscles, so indeed such kind of protector 
+                is neccessary. <br>
+                In my case safety switch was not provided neither by a separate wire 
+                or port on Pixhawk board, so it was always enabled on and prevented 
+                calibration of ESCs. You have to check GPS cable for it and even 
+                if you do not use GPS, you have to install the cable to use this 
+                button -- long press on it makes safety switch off. Power will 
+                come to ESC and you will hear nice sound from them. <br><br>
+                
+                For more details check
+                <a href="https://ardupilot.org/copter/docs/esc-calibration.html">official documentation</a>
+            </p>
+            <h4>Motor direction and prop check</h4>
+            <p>
+                As was described in hardware part each motor should take the right 
+                position and spin in the right direction. Get a small speed over RC 
+                transmitter or using special test in MissionPlanner will help you 
+                to confirm the right direction of motors
+            </p>
+            <p>
+                Not only motors, but propellers as well should rotate in the 
+                right direction. Check them and see under which direction, 
+                clockwise or counter clockwise, it will grasp the maximum air. 
+                It will give you clear understanding on which motor each of 
+                them should be installed.   
+            </p>
+            <p>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/set-motor-range.html">official documentation</a>
+            </p>
+            <h4>Flight mode setup</h4>
+            <p>
+                Operating the drone requires to virtuosly giving a different 
+                power on each of its motors. This orchestration is automotize 
+                by Ardupilot. In addition to it sevel flight modes are 
+                designed to give a proper UX from operating over RC transmitter. 
+            </p>
+            <p>
+                RC transmitter sticks could be and should be assigned to at least
+                some of this flight modes. A few the most important ones at start 
+                are stabilize and land.
+            </p>
+            <p>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/flight-modes.html">official documentation</a>
+            </p>
+            <h4>Failsafe configuration</h4>
+            <p>
+                "Copter has a number of failsafe mechanisms to ease vehicle 
+                recovery/prevent wandering in the event that vehicle control 
+                is lost. " <br>
+                <a href="https://ardupilot.org/copter/docs/failsafe-landing-page.html"> (c) official docs</a>
+            </p>
         </section>
+        <section>
+            <h3>5th trial flight on minimum gas</h3>
+            <p>
+                <video controls width="640" height="360">
+                  <source src="/blog/assets/images/2025-10-18/drone-5th-trial-flight-on-minimum-power.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                The minmum gas been used to better control the drone. With more 
+                flight experience gas could rised up to the maximum without 
+                (much) for the garden and other objects around.
+            </p>
         </section>
         <section>
             <p>
