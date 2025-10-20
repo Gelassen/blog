@@ -246,18 +246,346 @@ modified_time: '2025-10-20'
         <section>
             <h3>Software part</h3>
             <p style="text-align:center;">
-                <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"
-                     style="display:inline-block;max-width:100%;height:auto;"/>
+            <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"
+                style="display:inline-block; max-width:100%; height:auto;"/>
             </p>
             <p>
-                Below is a list of configuration and calibration steps completed during 
-                flight controller setup. Step 15 (Telemetry setup) has been postponed, 
-                as the GCS modem is currently unavailable.
+                Below is the full list of configuration and calibration steps 
+                performed during the flight controller setup.  
+                Step 15 (Telemetry setup) has been postponed since the GCS modem is currently unavailable.
             </p>
 
-            <!-- Configuration table preserved as-is -->
-            {{ configuration_table }}
+            <h4>Configuration steps</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Step</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Firmware installation</td>
+                        <td>✅</td>
+                        <td>ArduCopter firmware successfully installed</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Frame type selection</td>
+                        <td>✅</td>
+                        <td>Configured as Quad / X type</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Accelerometer calibration</td>
+                        <td>✅</td>
+                        <td>Completed via Mission Planner</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>RC transmitter calibration</td>
+                        <td>✅</td>
+                        <td>Radiomaster TX16S + CRSF receiver</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Compass calibration</td>
+                        <td>✅</td>
+                        <td>Performed after final assembly</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>ESC and motor calibration</td>
+                        <td>✅</td>
+                        <td>ESCs configured on PWM</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Motor and propeller direction check</td>
+                        <td>⏳</td>
+                        <td>Pending — to verify propeller rotation</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Flight mode setup</td>
+                        <td>✅</td>
+                        <td>Stabilize / AltHold / Loiter configured</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Failsafe configuration</td>
+                        <td>✅</td>
+                        <td>Radio, battery, and GCS failsafes configured</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Power module and battery levels</td>
+                        <td>✅</td>
+                        <td>Voltage-only mode set for Cube Orange HV PM</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>OSD configuration</td>
+                        <td>➖</td>
+                        <td>Not used (no camera installed)</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>Voltage/current sensor calibration</td>
+                        <td>✅</td>
+                        <td>Completed; current via ADC not measured</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>AutoTune or manual PID tuning</td>
+                        <td>⬜</td>
+                        <td>Planned after first hover test</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>Logging configuration</td>
+                        <td>⏳</td>
+                        <td>Postponed — logs cannot yet be read from device</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>Telemetry (GCS) setup</td>
+                        <td>⏳</td>
+                        <td>Postponed — GCS modem not available</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4>Flashing firmware and choosing the frame</h4>
+            <p>
+                FC is connected to PC over mini usb. ArduPilot team provides 
+                MissionPlanner -- software which allows to configure software 
+                part of the copter over GUI as well as to plan automatic missions. <br>
+                As a first steps you have to choose your type of vehicle and 
+                frame. <br><br>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-loading-firmware-onto-pixhawk.html">official documentation.</a>
+            </p>
+            <h4>Accelerometer calibration</h4>
+            <p>
+                You have to put your copter on all 6 posiible positions. It is 
+                important to keep it in the one position for a few seconds until 
+                the confirmation to let FC correctly get&write params. <br><br>  
+
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-accelerometer-calibration.html">official documentation.</a>
+            </p>
+            <h4>Compass calibration</h4>
+            <p>
+                You have to rotate your copter in different directions until 
+                receiving a sound confirmation from your FC about the end of 
+                configuration. <br><br>
+
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-compass-calibration-in-mission-planner.html">official documentation.</a>
+            </p>
+            <h4>Radio calibration</h4>
+            <p>
+                Radio controls calibration is neccessary to let FC understanding 
+                which values are max and min of the passing signal. It has several 
+                tricky nuances you have to pay attention to.<br><br>  
+                
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/common-radio-control-calibration.html">official documentation.</a> <br><br>
+
+                Also in my case of ELRS I have to buy & install extra module 
+                for my RC transmitter to support ELRS. This step also requires 
+                updating firmware on the pult. Another interesting point is 
+                option to adjust controlling signals on the pult over software 
+                for more precise control of drone movement. 
+            </p>
+            <h4>ESC & motors calibration</h4>
+            <p>
+                <video controls width="640" height="360">
+                  <source src="/blog/assets/images/2025-10-18/drone-working-engines.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                Electronic speed controllers also have to be configured to run 
+                motors according to percent of power passed to them. Modern 
+                protocols doesn't require it, but basic one like PWM still need 
+                this. 
+            </p>
+            <p>
+                Till this moment the chain RC transmitter -> RC receiver -> FC 
+                should be already installed and tested. One particular issue which 
+                remains hidden at start is a safety switch. <br>
+                Safety switch is a hardware protector from passing the power to 
+                the motoros. Carbon propellers and running motors could severely 
+                damage your tissues and muscles, so indeed such kind of protector 
+                is neccessary. <br>
+                In my case safety switch was not provided neither by a separate wire 
+                or port on Pixhawk board, so it was always enabled on and prevented 
+                calibration of ESCs. You have to check GPS cable for it and even 
+                if you do not use GPS, you have to install the cable to use this 
+                button -- long press on it makes safety switch off. Power will 
+                come to ESC and you will hear nice sound from them. <br><br>
+                
+                For more details check
+                <a href="https://ardupilot.org/copter/docs/esc-calibration.html">official documentation</a>
+            </p>
+            <h4>Motor direction and prop check</h4>
+            <p>
+                As was described in hardware part each motor should take the right 
+                position and spin in the right direction. Get a small speed over RC 
+                transmitter or using special test in MissionPlanner will help you 
+                to confirm the right direction of motors
+            </p>
+            <p>
+                Not only motors, but propellers as well should rotate in the 
+                right direction. Check them and see under which direction, 
+                clockwise or counter clockwise, it will grasp the maximum air. 
+                It will give you clear understanding on which motor each of 
+                them should be installed.   
+            </p>
+            <p>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/set-motor-range.html">official documentation</a>
+            </p>
+            <h4>Flight mode setup</h4>
+            <p>
+                Operating the drone requires to virtuosly giving a different 
+                power on each of its motors. This orchestration is automotize 
+                by Ardupilot. In addition to it sevel flight modes are 
+                designed to give a proper UX from operating over RC transmitter. 
+            </p>
+            <p>
+                RC transmitter sticks could be and should be assigned to at least
+                some of this flight modes. A few the most important ones at start 
+                are stabilize and land.
+            </p>
+            <p>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/flight-modes.html">official documentation</a>
+            </p>
+            <h4>Failsafe configuration</h4>
+            <p>
+                "Copter has a number of failsafe mechanisms to ease vehicle 
+                recovery/prevent wandering in the event that vehicle control 
+                is lost. " <br>
+                <a href="https://ardupilot.org/copter/docs/failsafe-landing-page.html"> (c) official docs</a>
+            </p>
+        </section>
+        <section>
+            <h3>Power module and battery levels</h3>
+            <p>
+                You have to setup expected voltage and current of your battery 
+                and several thresholds to let flight contoroller (FC) know 
+                when to trigger special event assigned to each of them, e.g. 
+                land the copter on minimum level of the battery.  
+            </p>
+            <p>
+                The voltage and current doesn't come to measurement sensors as is, 
+                but over voltage divider. This values should be restored back to 
+                original through multiplying on special coefficient. <br>
+                I setup this values for voltage, but for current I hadn't succeed 
+                yet with current -- likely because of lack of current sensor itself.
+            </p>
+            <p>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/flight-modes.html">official documentation</a>
+            </p>
+        </section>
+        <section>
+            <h3>5th trial flight on minimum gas</h3>
+            <p style="text-align:center;">
+                <video controls width="640" height="360"
+                        style="display:inline-block;">
+                    <source src="/blog/assets/images/2025-10-18/drone-5th-trial-flight-on-minimum-power.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </p>
+            <p>
+                The minmum gas been used for better control of the drone. With more 
+                flight experience gas could be rised up to the maximum without 
+                (much) danger for the garden and others objects around.
+            </p>
+            <p>
+                The nexts steps would be solve flaws discovered after trial launches 
+                and develop 2nd generation of copter.
+            </p>
+            <p>
+                <table aria-label="Drone versions summary">
+                    <thead>
+                    <tr>
+                        <th style="width:110px;">Version</th>
+                        <th style="width:260px;">Brief purpose</th>
+                        <th>Business intent / Technical task / Tech components</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="badge">V1</span></td>
+                        <td><strong>Minimal RC drone</strong><br/><small>Assembly and verification of base platform</small></td>
+                        <td>
+                        <ul class="features">
+                            <li><strong>Business intent:</strong> Validate basic flight mechanics and build experience before extending system complexity.</li>
+                            <li><strong>Technical task:</strong> Assemble 4-motor quadcopter, configure stabilization, test RC link and flight modes (Stabilize / AltHold).</li>
+                            <li><strong>Tech components:</strong> 450–500 mm frame, 4 motors + 4 ESCs, Cube Orange, basic power module, no FPV or telemetry.</li>
+                        </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="badge">V2</span></td>
+                        <td><strong>Video (FPV) and telemetry</strong><br/><small>Adding live video feedback for operator</small></td>
+                        <td>
+                        <ul class="features">
+                            <li><strong>Business intent:</strong> Enable real-time situational awareness for manual missions and visual monitoring.</li>
+                            <li><strong>Technical task:</strong> Integrate FPV system with live video and telemetry overlay; test pilot interface and signal stability.</li>
+                            <li><strong>Tech components:</strong> Analog FPV camera + VTx, OSD module, receiver/display or FPV goggles, telemetry link to ground station.</li>
+                        </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="badge">V3</span></td>
+                        <td><strong>ML integration</strong><br/><small>On-board video processing</small></td>
+                        <td>
+                        <ul class="features">
+                            <li><strong>Business intent:</strong> Move toward semi-autonomous recognition — detect objects and transmit key data to operator.</li>
+                            <li><strong>Technical task:</strong> Run onboard inference using lightweight neural models (YOLOv5n / YOLOv8n) and forward detections via MAVLink.</li>
+                            <li><strong>Tech components:</strong> SBC (Jetson Nano / Orange Pi) + CSI / USB camera, local inference pipeline, dual video output for analysis and monitoring.</li>
+                        </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="badge">V4</span></td>
+                        <td><strong>Autonomy and analysis</strong><br/><small>Navigation, SLAM, and target filtering</small></td>
+                        <td>
+                        <ul class="features">
+                            <li><strong>Business intent:</strong> Build semi-autonomous navigation and perception; reduce operator load in mapping or monitoring missions.</li>
+                            <li><strong>Technical task:</strong> Implement obstacle avoidance and SLAM; process and filter detected targets for smart guidance.</li>
+                            <li><strong>Tech components:</strong> Depth sensors / LiDAR, SLAM stack (RTAB-Map / PX4 avoidance), web or QGroundControl interface, analytics module.</li>
+                        </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </p>
+            <p>
+                The whole technial docs where allmost all research is written down 
+                is avaliable but <a href="https://docs.google.com/document/d/1_WgitYAnTEcGtN1k8gPY6BUpVtkGZJvxc-uoXbCFgYc/edit?usp=sharing">this link.</a>
+            </p>
+        </section>
+        <section>
+            <p>
+                A few related posts:
+            </p>
+            <p>
+                <a href="https://gelassen.github.io/blog/2025/05/17/flying-drone-diy-part-II.html">Flying drone DIY, part II: configuration for the 1st version</a> <br><br>
+
+                <a href="https://gelassen.github.io/blog/2023/03/19/case-study-flying-drone-diy.html">Flying drone DIY, part I: discovery phase</a> <br><br>
+            </p>
         </section>
     </article>
 </body>
-</html>
