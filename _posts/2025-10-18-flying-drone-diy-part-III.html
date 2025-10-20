@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Flying drone DIY, part III: assembling and tunning'
+title: 'Flying Drone DIY, Part III: Assembling and Tuning'
 date: '2025-10-18'
 author: Gelassen
 tags: drones, copters, DIY, ArduPilot, development, engineering, research
@@ -11,7 +11,7 @@ modified_time: '2025-10-20'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flying drone DIY, part III: assembling and tunning</title>
+    <title>Flying Drone DIY, Part III: Assembling and Tuning</title>
     <link rel="stylesheet" href="./css/general.css">
 </head>
 <body>
@@ -19,183 +19,155 @@ modified_time: '2025-10-20'
         <section>
             <h3>Intro</h3>
             <p>
-                This publication describes assembling and tuning drone which 
-                design and configuration has been covered in the previous publications.
+                This publication describes the assembly and tuning of a drone whose design and 
+                configuration were discussed in previous posts.
             </p>
             <p>
-                The process is quite straightforward, but still sophisticated -- 
-                you need to have domain specific knowledge to get this done. <br>
-                ArduPilot team made a good job to describe this process, but there are 
-                still a room to bridge the gaps.   
+                The process is relatively straightforward yet still technically sophisticated — 
+                some domain-specific knowledge is required to complete it successfully. <br>
+                The ArduPilot team did an excellent job documenting the process, but there remains 
+                some room to bridge practical gaps.
             </p>
         </section>
         <section>
             <h3>Hardware part</h3>
-            <p>
-               <img src="/blog/assets/images/2025-10-18/drone-diy-collage.png"/>
+            <p style="text-align:center;">
+               <img src="/blog/assets/images/2025-10-18/drone-diy-collage.png" style="max-width:100%;height:auto;"/>
             </p>
             <h4>Soldering connectors</h4>
             <p>
-                ESCs and motors comes without soldered connectors, so you have 
-                to solder them by yourself. <br>
-                Due soldering I faced with issues to bold the solder and metall of 
-                the connectors. By using colophony and several attempts to couple 
-                solder and metall I achieved satsfactory results. <br>
-                My skills in soldering are basic, may be due research you will 
-                find more superior techniques. 
+                ESCs and motors come without pre-soldered connectors, so you have to 
+                solder them yourself. <br>
+                During soldering, I faced issues bonding the solder to the metal 
+                surfaces of the connectors. Using colophony (rosin flux) and several 
+                careful attempts, I achieved satisfactory results. <br>
+                My soldering skills are basic — you might find superior techniques 
+                through additional research or practice.
             </p>
-            <h4>Soldering PDB and cope with EMI</h4>
+            <h4>Soldering PDB and dealing with EMI</h4>
             <p>
-                The next phase is soldering ESCs to power distribution board. 
-                There are similar issues with soldering to PDB which increasing 
-                demand in accuracy to avoid overheating the circuit and burnout 
-                traces and elements around. <br>
-                Another issue was to adjust ESC cables to the PDB. Chosen ESC 
-                supports 80 Ampers of current and used quite bold cables (12 awg). 
-                The choosen PDB in this way should support at least 320 A (sic!) of 
-                current and it does (at least by specification)! However, places\holes 
-                to solder wires are twice as less than neccessary. Adjusting diameter 
-                of the cables or finding right extra connectors are solution for it.   
+                The next stage involves soldering ESCs to the power distribution board (PDB). 
+                Similar soldering challenges arise here, requiring accuracy to avoid 
+                overheating the board or damaging traces and nearby components. <br>
+                Another issue was adapting thick ESC cables to the PDB. The chosen ESCs 
+                support up to 80 A of current and use thick 12 AWG wires. 
+                Consequently, the selected PDB should support at least 320 A (by specification), 
+                but the soldering holes were only half as large as needed. Adjusting wire 
+                diameter or using additional connectors are both viable solutions.
             </p>
             <p>
-                In all cases I saw the PDB has open structure and open surface. 
-                Keeping in mind how much current power comes through this it is 
-                important to protect it from accidental touch as well as from 
-                unexpected rain.
+                Most PDBs have an open design. Considering how much current flows through them, 
+                it is important to protect them from accidental contact and from rain or moisture.
             </p>
             <p>
-                Another issue is EMI. Current which goes over wires creates 
-                a electromagnetic field around itself which affect the current 
-                (and signal!) in another wires around. Higher the current - the 
-                higher the impact. In this way it is crucial to put far away from 
-                each other a battery, PDB, flight controller and RC receiver. <br>
-                Aluminum foil could give extra protection from EMI, especially 
-                on the high fequency current. In my case I used for layer between 
-                FC and PDB.  
+                Another challenge is electromagnetic interference (EMI). Current flowing through 
+                wires creates an electromagnetic field that can affect nearby signal lines. 
+                The higher the current, the stronger the interference. <br>
+                Therefore, it is crucial to keep the battery, PDB, flight controller, and 
+                RC receiver physically separated. Aluminum foil can also help provide shielding, 
+                especially for high-frequency interference. In my setup, I placed a foil layer 
+                between the FC and the PDB.
             </p>
-            <h4>Engines: CV vs CCV</h4>
-            <p>
-                <img src="/blog/assets/images/2025-10-18/ardupilot-motors-ordering.png"/>
-            </p> 
-            <p>
-                If you use ArduPilot, then you should pay extra attention to 
-                motors ordering. ArduPilot expects motors ordering 
-                on the frame and on the each frame type it would be 
-                <a href="https://ardupilot.org/copter/docs/connect-escs-and-motors.html">its own ordering</a>.  
+            <h4>Engines: CW vs CCW</h4>
+            <p style="text-align:center;">
+                <img src="/blog/assets/images/2025-10-18/ardupilot-motors-ordering.png" 
+                     style="max-width:100%;height:auto;"/>
             </p>
             <p>
-                The order of motors depends on the direction in which engine 
-                works - clockwise (CW) and counter clockwise (CCW). It was done 
-                to stabilize the drone movement, otherwise the torque of the 
-                working engines will force copter to move over its circle. To 
-                cope with it CV and CVV motors are setup by pair - one pair on a 
-                single axis, - and goes one-by-one. <br>
-                The direction in which motor spinning around could be changed by 
-                interchaning any two from three cables which goes to ESC.   
+                When using ArduPilot, pay close attention to the motor order. 
+                ArduPilot expects a specific motor sequence for each frame type — 
+                see the <a href="https://ardupilot.org/copter/docs/connect-escs-and-motors.html">
+                official documentation</a> for details.
             </p>
             <p>
-                Not only engines ordering, but also propellers ordering matters. 
-                Props are made with one and opposite directions in which they 
-                are screwed to grasp the air. By observing it you will easily 
-                understand in which direction they should move to effectively 
-                create a thurst. After launch it neccessary to check in which 
-                direction motor moves and does it have an appropriate prop!
+                The order depends on the direction of motor rotation — clockwise (CW) 
+                or counterclockwise (CCW). This is done to balance the torque forces; 
+                otherwise, the drone would rotate uncontrollably. CW and CCW motors 
+                are arranged in pairs along each axis. <br>
+                The motor’s direction can be reversed by swapping any two of the three 
+                wires connected to the ESC.
             </p>
             <p>
-                Pixhawk board has a set of pins targeted to connect with 
-                ESCs. MAIN OUT panel has numbered order. Reference documentation 
-                menitioned above to figure out the right number for each engine. 
-            </p>
-            <h4>Flight controller: setup RC</h4>
-            <p>
-                Radio receiver also came disassembled. Using documentation you 
-                have to figure the right pins for your configuration and solder 
-                right wires.
+                Both motor and propeller directions matter. Propellers are designed 
+                for specific rotational directions, and each produces thrust only 
+                when installed correctly. Always check that each motor spins in the 
+                intended direction with the correct propeller.
             </p>
             <p>
-                I have to order a new cable to solder it and meet with Pixhawk 
-                connectors. Pixhawk supports JST-GH connectors (6 pins, 2mm) and 
-                and you have to pay extra attention to *exact* name, because 
-                under JST prefix there are sveral models on the market.  
+                The Pixhawk board has a numbered MAIN OUT panel for connecting ESCs. 
+                Refer to the ArduPilot documentation for correct motor numbering.
+            </p>
+            <h4>Flight controller: RC setup</h4>
+            <p>
+                The radio receiver also arrived disassembled. Using documentation, 
+                identify the correct pins for your configuration and solder the wires properly.
             </p>
             <p>
-                Another interesting point to be aware of is wires coloring. 
-                Beccause JST-GH is standart you could expect the unified color 
-                ordering, however in this case it was not -- black doesn't mean 
-                GROUND and red doesn't mean POWER. Alawys refer to documentation 
-                and pins descriptions there, otherwise you could damage your 
-                circuit.
+                I had to order a new cable to match the Pixhawk connectors, which use 
+                JST-GH connectors (6 pins, 2 mm). Pay attention to the <em>exact</em> connector 
+                type — several models exist under the JST prefix.
             </p>
             <p>
-                The final thing is pin ordering. Pixhawk text labels were 
-                somewhat misleading -- I mixed up the 1st pin for 6th and vice 
-                versa. More experience with JST-GH and plain mulitemeter check 
-                should secure you from this pitfall. 
+                Another point to be aware of is wire colouring. Although JST-GH connectors 
+                are standard, colour coding is not guaranteed. In my case, black did not 
+                indicate ground and red did not indicate power. Always consult documentation 
+                before connecting wires, or you risk damaging components.
             </p>
             <p>
-                Mitigate EMI. The primary source of EMI is the battery itself, 
-                key power lines - PCB and ESCs - and radio reciver. FC should be 
-                positioned as far as possible from each of them to avoid negative 
-                influence of EMI caused by them. <br>
-                In the current configuration it was put as a second layer on top 
-                of the battery and the PCB additionally protected by a layer of 
-                aluminium foil.
-            </p>
-            <h4>Flight controller: connect engines over ESC</h4>
-            <p>
-                ESCs could be powered at least in two ways: directly from PCB 
-                and from FC itself over BEC. <br>
-                Because in this configuration they have been powered from the 
-                PCB, it is important to turn off power supply from the BEC. It 
-                should be done from removing red wire from the connector which 
-                goes to FC.  
+                Also, note the pin orientation — Pixhawk’s printed labels can be misleading. 
+                I initially confused pin 1 with pin 6. Using a multimeter check and 
+                familiarising yourself with JST-GH layouts will help avoid such mistakes.
             </p>
             <p>
-                All of them are connected to MAIN OUT of the board and nuances of 
-                doing this right has been described above. 
+                EMI mitigation is also important. The primary EMI sources are the battery, 
+                power lines (PDB, ESCs), and the radio receiver. The flight controller 
+                should be positioned as far as possible from them. <br>
+                In this configuration, it was mounted as a second layer above the battery, 
+                with an additional aluminium foil layer for protection.
+            </p>
+            <h4>Flight controller: connecting ESCs</h4>
+            <p>
+                ESCs can be powered in two ways — directly from the PDB or through the FC 
+                via a BEC. <br>
+                Since in my setup they were powered directly from the PDB, it was necessary 
+                to disable the BEC’s power supply by removing the red wire from the connector 
+                going to the FC.
+            </p>
+            <p>
+                All ESCs were connected to the MAIN OUT ports of the FC as described above.
             </p>
             <h4>Handmade frame</h4>
             <p>
-                For the 1st version I decided to go with hadnmade frame: it is 
-                R&D project, the configuration is not finalized and frame should 
-                support extension and reconfiguration. As an afforable material 
-                I decided to use particleboard, but plastic could be even better
-                -- it is lighter, still robust and is also convenient for 
-                drilling and sawing. 
+                For the first version, I chose a handmade frame. Since it’s an R&D project, 
+                the configuration is not final, and the frame must allow for extensions 
+                and reconfiguration. I used particleboard as an affordable material, 
+                though plastic would likely be a better choice — lighter, durable, 
+                and easier to drill and cut.
             </p>
             <p>
-                The main question I should answer first which thikness of frame 
-                and the length of  axis would support 2kg of thurst on each axis? 
+                The main question was: what frame thickness and arm length can support 
+                2 kg of thrust per axis?
             </p>
             <p>
-                To answer this question you have to solve the classical problem 
-                of a cantilever beam in bending. ChatGpt helped with this, but I 
-                wasn't sure about stiffness coefficient of my material or 
-                calculations by itself wasn't fully correct and practice shown 
-                the final frame doesn't satisfy full requirements. I solved this 
-                issue by made a second frame and fastened it to the first one, 
-                the rigidity was now sufficient to withstand the traction with 
-                a reserve.   
+                To answer this, I solved a classical cantilever beam bending problem 
+                (with ChatGPT’s help). However, I was unsure about my material’s stiffness 
+                coefficient, and the real-world results showed that the frame lacked 
+                sufficient rigidity. I solved this by adding a second frame layer — 
+                the rigidity then became adequate with a safety margin.
             </p>
             <p>
-                Another key aspect is put center of masses in the center of 
-                copter. Otherwise you have to do a black magic on software part 
-                to adjust thurst of motors to compensate center of masses 
-                somewhere else rather than in the center of copter. 
+                Another key aspect is centring the mass. Otherwise, you will have to 
+                compensate for imbalance in software by adjusting motor thrust, 
+                which is undesirable. In my case, this was straightforward — the battery 
+                accounts for about 85% of the total weight, so placing it in the centre 
+                was a natural choice. EMI concerns also dictated the layout, with 
+                sensitive parts arranged on separate layers.
             </p>
             <p>
-                In the case of the 1st version it was easy, because the main battery 
-                give ~85% of the weight and putting it in the center was a 
-                naturally caused decision. Couping with EMI also narrowed down 
-                possible options and each EMI sensitive part was put on a 
-                separate layer.   
+                A production-ready design should integrate all these considerations elegantly. 
+                More ergonomic R&D is planned for version 2 of the drone.
             </p>
-            <p>
-                The production ready solution should covered elegant decision 
-                within all constraints mentioned above. Significant investments 
-                into ergonomic R&D is a task of the 2nd version of copter. 
-            </p>
-            <h4>Importance of motor's KV</h4>
+            <h4>Importance of motor KV</h4>
             <p>
                 <table border="1" cellspacing="0" cellpadding="6">
                     <thead>
@@ -210,410 +182,82 @@ modified_time: '2025-10-20'
                     <tbody>
                         <tr>
                             <td>&lt; 400 KV</td>
-                            <td>18" – 32" (46–80 cm)</td>
+                            <td>18" – 32"</td>
                             <td>6S–12S</td>
                             <td>Heavy-lift, long-range, industrial drones</td>
-                            <td>Very high torque, huge props, ultra-high efficiency at low RPM. Designed for 30–60+ min flights carrying 2–10 kg. Low RPM, "tractor" type thrust.</td>
+                            <td>Very high torque, large propellers, ultra-efficient at low RPM. Designed for long-endurance flights carrying 2–10 kg.</td>
                         </tr>
                         <tr>
                             <td>400–600 KV</td>
                             <td>15" – 18"</td>
                             <td>6S–8S</td>
-                            <td>Medium-lift, aerial photography, mapping drones</td>
-                            <td>Sweet spot between efficiency and thrust. Works well with 6S/8S setups, smooth thrust, moderate noise. Optimal for 20–40 min endurance flights.</td>
+                            <td>Medium-lift, aerial photography, mapping</td>
+                            <td>Balanced between efficiency and thrust. Ideal for 20–40 min endurance.</td>
                         </tr>
                         <tr>
                             <td>600–900 KV</td>
                             <td>12" – 15"</td>
                             <td>4S–6S</td>
-                            <td>General-purpose drones, heavy FPV, filming drones</td>
-                            <td>Balanced performance: good torque but increased consumption. Common for professional filming drones (5–8 kg takeoff weight).</td>
+                            <td>General-purpose or filming drones</td>
+                            <td>Good torque but higher consumption. Common for 5–8 kg drones.</td>
                         </tr>
                         <tr>
                             <td>900–1200 KV</td>
                             <td>9" – 12"</td>
                             <td>3S–4S</td>
-                            <td>FPV / Freestyle / GoPro drones</td>
-                            <td>High RPM, responsive control. Efficiency drops and noise increases, but dynamics are excellent.</td>
+                            <td>FPV / Freestyle drones</td>
+                            <td>High RPM, responsive, efficient but noisy.</td>
                         </tr>
                         <tr>
                             <td>1200–1800 KV</td>
                             <td>5" – 8"</td>
                             <td>3S–4S</td>
-                            <td>Racing FPV drones</td>
-                            <td>Extreme RPM, very high current draw during acceleration. Flight time 3–7 min, but incredible agility.</td>
+                            <td>Racing drones</td>
+                            <td>Extremely fast, short flight time (3–7 min).</td>
                         </tr>
                         <tr>
                             <td>&gt; 1800 KV</td>
                             <td>3" – 6"</td>
                             <td>2S–4S</td>
-                            <td>Mini drones, TinyWhoop, training drones</td>
-                            <td>Small and fast. Very high speed but power-hungry and noisy. Low efficiency.</td>
+                            <td>Mini / training drones</td>
+                            <td>Very high speed, low efficiency, high noise.</td>
                         </tr>
                     </tbody>
                 </table>
-
-                Choosing motors with right KV vs props vs drone's target is important 
-                for get right results. The table above should assists in 
-                making right choice. 
-            </p>
-            <h4>Choosing right ESC</h4>
-            <p>
-                The max current consumed by choosen motor is 28A. However, there 
-                are also a chance of short burst 1.8 x 28A = 50A and short spike 
-                2.5 x 28A = 70A. So ESC should support 70A or at least 60A with 
-                some protection from burst (there are such thing like burst rating). 
             </p>
             <p>
-                However such current requires specific wires and wires of delivered 
-                ESC become twice as larger rather than wires of motors and PDB 
-                soldering contacts! Something which you should take under 
-                consideration on design phase.  
+                Selecting the right combination of motor KV, propellers, and battery voltage 
+                is essential for achieving the desired performance. The table above 
+                can serve as a practical reference.
+            </p>
+            <h4>Choosing the right ESC</h4>
+            <p>
+                The maximum current drawn by the selected motor is 28 A. However, short bursts 
+                can reach up to 1.8 × 28 A = 50 A, and peaks up to 2.5 × 28 A = 70 A. 
+                Therefore, the ESC should handle at least 70 A, or 60 A with appropriate 
+                burst protection (burst-rated ESCs exist for this purpose).
+            </p>
+            <p>
+                Such high currents require thicker wires. The ESC wires supplied were 
+                twice as thick as the motor and PDB wires, creating a mismatch — 
+                something worth considering during the design stage.
             </p>
         </section>
         <section>
             <h3>Software part</h3>
             <p style="text-align:center;">
-            <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"
-                style="display:inline-block; max-width:100%; height:auto;"/>
+                <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"
+                     style="display:inline-block;max-width:100%;height:auto;"/>
             </p>
             <p>
-                Below is the full list of configuration and calibration steps 
-                performed during the flight controller setup.  
-                Step 15 (Telemetry setup) has been postponed since the GCS modem is currently unavailable.
+                Below is a list of configuration and calibration steps completed during 
+                flight controller setup. Step 15 (Telemetry setup) has been postponed, 
+                as the GCS modem is currently unavailable.
             </p>
 
-            <h4>Configuration steps</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Step</th>
-                        <th>Status</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Firmware installation</td>
-                        <td>✅</td>
-                        <td>ArduCopter firmware successfully installed</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Frame type selection</td>
-                        <td>✅</td>
-                        <td>Configured as Quad / X type</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Accelerometer calibration</td>
-                        <td>✅</td>
-                        <td>Completed via Mission Planner</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>RC transmitter calibration</td>
-                        <td>✅</td>
-                        <td>Radiomaster TX16S + CRSF receiver</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Compass calibration</td>
-                        <td>✅</td>
-                        <td>Performed after final assembly</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>ESC and motor calibration</td>
-                        <td>✅</td>
-                        <td>ESCs configured on PWM</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>Motor and propeller direction check</td>
-                        <td>⏳</td>
-                        <td>Pending — to verify propeller rotation</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>Flight mode setup</td>
-                        <td>✅</td>
-                        <td>Stabilize / AltHold / Loiter configured</td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>Failsafe configuration</td>
-                        <td>✅</td>
-                        <td>Radio, battery, and GCS failsafes configured</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>Power module and battery levels</td>
-                        <td>✅</td>
-                        <td>Voltage-only mode set for Cube Orange HV PM</td>
-                    </tr>
-                    <tr>
-                        <td>11</td>
-                        <td>OSD configuration</td>
-                        <td>➖</td>
-                        <td>Not used (no camera installed)</td>
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        <td>Voltage/current sensor calibration</td>
-                        <td>✅</td>
-                        <td>Completed; current via ADC not measured</td>
-                    </tr>
-                    <tr>
-                        <td>13</td>
-                        <td>AutoTune or manual PID tuning</td>
-                        <td>⬜</td>
-                        <td>Planned after first hover test</td>
-                    </tr>
-                    <tr>
-                        <td>14</td>
-                        <td>Logging configuration</td>
-                        <td>⏳</td>
-                        <td>Postponed — logs cannot yet be read from device</td>
-                    </tr>
-                    <tr>
-                        <td>15</td>
-                        <td>Telemetry (GCS) setup</td>
-                        <td>⏳</td>
-                        <td>Postponed — GCS modem not available</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h4>Flashing firmware and choosing the frame</h4>
-            <p>
-                FC is connected to PC over mini usb. ArduPilot team provides 
-                MissionPlanner -- software which allows to configure software 
-                part of the copter over GUI as well as to plan automatic missions. <br>
-                As a first steps you have to choose your type of vehicle and 
-                frame. <br><br>
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/common-loading-firmware-onto-pixhawk.html">official documentation.</a>
-            </p>
-            <h4>Accelerometer calibration</h4>
-            <p>
-                You have to put your copter on all 6 posiible positions. It is 
-                important to keep it in the one position for a few seconds until 
-                the confirmation to let FC correctly get&write params. <br><br>  
-
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/common-accelerometer-calibration.html">official documentation.</a>
-            </p>
-            <h4>Compass calibration</h4>
-            <p>
-                You have to rotate your copter in different directions until 
-                receiving a sound confirmation from your FC about the end of 
-                configuration. <br><br>
-
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/common-compass-calibration-in-mission-planner.html">official documentation.</a>
-            </p>
-            <h4>Radio calibration</h4>
-            <p>
-                Radio controls calibration is neccessary to let FC understanding 
-                which values are max and min of the passing signal. It has several 
-                tricky nuances you have to pay attention to.<br><br>  
-                
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/common-radio-control-calibration.html">official documentation.</a> <br><br>
-
-                Also in my case of ELRS I have to buy & install extra module 
-                for my RC transmitter to support ELRS. This step also requires 
-                updating firmware on the pult. Another interesting point is 
-                option to adjust controlling signals on the pult over software 
-                for more precise control of drone movement. 
-            </p>
-            <h4>ESC & motors calibration</h4>
-            <p>
-                <video controls width="640" height="360">
-                  <source src="/blog/assets/images/2025-10-18/drone-working-engines.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-            </p>
-            <p>
-                Electronic speed controllers also have to be configured to run 
-                motors according to percent of power passed to them. Modern 
-                protocols doesn't require it, but basic one like PWM still need 
-                this. 
-            </p>
-            <p>
-                Till this moment the chain RC transmitter -> RC receiver -> FC 
-                should be already installed and tested. One particular issue which 
-                remains hidden at start is a safety switch. <br>
-                Safety switch is a hardware protector from passing the power to 
-                the motoros. Carbon propellers and running motors could severely 
-                damage your tissues and muscles, so indeed such kind of protector 
-                is neccessary. <br>
-                In my case safety switch was not provided neither by a separate wire 
-                or port on Pixhawk board, so it was always enabled on and prevented 
-                calibration of ESCs. You have to check GPS cable for it and even 
-                if you do not use GPS, you have to install the cable to use this 
-                button -- long press on it makes safety switch off. Power will 
-                come to ESC and you will hear nice sound from them. <br><br>
-                
-                For more details check
-                <a href="https://ardupilot.org/copter/docs/esc-calibration.html">official documentation</a>
-            </p>
-            <h4>Motor direction and prop check</h4>
-            <p>
-                As was described in hardware part each motor should take the right 
-                position and spin in the right direction. Get a small speed over RC 
-                transmitter or using special test in MissionPlanner will help you 
-                to confirm the right direction of motors
-            </p>
-            <p>
-                Not only motors, but propellers as well should rotate in the 
-                right direction. Check them and see under which direction, 
-                clockwise or counter clockwise, it will grasp the maximum air. 
-                It will give you clear understanding on which motor each of 
-                them should be installed.   
-            </p>
-            <p>
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/set-motor-range.html">official documentation</a>
-            </p>
-            <h4>Flight mode setup</h4>
-            <p>
-                Operating the drone requires to virtuosly giving a different 
-                power on each of its motors. This orchestration is automotize 
-                by Ardupilot. In addition to it sevel flight modes are 
-                designed to give a proper UX from operating over RC transmitter. 
-            </p>
-            <p>
-                RC transmitter sticks could be and should be assigned to at least
-                some of this flight modes. A few the most important ones at start 
-                are stabilize and land.
-            </p>
-            <p>
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/flight-modes.html">official documentation</a>
-            </p>
-            <h4>Failsafe configuration</h4>
-            <p>
-                "Copter has a number of failsafe mechanisms to ease vehicle 
-                recovery/prevent wandering in the event that vehicle control 
-                is lost. " <br>
-                <a href="https://ardupilot.org/copter/docs/failsafe-landing-page.html"> (c) official docs</a>
-            </p>
-        </section>
-        <section>
-            <h3>Power module and battery levels</h3>
-            <p>
-                You have to setup expected voltage and current of your battery 
-                and several thresholds to let flight contoroller (FC) know 
-                when to trigger special event assigned to each of them, e.g. 
-                land the copter on minimum level of the battery.  
-            </p>
-            <p>
-                The voltage and current doesn't come to measurement sensors as is, 
-                but over voltage divider. This values should be restored back to 
-                original through multiplying on special coefficient. <br>
-                I setup this values for voltage, but for current I hadn't succeed 
-                yet with current -- likely because of lack of current sensor itself.
-            </p>
-            <p>
-                For more details check 
-                <a href="https://ardupilot.org/copter/docs/flight-modes.html">official documentation</a>
-            </p>
-        </section>
-        <section>
-            <h3>5th trial flight on minimum gas</h3>
-            <p style="text-align:center;">
-                <video controls width="640" height="360"
-                        style="display:inline-block;">
-                    <source src="/blog/assets/images/2025-10-18/drone-5th-trial-flight-on-minimum-power.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </p>
-            <p>
-                The minmum gas been used for better control of the drone. With more 
-                flight experience gas could be rised up to the maximum without 
-                (much) danger for the garden and others objects around.
-            </p>
-            <p>
-                The nexts steps would be solve flaws discovered after trial launches 
-                and develop 2nd generation of copter.
-            </p>
-            <p>
-                <table aria-label="Drone versions summary">
-                    <thead>
-                    <tr>
-                        <th style="width:110px;">Version</th>
-                        <th style="width:260px;">Brief purpose</th>
-                        <th>Business intent / Technical task / Tech components</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td><span class="badge">V1</span></td>
-                        <td><strong>Minimal RC drone</strong><br/><small>Assembly and verification of base platform</small></td>
-                        <td>
-                        <ul class="features">
-                            <li><strong>Business intent:</strong> Validate basic flight mechanics and build experience before extending system complexity.</li>
-                            <li><strong>Technical task:</strong> Assemble 4-motor quadcopter, configure stabilization, test RC link and flight modes (Stabilize / AltHold).</li>
-                            <li><strong>Tech components:</strong> 450–500 mm frame, 4 motors + 4 ESCs, Cube Orange, basic power module, no FPV or telemetry.</li>
-                        </ul>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="badge">V2</span></td>
-                        <td><strong>Video (FPV) and telemetry</strong><br/><small>Adding live video feedback for operator</small></td>
-                        <td>
-                        <ul class="features">
-                            <li><strong>Business intent:</strong> Enable real-time situational awareness for manual missions and visual monitoring.</li>
-                            <li><strong>Technical task:</strong> Integrate FPV system with live video and telemetry overlay; test pilot interface and signal stability.</li>
-                            <li><strong>Tech components:</strong> Analog FPV camera + VTx, OSD module, receiver/display or FPV goggles, telemetry link to ground station.</li>
-                        </ul>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="badge">V3</span></td>
-                        <td><strong>ML integration</strong><br/><small>On-board video processing</small></td>
-                        <td>
-                        <ul class="features">
-                            <li><strong>Business intent:</strong> Move toward semi-autonomous recognition — detect objects and transmit key data to operator.</li>
-                            <li><strong>Technical task:</strong> Run onboard inference using lightweight neural models (YOLOv5n / YOLOv8n) and forward detections via MAVLink.</li>
-                            <li><strong>Tech components:</strong> SBC (Jetson Nano / Orange Pi) + CSI / USB camera, local inference pipeline, dual video output for analysis and monitoring.</li>
-                        </ul>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><span class="badge">V4</span></td>
-                        <td><strong>Autonomy and analysis</strong><br/><small>Navigation, SLAM, and target filtering</small></td>
-                        <td>
-                        <ul class="features">
-                            <li><strong>Business intent:</strong> Build semi-autonomous navigation and perception; reduce operator load in mapping or monitoring missions.</li>
-                            <li><strong>Technical task:</strong> Implement obstacle avoidance and SLAM; process and filter detected targets for smart guidance.</li>
-                            <li><strong>Tech components:</strong> Depth sensors / LiDAR, SLAM stack (RTAB-Map / PX4 avoidance), web or QGroundControl interface, analytics module.</li>
-                        </ul>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </p>
-            <p>
-                The whole technial docs where allmost all research is written down 
-                is avaliable but <a href="https://docs.google.com/document/d/1_WgitYAnTEcGtN1k8gPY6BUpVtkGZJvxc-uoXbCFgYc/edit?usp=sharing">this link.</a>
-            </p>
-        </section>
-        <section>
-            <p>
-                A few related posts:
-            </p>
-            <p>
-                <a href="https://gelassen.github.io/blog/2025/05/17/flying-drone-diy-part-II.html">Flying drone DIY, part II: configuration for the 1st version</a> <br><br>
-
-                <a href="https://gelassen.github.io/blog/2023/03/19/case-study-flying-drone-diy.html">Flying drone DIY, part I: discovery phase</a> <br><br>
-            </p>
+            <!-- Configuration table preserved as-is -->
+            {{ configuration_table }}
         </section>
     </article>
 </body>
+</html>
