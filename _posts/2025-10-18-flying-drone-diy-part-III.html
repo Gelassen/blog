@@ -273,8 +273,9 @@ modified_time: '2025-10-20'
         </section>
         <section>
             <h3>Software part</h3>
-            <p>
-               <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"/>
+            <p style="text-align:center;">
+            <img src="/blog/assets/images/2025-10-18/drone-software-part.jpg"
+                style="display:inline-block; max-width:100%; height:auto;"/>
             </p>
             <p>
                 Below is the full list of configuration and calibration steps 
@@ -523,10 +524,11 @@ modified_time: '2025-10-20'
         </section>
         <section>
             <h3>5th trial flight on minimum gas</h3>
-            <p>
-                <video controls width="640" height="360">
-                  <source src="/blog/assets/images/2025-10-18/drone-5th-trial-flight-on-minimum-power.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
+            <p style="text-align:center;">
+                <video controls width="640" height="360"
+                        style="display:inline-block;">
+                    <source src="/blog/assets/images/2025-10-18/drone-5th-trial-flight-on-minimum-power.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
                 </video>
             </p>
             <p>
@@ -539,65 +541,53 @@ modified_time: '2025-10-20'
                 and develop 2nd generation of copter.
             </p>
             <p>
-                <table aria-label="Drone versions summary">
-                    <thead>
-                    <tr>
-                        <th style="width:120px;">Версия</th>
-                        <th style="width:300px;">Краткое назначение</th>
-                        <th>Новые функции / основные дополнения</th>
+                <table style="width:100%; border-collapse:collapse; text-align:left;">
+                <thead>
+                    <tr style="background-color:#f2f2f2;">
+                    <th style="width:10%; padding:8px; border:1px solid #ddd;">Version</th>
+                    <th style="width:20%; padding:8px; border:1px solid #ddd;">Short purpose</th>
+                    <th style="width:70%; padding:8px; border:1px solid #ddd;">New functions / main additions</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     <tr>
-                        <td><span class="badge">V1</span></td>
-                        <td><strong>Минимальный RC-дрон</strong><br/><small>Сборка и проверка базовой платформы</small></td>
-                        <td>
-                        <ul class="features">
-                            <li>Рама 450–500 мм, 4 мотора + 4 ESC, Cube Orange + базовый power module.</li>
-                            <li>Конфигурация ArduPilot: стабилизация, привязка RC, тест arm/disarm, Stabilize/AltHold.</li>
-                            <li>Первые полёты без FPV — цель: проверить базовую летную платформу и процессы сборки.</li>
-                        </ul>
-                        </td>
+                    <td style="padding:8px; border:1px solid #ddd;">v1.0</td>
+                    <td style="padding:8px; border:1px solid #ddd;">Initial prototype</td>
+                    <td style="padding:8px; border:1px solid #ddd;">
+                        <b>Business intent:</b> Achieve first stable flight and confirm design feasibility.<br>
+                        <b>Technical task:</b> Assemble base frame, connect ESCs, perform motor calibration and manual flight tests.<br>
+                        <b>Tech components:</b> Pixhawk 2.4.8, 920KV motors, 30A ESC, 3S LiPo, Mission Planner.
+                    </td>
                     </tr>
-
                     <tr>
-                        <td><span class="badge">V2</span></td>
-                        <td><strong>Видео (FPV) и телеметрия</strong><br/><small>Добавление видеосвязи для оператора</small></td>
-                        <td>
-                        <ul class="features">
-                            <li>Установка аналоговой FPV-камеры и VTx; приёмник на контроллер/экран/очки.</li>
-                            <li>Телеметрия и OSD (опционально) для отображения данных полёта.</li>
-                            <li>Реальная проверка стабильности видеосигнала и UX для пилота/оператора.</li>
-                        </ul>
-                        </td>
+                    <td style="padding:8px; border:1px solid #ddd;">v2.0</td>
+                    <td style="padding:8px; border:1px solid #ddd;">Extended endurance</td>
+                    <td style="padding:8px; border:1px solid #ddd;">
+                        <b>Business intent:</b> Increase flight duration and payload capacity for agricultural field work.<br>
+                        <b>Technical task:</b> Upgrade power system, replace frame, and improve GPS stability.<br>
+                        <b>Tech components:</b> 12" propellers, 40A ESC, 4S LiPo, power distribution board, GPS/compass combo.
+                    </td>
                     </tr>
-
                     <tr>
-                        <td><span class="badge">V3</span></td>
-                        <td><strong>ML-интеграция</strong><br/><small>Обработка видео на борту</small></td>
-                        <td>
-                        <ul class="features">
-                            <li>Добавление SBC (Jetson Nano / Orange Pi) и CSI/USB-камеры.</li>
-                            <li>Запуск лёгких моделей детекции (YOLOv5n/YOLOv8n) для инференса на борту.</li>
-                            <li>Отправка результатов на ground station (MAVLink), дублирование видеопотока для анализа.</li>
-                        </ul>
-                        </td>
+                    <td style="padding:8px; border:1px solid #ddd;">v3.0</td>
+                    <td style="padding:8px; border:1px solid #ddd;">Sprayer adaptation</td>
+                    <td style="padding:8px; border:1px solid #ddd;">
+                        <b>Business intent:</b> Enable semi-autonomous crop spraying missions.<br>
+                        <b>Technical task:</b> Integrate pump and tank system, configure liquid flow, stabilize weight balance.<br>
+                        <b>Tech components:</b> 2L spray tank, 12V pump, flow controller, telemetry module, reinforced frame.
+                    </td>
                     </tr>
-
                     <tr>
-                        <td><span class="badge">V4</span></td>
-                        <td><strong>Автономия и анализ</strong><br/><small>Навигация, SLAM, и фильтрация целей</small></td>
-                        <td>
-                        <ul class="features">
-                            <li>Датчики глубины / LiDAR для избегания препятствий и SLAM-навигации.</li>
-                            <li>Автоматизация полётов: SLAM (RTAB-Map / PX4 avoidance), отфильтрованные цели для оператора.</li>
-                            <li>Интерфейс управления (QGroundControl / веб-панель) и расширенная аналитика.</li>
-                        </ul>
-                        </td>
+                    <td style="padding:8px; border:1px solid #ddd;">v4.0</td>
+                    <td style="padding:8px; border:1px solid #ddd;">Autonomous platform</td>
+                    <td style="padding:8px; border:1px solid #ddd;">
+                        <b>Business intent:</b> Achieve full autonomy and real-time monitoring for precision agriculture.<br>
+                        <b>Technical task:</b> Add long-range telemetry, onboard camera, and optimize flight endurance.<br>
+                        <b>Tech components:</b> Long-range modem, FPV camera, 6S battery, carbon frame, vibration isolation mount.
+                    </td>
                     </tr>
-                    </tbody>
+                </tbody>
                 </table>
-
             </p>
             <p>
                 The whole technial docs where allmost all research is written down 
