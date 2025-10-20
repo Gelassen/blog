@@ -4,7 +4,7 @@ title: 'Flying drone DIY, part III: assembling and tunning'
 date: '2025-10-18'
 author: Gelassen
 tags: drones, copters, DIY, ArduPilot, development, engineering, research
-modified_time: '2025-10-18'
+modified_time: '2025-10-20'
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -502,6 +502,26 @@ modified_time: '2025-10-18'
             </p>
         </section>
         <section>
+            <h3>Power module and battery levels</h3>
+            <p>
+                You have to setup expected voltage and current of your battery 
+                and several thresholds to let flight contoroller (FC) know 
+                when to trigger special event assigned to each of them, e.g. 
+                land the copter on minimum level of the battery.  
+            </p>
+            <p>
+                The voltage and current doesn't come to measurement sensors as is, 
+                but over voltage divider. This values should be restored back to 
+                original through multiplying on special coefficient. <br>
+                I setup this values for voltage, but for current I hadn't succeed 
+                yet with current -- likely because of lack of current sensor itself.
+            </p>
+            <p>
+                For more details check 
+                <a href="https://ardupilot.org/copter/docs/flight-modes.html">official documentation</a>
+            </p>
+        </section>
+        <section>
             <h3>5th trial flight on minimum gas</h3>
             <p>
                 <video controls width="640" height="360">
@@ -510,9 +530,78 @@ modified_time: '2025-10-18'
                 </video>
             </p>
             <p>
-                The minmum gas been used to better control the drone. With more 
-                flight experience gas could rised up to the maximum without 
-                (much) for the garden and other objects around.
+                The minmum gas been used for better control of the drone. With more 
+                flight experience gas could be rised up to the maximum without 
+                (much) danger for the garden and others objects around.
+            </p>
+            <p>
+                The nexts steps would be solve flaws discovered after trial launches 
+                and develop 2nd generation of copter.
+            </p>
+            <p>
+                <table aria-label="Drone versions summary">
+                    <thead>
+                    <tr>
+                        <th style="width:120px;">Версия</th>
+                        <th style="width:300px;">Краткое назначение</th>
+                        <th>Новые функции / основные дополнения</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="badge">V1</span></td>
+                        <td><strong>Минимальный RC-дрон</strong><br/><small>Сборка и проверка базовой платформы</small></td>
+                        <td>
+                        <ul class="features">
+                            <li>Рама 450–500 мм, 4 мотора + 4 ESC, Cube Orange + базовый power module.</li>
+                            <li>Конфигурация ArduPilot: стабилизация, привязка RC, тест arm/disarm, Stabilize/AltHold.</li>
+                            <li>Первые полёты без FPV — цель: проверить базовую летную платформу и процессы сборки.</li>
+                        </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="badge">V2</span></td>
+                        <td><strong>Видео (FPV) и телеметрия</strong><br/><small>Добавление видеосвязи для оператора</small></td>
+                        <td>
+                        <ul class="features">
+                            <li>Установка аналоговой FPV-камеры и VTx; приёмник на контроллер/экран/очки.</li>
+                            <li>Телеметрия и OSD (опционально) для отображения данных полёта.</li>
+                            <li>Реальная проверка стабильности видеосигнала и UX для пилота/оператора.</li>
+                        </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="badge">V3</span></td>
+                        <td><strong>ML-интеграция</strong><br/><small>Обработка видео на борту</small></td>
+                        <td>
+                        <ul class="features">
+                            <li>Добавление SBC (Jetson Nano / Orange Pi) и CSI/USB-камеры.</li>
+                            <li>Запуск лёгких моделей детекции (YOLOv5n/YOLOv8n) для инференса на борту.</li>
+                            <li>Отправка результатов на ground station (MAVLink), дублирование видеопотока для анализа.</li>
+                        </ul>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><span class="badge">V4</span></td>
+                        <td><strong>Автономия и анализ</strong><br/><small>Навигация, SLAM, и фильтрация целей</small></td>
+                        <td>
+                        <ul class="features">
+                            <li>Датчики глубины / LiDAR для избегания препятствий и SLAM-навигации.</li>
+                            <li>Автоматизация полётов: SLAM (RTAB-Map / PX4 avoidance), отфильтрованные цели для оператора.</li>
+                            <li>Интерфейс управления (QGroundControl / веб-панель) и расширенная аналитика.</li>
+                        </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </p>
+            <p>
+                The whole technial docs where allmost all research is written down 
+                is avaliable but <a href="https://docs.google.com/document/d/1_WgitYAnTEcGtN1k8gPY6BUpVtkGZJvxc-uoXbCFgYc/edit?usp=sharing">this link.</a>
             </p>
         </section>
         <section>
