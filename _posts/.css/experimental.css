@@ -48,7 +48,14 @@ table {
 }
 
 .video-wrapper video {
-  max-width: 100%;
+  max-width: 640px; /* limits size even on big screens */
+  width: 100%;       /* scales down for smaller screens */
   height: auto;
   display: inline-block;
+}
+
+@media (max-width: 480px) {
+  .video-wrapper video {
+    max-width: 90%;  /* leaves some margin on mobile */
+  }
 }
