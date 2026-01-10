@@ -1,0 +1,126 @@
+---
+layout: post
+title: 'Flying Drone DIY, part V: custom autopilot programs -- improving computer vision of drone'
+date: '2026-01-10'
+author: Gelassen
+tags: programming, drones, computer-vision, optical-flow
+modified_time: '2026-01-10'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flying Drone DIY, part V: custom autopilot programs -- improving computer vision of drone</title>
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Executive summary</h3>
+            <p>TODO: complete me</p>
+        </section>
+        <section>
+            <h3>Research & development</h3>
+            <p>
+                Straightforward approach to solve image recognition and flight 
+                stabilization issues didn't work out: it recognize the markers 
+                and respond by tunning engines, but it does it in a way that a 
+                bit far from what is expected.
+            </p>
+            <p>
+                Going deep to the root cause shown homography of the image 
+                doesn't give clear signal, clear enough to drive a drone. 
+                Improving homorgraphy results seems as a dead end and I started 
+                to search for alternative approaches.
+            </p>
+            <p>
+                Such alternative approach is to extract several features of the 
+                image and to use result of their analysis as a potential signal 
+                for a drone maneuvering. Such signals goes over evaluation 
+                pipeline which filtrates weak and noisy signals and ended up 
+                with a short list of signals which are allowed to drive a drone. 
+            </p>
+            <p style="text-align:center;">
+               <img src="/blog/assets/images/2026-01-10/signal-evaluation-pipeline-diagram.png" style="max-width:100%;height:auto;"/>
+            </p>
+            <h4>Features of the image</h4>
+            <p>
+                What we can take from the image for analysis? Here is a short 
+                list of features: <br><br>
+                
+                <ul>
+                    <li>Center of the marker</li>
+                    <li>Axis of the marker</li>
+                    <li>Aspect of the marker</li>
+                    <li>Skew of the marker</li>
+                    <li>How fast the marker moves -- speed</li>
+                    <li>How fast the marker rotates -- rotation speed</li>
+                </ul>
+            </p>
+            <h4>Signal analysis</h4>
+            <p>
+                RMS of noise. This metric is usefull to understand can we rely 
+                on this signal for controlling the drone. Generally it gives us 
+                dispersion how far varies signal from its expcted normal curve. 
+                Such variations are possible a noise. High value means we can't 
+                use it for drone control. Low value means we can rely on it.
+            </p>
+            <pre>
+                <code>
+                    def prepare_rms_of_noise(self, ema_window=10):
+
+                        def rms(signal):
+                            if not self.signal_filter.allows(signal.name, SignalMetricsNames.NOISE):
+                                raise Exception(f'RMS doesn\'t support {signal.name}')
+                            
+                            self.buffer.update(signal)
+                            values = np.array(self.buffer.values(signal.name))
+
+                            if len(values) < ema_window:
+                                return None
+
+                            ema = np.convolve(
+                                values,
+                                np.ones(ema_window) / ema_window,
+                                mode="same"
+                            )
+
+                            return float(np.sqrt(np.mean((values - ema) ** 2)))
+
+                        return rms
+                </code>
+            </pre>
+            <p>
+                ema_window controls locality <br><br>
+                 
+                Larger window → slower trend → higher RMS <br><br>
+                
+                Smaller window → more aggressive jitter detection <br><br>
+            </p>
+            <p>
+                RMS noise can be thresholded qualitatively and safely today 
+                using normalized bands, but any absolute “valid / invalid” 
+                cutoff requires observing the drone in closed loop.
+            </p>
+            <h4>Can we trust this signal?</h4>
+            <p></p>
+            <h4>Choosing the right signal</h4>
+            <p></p>
+            <h4>Convert signal into drone drive command</h4>
+            <p></p>
+        </section>
+        <section>
+            <p>
+                A few related publications:
+            </p>
+            <p>
+                <a href="https://gelassen.github.io/blog/2025/10/18/flying-drone-diy-part-III.html">Flying Drone DIY, Part III: Assembling and Tuning</a> <br><br>
+
+                <a href="https://gelassen.github.io/blog/2025/05/17/flying-drone-diy-part-II.html">Flying drone DIY, part II: configuration for the 1st version</a> <br><br>
+
+                <a href="https://gelassen.github.io/blog/2023/03/19/case-study-flying-drone-diy.html">Flying drone DIY, part I: discovery phase</a> 
+            </p>
+        </section>
+    </article>
+</body>
