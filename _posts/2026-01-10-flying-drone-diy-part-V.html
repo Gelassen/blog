@@ -59,10 +59,13 @@ modified_time: '2026-01-10'
                 </ul>
             </p>
             <h4>Signal analysis</h4>
+            <h5>RMS of noise</h5>
             <p>
-                RMS of noise. This metric is usefull to understand can we rely 
-                on this signal for controlling the drone. Generally it gives us 
-                dispersion how far varies signal from its expcted normal curve. 
+                This metric is useful to understand can we rely 
+                on this signal for controlling the drone. RMS measures the 
+                average deviation of the signal from its local trend (EMA), 
+                serving as a practical estimate of noise magnitude.dispersion 
+                how far varies signal from its expected normal curve. 
                 Such variations are possible a noise. High value means we can't 
                 use it for drone control. Low value means we can rely on it.
             </p>
@@ -103,9 +106,331 @@ modified_time: '2026-01-10'
                 using normalized bands, but any absolute “valid / invalid” 
                 cutoff requires observing the drone in closed loop.
             </p>
+            <h5>Spectral density and high frequency spectral density</h5>
+            <p>
+                Spectral density estimates how rapidly the signal varies, while 
+                RMS estimates how large those variations are. A signal should 
+                be rejected only when both variation magnitude and variation 
+                speed are high. Low RMS with high HF indicates small but fast 
+                jitter and should be handled by gain reduction rather than 
+                rejection, while moderate values in both metrics require 
+                additional context to determine validity.
+            </p>
+            <p>
+                This metric is not a physically normalized power spectral density. 
+                It is a heuristic frequency-domain indicator intended for 
+                relative comparison between signals.
+            </p>
+            <p style="text-align:center;">
+               <img src="/blog/assets/images/2026-01-10/signal-rms-and-spectral-density-table.png" style="max-width:100%;height:auto;"/>
+            </p>
+            <pre>
+                <code>
+                    def prepare_spectral_density(self):
+
+                        def spectral(signal):
+                            self.buffer.update(signal)
+                            values = np.array(self.buffer.values(signal.name))
+
+                            if len(values) < 8:
+                                return None
+
+                            fft = np.fft.rfft(values - np.mean(values))
+                            power = np.abs(fft) ** 2
+
+                            # part of the energy in HF
+                            hf = power[len(power)//2:]
+                            return float(np.mean(hf))
+
+                        return spectral
+                </code>
+            </pre>
+            <h5>Dropout rate</h5>
+            <p>
+                This metric estimates how often signal samples are missing or delayed.
+                The signal is treated as a time-ordered sequence, and gaps between
+                consecutive timestamps are analyzed. If the time gap between samples
+                exceeds the expected update interval, it is counted as a dropout.
+                A high dropout rate indicates unreliable temporal continuity and
+                reduces the signal’s suitability for analysis and control. 
+            </p>
+            <pre>
+                <code>
+                    def prepare_dropout_rate(self, expected_dt):
+
+                        def dropout(signal):
+                            self.buffer.update(signal)
+                            ts = self.buffer.timestamps(signal.name)
+
+                            if len(ts) < 2:
+                                return 0.0
+
+                            gaps = np.diff(ts)
+                            dropouts = gaps > (1.5 * expected_dt)
+
+                            return float(np.mean(dropouts))
+
+                        return dropout
+                </code>
+            </pre>
+            <p>
+                Dropout rate does not capture delayed but continuous signals — 
+                this is intentionally handled by latency.
+            </p>
+            <h5>Sign stability of signal</h5>
+            <p>
+                Sign stability measures the consistency of the signal’s directional 
+                polarity over time. Frequent sign changes indicate loss of 
+                directional meaning, oscillatory behavior, or unreliable estimation, 
+                making the signal unsuitable for direct control.
+            </p>
+            <p>
+                cx / cy -- determines the direction of correction <br><br>
+
+                angle -- determines the side of the slope <br><br>
+
+                omega -- determines the direction of rotation
+            </p>
+            <pre>
+                <code>
+                    def prepare_sign_stability(self):
+
+                        def stability(signal):
+                            self.buffer.update(signal)
+                            values = np.array(self.buffer.values(signal.name))
+
+                            if len(values) < 3:
+                                return None
+
+                            signs = np.sign(values)
+                            signs = signs[signs != 0]
+
+                            if len(signs) == 0:
+                                return 0.0
+
+                            return float(abs(np.sum(signs)) / len(signs))
+
+                        return stability
+                </code>
+            </pre>
+            <p>
+                Sign stability does not measure accuracy — it measures 
+                directional consistency.
+            </p>
+            <h5>Latency of the signal</h5>
+            <p>
+                Latency here is used not for analysis of the signal, but for 
+                decision making. Code doesn't measure the gap since an event 
+                occurrence, but time gape since the most significant change in 
+                the signal. <br>
+                This is not an absolute sensor-to-actuator latency, but a 
+                relative responsiveness estimate.
+            </p>
+            <h6>Signal Arbitration (Most Important)</h6>
+            <blockquote>
+                <p>
+                    When multiple signals are available:
+                </p>
+                <ul>
+                    <li><strong>cx</strong> (position)</li>
+                    <li><strong>angle</strong> (tilt)</li>
+                    <li><strong>omega</strong> (angular velocity)</li>
+                </ul>
+                <p>
+                    and all of them are considered <em>correct</em>, but have different latencies,
+                    the rule is simple:
+                </p>
+                <p>
+                    <strong>lower latency → higher priority</strong>
+                </p>
+                <p>
+                    This is a classical control principle:
+                    a less accurate but fast signal is often preferable to
+                    a highly accurate but delayed one.
+                </p>
+                <p>
+                    Therefore, <strong>latency becomes a key weighting factor in the Arbitrator</strong>.
+                </p>
+            </blockquote>
+            <h6>Adaptive Gain Scheduling</h6>
+            <blockquote>
+                <p>
+                    Signal delay increases phase shift in a closed-loop system.
+                </p>
+                <p>
+                    As latency grows:
+                </p>
+                <ul>
+                    <li>reduce controller gain</li>
+                    <li>increase damping</li>
+                </ul>
+                <p>
+                    Even a rough latency estimate can significantly reduce
+                    the risk of oscillations and instability.
+                </p>
+            </blockquote>
+            <h6>Detection of “Stale” Signals</h6>
+            <blockquote>
+                <p>
+                    Computer vision pipelines often produce:
+                </p>
+                <ul>
+                    <li>irregular updates</li>
+                    <li>burst-like outputs</li>
+                </ul>
+                <p>
+                    Latency helps detect cases where:
+                </p>
+                <ul>
+                    <li>the signal is technically alive, but outdated</li>
+                    <li>the signal has not dropped out (<code>dropout = 0</code>), yet is no longer useful</li>
+                </ul>
+                <p>
+                    This represents a separate dimension of signal assessment,
+                    orthogonal to dropout.
+                </p>
+            </blockquote>
+            <h6>Channel Desynchronization Filtering</h6>
+            <blockquote>
+                <p>
+                    Example:
+                </p>
+                <ul>
+                    <li><strong>cx</strong> responds quickly</li>
+                    <li><strong>angle</strong> responds slowly</li>
+                </ul>
+                <p>
+                    Possible causes include:
+                </p>
+                <ul>
+                    <li>pipeline lag</li>
+                    <li>buffering effects</li>
+                    <li>internal branching in the CV pipeline</li>
+                </ul>
+                <p>
+                    Latency analysis helps:
+                </p>
+                <ul>
+                    <li>detect channel desynchronization</li>
+                    <li>reduce trust in slower channels</li>
+                </ul>
+            </blockquote>
+            <p style="text-align:center;">
+               <img src="/blog/assets/images/2026-01-10/signal-metrics-roles.png" style="max-width:100%;height:auto;"/>
+            </p>
+            <pre>
+                <code>
+                    def prepare_latency(self):
+
+                        def latency(signal):
+                            self.buffer.update(signal)
+                            values = np.array(self.buffer.values(signal.name))
+                            ts = np.array(self.buffer.timestamps(signal.name))
+
+                            if len(values) < 5:
+                                return None
+
+                            dv = np.diff(values)
+                            idx = np.argmax(np.abs(dv))
+
+                            if idx <= 0 or idx >= len(ts):
+                                return None
+
+                            return float(ts[-1] - ts[idx])
+
+                        return latency
+                </code>
+            </pre>
+            <h5>Monotonic signal</h5>
+            <p>
+                Monotonicity measures whether a signal changes consistently in 
+                one direction and can be safely used as a control input rather 
+                than a noise-driven measurement.
+            </p>
+            <p>
+                Monotonicity may temporarily drop during legitimate oscillatory 
+                dynamics (e.g., hover stabilization), therefore it should be 
+                interpreted in context and combined with other metrics rather 
+                than used as a hard gate.
+            </p>
+            <h6>Protection against “false control”</h6>
+            <blockquote>
+                <p>Computer vision signals often:</p>
+                <ul>
+                    <li>Oscillate around the true value</li>
+                    <li>Suffer from quantization effects</li>
+                    <li>“Reinterpret” the scene over time</li>
+                </ul>
+                <p>
+                    This signal will not drive the drone back and forth, even if 
+                    it is numerically accurate.
+                </p>
+                <p>Monotonicity expresses exactly this property.</p>
+            </blockquote>
+            <h6>Weight in the Arbitrator</h6>
+            <blockquote>
+                <p>If:</p>
+                <ul>
+                    <li>RMS is acceptable</li>
+                    <li>HF energy is acceptable</li>
+                    <li>Dropout rate is zero</li>
+                    <li>Latency is low</li>
+                </ul>
+                <p>but:</p>
+                <ul>
+                    <li><strong>Monotonicity is low</strong></li>
+                </ul>
+                <p>
+                    The signal should lose arbitration to a coarser but directionally 
+                    consistent signal.
+                </p>   
+            </blockquote>
+            <h6>Adaptive gain scheduling</h6>
+            <blockquote>
+                <p>
+                    Low monotonicity implies:
+                </p>
+                <ul>
+                    <li>Reducing control gain</li>
+                    <li>Increasing damping</li>
+                    <li>Disabling the integrator</li>
+                </ul>
+                <p>
+                    This is a direct protection mechanism against self-excitation.
+                </p>
+            </blockquote>
+            <pre>
+                <code>
+                    def prepare_monotonic_coefficient(self):
+
+                        def monotonic(signal):
+                            self.buffer.update(signal)
+                            values = np.array(self.buffer.values(signal.name))
+
+                            if len(values) < 3:
+                                return None
+
+                            diffs = np.diff(values)
+                            signs = np.sign(diffs)
+                            non_zero = signs[signs != 0]
+
+                            if len(non_zero) == 0:
+                                return 0.0
+
+                            # 1.0 → строго монотонно
+                            # ≈0 → шум / колебания
+
+                            return float(abs(np.sum(non_zero)) / len(non_zero))
+
+                        return monotonic
+                </code>
+            </pre>
             <h4>Can we trust this signal?</h4>
             <p></p>
             <h4>Choosing the right signal</h4>
+            <p style="text-align:center;">
+               <img src="/blog/assets/images/2026-01-10/signal-metrics-roles.png" style="max-width:100%;height:auto;"/>
+            </p>
             <p></p>
             <h4>Convert signal into drone drive command</h4>
             <p></p>
