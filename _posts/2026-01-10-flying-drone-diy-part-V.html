@@ -426,7 +426,55 @@ modified_time: '2026-01-10'
                 </code>
             </pre>
             <h4>Can we trust this signal?</h4>
-            <p></p>
+            <p>
+                The next step is to understand could we really rely on this 
+                signal for a drone control. Each signal's metric has corresponding weight 
+                which is multiplied on value of the signal: in this case the 
+                most important metrics count more and less important metrics 
+                count less. It works as a filter.   
+            </p>
+            <pre>
+                <code>
+                    weights={
+                        SignalMetricsNames.STABILITY:         0.25,
+                        SignalMetricsNames.NOISE_RMS:         0.20,
+                        SignalMetricsNames.NOISE_STD:         0.20,
+                        SignalMetricsNames.MONOTONIC:         0.15,
+                        SignalMetricsNames.DROPOUT_RATE:      0.15,
+                        SignalMetricsNames.LATENCY:           0.15,
+                    })
+
+                    if metrics.rms_noise is not None:
+                        self._assert_normalized(metrics.rms_noise, SignalMetricsNames.NOISE_RMS)
+                        score = 1.0 - metrics.rms_noise
+                        self._add_score(
+                            weighted_scores,
+                            SignalMetricsNames.NOISE_RMS,
+                            score
+                        )
+                </code>
+            </pre>
+            <p>
+                How does such has been choosen? Based on emperical knowledge 
+                gathered over AI. It is just a start pointm then this weight 
+                should be tuned further based on new data. 
+            </p>
+            <p>
+                Not all metrics are applied to each signal. Therefore the weight 
+                of each metric will be increased in the not completed signal's 
+                weight vector. It is done over normalization at the end of the 
+                method. 
+            </p>
+            <pre>
+                <code>
+                    total_weight = sum(w for w, _ in weighted_scores)
+                    
+                    if total_weight <= 0.0:
+                        return 0.0
+                
+                    return sum(w * s for w, s in weighted_scores) / total_weight
+                </code>
+            </pre>
             <h4>Choosing the right signal</h4>
             <p style="text-align:center;">
                <img src="/blog/assets/images/2026-01-10/signal-metrics-roles.png" style="max-width:100%;height:auto;"/>
