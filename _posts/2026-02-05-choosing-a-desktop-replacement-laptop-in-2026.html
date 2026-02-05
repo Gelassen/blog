@@ -1,0 +1,221 @@
+---
+layout: post
+title: 'Choosing a desktop replacement laptop in 2025'
+date: '2026-02-05'
+author: Gelassen
+tags: 
+modified_time: '2026-02-05'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <h3>Summary</h3>
+        <p>
+            A desktop replacement laptop is real. Although you should move 
+            your focus from mass market slip and light laptops and look on 
+            game laptops, workstations and googled 'desktop replacement laptop'.  
+        </p>
+        <p>
+            The most underestimated thing is CPU throttling. Under the critical 
+            temperature (~100C) CPU slow downs its work automatically. It means 
+            the numbers CPU has in its description are nominal, the actual 
+            performance is unclear.  
+        </p>
+        <p>
+            It seems like a good strategy to look for processor with maximized 
+            base frequency and the market has several good examples, but in 
+            general CPU manufactures goes by a different way -- create a CPU 
+            with a really vast gap between base and boost performance and let 
+            PC\laptop manufacturers choose desired mode by playing with 
+            cooling system. It was said the edge innovation nowadays goes not 
+            in processor itself, but in the cooling system. 
+        </p>
+        <p>
+            Anyway 55 Watts is an optimum for old styled laptops. Further grows 
+            of power consumption increase heating which leads to throttling -- 
+            slow down performance. It seems like more than 8 core CPU is not 
+            worth to install into such laptops. 
+        </p>
+        <p>
+            However, innovative cooling system helps to reach sustained 
+            performance even in much higher power budget. I haven't checked it 
+            by my own yet, but laptop I just ordered has such configuration. 
+            Will see how it would work. 
+        </p>
+        <p>
+            The second bottleneck is disk and network speed. SSD really made 
+            a difference compare to HDD. Evolution of PCI lines doesn't make 
+            such difference, but each next version doubles speed of transmitting 
+            data -- very important point to pay attention to. PCI 5 exist on the 
+            market and PCI 6 is going to be introduced. 
+        </p>
+        <p>
+            There is a rising trend of professionals who looks for a laptop as 
+            a replacement of their stationary PC. Manufacturers need time to 
+            adopt, but even now good examples of such laptops exist on the 
+            market -- Lenovo Legion 7 pro and MSI Crosshair are ones of them. 
+        </p>
+        <h3>
+            Motivation
+        </h3>
+        <p>
+            After 10 years of using my current laptop, it became clear that an upgrade is necessary. 
+            Modern processors offer performance many times higher than my current machine, RAM limits 
+            are reached (16 GB is now insufficient for engineering and ML tasks), and some frameworks 
+            no longer support my GPU. <br><br>
+            
+            The goal is to select a laptop capable of handling sustained multi-threaded workloads, 
+            ML workloads, and modern storage requirements while remaining energy-efficient and avoiding 
+            throttling under heavy use. This study explores the components, trade-offs, and best practices 
+            for selecting such a laptop in 2025.
+        </p>
+        <h3>
+            Processor
+        </h3>
+        <p>
+            For engineering workloads, effective multi-threading is key. However, laptops with more than 
+            8–16 cores often do not provide linear performance gains due to thermal limitations and throttling. 
+            Key considerations: <br><br>
+
+            - Maximum practical TDP: 55 W — higher TDP rarely yields sustainable gains. <br>
+            - Base frequency is more important than turbo: base frequency reflects stable performance under prolonged load. <br>
+            - Ryzen 7/9 HS (8 cores, 3.8–4.0 GHz base) is excellent for engineering tasks. These CPUs often outperform 
+              competitors in sustained performance and energy efficiency. <br>
+            - Intel HX / Ultra HX chips offer more cores and high turbo, but lower base frequency and higher TDP can 
+              result in throttling under long-term loads. <br><br>
+
+            However in general CPU manufactures goes by a different way -- create a CPU 
+            with a really vast gap between base and boost performance and let 
+            PC\laptop manufacturers choose desired mode by playing with 
+            cooling system. It was said the edge innovation nowadays goes not 
+            in processor itself, but in the cooling system. (still there is a limit what 
+            you can do with cooling system)
+        </p>
+        <h3>
+            Storage
+        </h3>
+        <p>
+            NVMe SSD, M.2 slot, x4 lanes. PCIe Gen 4/5 preferred; Gen 6 desirable but rare. <br><br>
+
+            <table>
+                <tr>
+                    <th>PCIe generation</th>
+                    <th>Data rate (GT/s per lane)</th>
+                    <th>Max throughput (x4)</th>
+                    <th>Typical NVMe SSD speeds (sequential)</th>
+                    <th>Year/status</th>
+                </tr>
+                <tr>
+                    <td>Gen 1</td>
+                    <td>2.5</td>
+                    <td>~1 GB/s (~8 Gb/s)</td>
+                    <td>~400–500 MB/s</td>
+                    <td>Early 2000s</td>
+                </tr>
+                <tr>
+                    <td>Gen 2</td>
+                    <td>5</td>
+                    <td>~2 GB/s</td>
+                    <td>~1 000 MB/s</td>
+                    <td>Later 2000s</td>
+                </tr>
+                <tr>
+                    <td>Gen 3</td>
+                    <td>8</td>
+                    <td>~4 GB/s</td>
+                    <td>~3 000–3 500 MB/s</td>
+                    <td>Widespread</td>
+                </tr>
+                <tr>
+                    <td>Gen 4</td>
+                    <td>16</td>
+                    <td>~8 GB/s</td>
+                    <td>~6 000–7 000 MB/s</td>
+                    <td>Modern mainstream</td>
+                </tr>
+                <tr>
+                    <td>Gen 5</td>
+                    <td>32</td>
+                    <td>~16 GB/s</td>
+                    <td>~10 000–14 000 MB/s+</td>
+                    <td>Latest PCs</td>
+                </tr>
+                <tr>
+                    <td>Gen 6</td>
+                    <td>64 (PAM4)</td>
+                    <td>~32 GB/s</td>
+                    <td>~20 000–28 000 MB/s (future SSD)</td>
+                    <td>Emerging ([atpinc.com](https://www.atpinc.com/de/blog/PCIe-vs-NVMe-are-they…ource=chatgpt.com))</td>
+                </tr>
+            </table>
+        </p>
+        <h3>
+            RAM
+        </h3>
+        <p>
+            Dual-channel or quad-channel configuration is highly recommended to maximize memory bandwidth.
+            32–64 GB is ideal for current engineering and ML workloads.
+        </p>
+        <p>
+            By reports extending RAM is not a trivial task due compatibility issues. 
+            You might need several try & run iterations for find one which fits your 
+            machine. Anyway you should expect increasing RAM would lead to decrease 
+            of working frequency.
+        </p>
+        <p>
+            If you plan to use you PC\laptop more than 4 years, consider machines 
+            which motherboard and CPU supports to double current amount of RAM. 
+        </p>
+        <h3>
+            GPU
+        </h3>
+        <p>
+            Discrete GPU is desirable for ML tasks. Performance is important, but consider thermal and power limits.
+        </p>
+        <p>
+            By reports 8Gb GPU is not enough for neural networks which are used 
+            in Photoshop and Lightroom. It means if you plan to train even 
+            moderate ML models on your machine, you will need at least 12Gb GPU.   
+        </p>
+        <p>
+            All modern frameworks support only NVidia. For ML tasks there is no 
+            other choice.  
+        </p>
+        <h3>
+            Cooling
+        </h3>
+        <p>
+            Sustained performance is critical. Efficient cooling prevents CPU/GPU 
+            throttling under long workloads.
+        </p>
+        <p>
+            Vapor chamber, several fans, liquid metal are all cutting edge tech 
+            in cooling system design. Lenovo Legion 7 pro series seems to be 
+            a leader in this. 
+        </p>
+        <h3>
+            Networking
+        </h3>
+        <p>
+            Wi-Fi 6/6E for wireless; 2.5–10 GbE Ethernet for wired connections.
+        </p>
+        <h3>
+            BIOS & Power Settings
+        </h3>
+        <p>
+            - Enable XMP/DOCP to run RAM at rated frequency. <br>
+            - Set Windows High Performance profile. <br>
+            - If available, tune PL1/PL2 and Turbo settings in BIOS. <br>
+            - Monitor temperatures and optimize cooling to prevent throttling.
+        </p>
+        <p>
+            It is really nice to have an option to undervolt CPU cores or setup 
+            temperature limits in BIOS. In case of Lenovo, on Windows they have 
+            software which automatically tune CPU and fans to keep sustainable 
+            performance, but on Linux machine there is not such software -- 
+            all of such things should be done manually. 
+        </p>
+    </body>
+</html>
