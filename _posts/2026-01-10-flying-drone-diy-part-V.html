@@ -83,6 +83,10 @@ modified_time: '2026-02-21'
                 </ul>
             </p>
             <h4>Signal analysis</h4>
+            <p>
+                All these metrics are computed in real time inside SignalEvaluator 
+                and ConfidenceLayer classes.
+            </p>
             <h5>RMS of noise</h5>
             <p>
                 This metric is useful to understand can we rely 
@@ -501,57 +505,85 @@ modified_time: '2026-02-21'
             </pre>
             <h4>Choosing the right signal</h4>
             <p>
-                At this stage, the system already knows how reliable each individual signal is. 
-                But how do we decide which signals to actually use for control at any given moment?
+                At this stage the system already knows the reliability of every signal. 
+                The question is: which ones should actually drive the drone right now?
             </p>
             <p style="text-align:center;">
-               <img src="/blog/assets/images/2026-01-10/signal-metrics-roles.png" style="max-width:100%;height:auto;"/>
+            <img src="/blog/assets/images/2026-01-10/signal-metrics-roles.png" style="max-width:100%;height:auto;"/>
             </p>
+
             <p>
-                For this purpose, we use a two-level arbitration scheme:
+                We solve this with a two-level arbitration system:
             </p>
+
             <ul>
-                <li>First, <strong>SignalGate</strong> filters out completely unreliable channels (using hysteresis and a minimum stability time threshold).</li>
-                <li>Then <strong>Arbitrator</strong> decides what to do next:
-                    <ul>
-                        <li>If both position channels (IMAGE_X and IMAGE_Y) are confident enough → use both (the most accurate mode).</li>
-                        <li>If one channel drops below the threshold → switch to fallback mode and continue control using the remaining strong channel.</li>
-                        <li>If fallback also fails → check ANGLE or OMEGA.</li>
-                        <li>If nothing is selected → command HOLD (0,0,0,0).</li>
-                    </ul>
-                </li>
+                <li><strong>SignalGate</strong> — quickly discards clearly bad channels using hysteresis and minimum stability time.</li>
+                <li><strong>Arbitrator</strong> — makes the final decision with the following priority:</li>
             </ul>
+
+            <ol>
+                <li>Both <code>IMAGE_X</code> + <code>IMAGE_Y</code> are confident → use both (highest accuracy)</li>
+                <li>One of them dropped below threshold → fallback to the remaining strong channel (single-channel mode)</li>
+                <li>Neither position channel is usable → try <code>ANGLE</code></li>
+                <li>Still nothing → try <code>OMEGA</code></li>
+                <li>Nothing works → <strong>HOLD</strong> (0, 0, 0, 0)</li>
+            </ol>
+
             <p>
-                This approach allows the system to remain operational even during temporary loss of one measurement — 
-                a classic real-world flight problem caused by vibration, glare, or partial marker occlusion.
+                This fallback mechanism is the key improvement of version V2. 
+                The drone no longer freezes when one axis temporarily loses the marker — it continues flying on the remaining reliable channel.
             </p>
 
             <h4>Convert signal into drone drive command</h4>
             <p>
                 The final stage is transforming the selected and weighted signals into control commands.
-                This is where the most critical part happens: the sign of the command must be opposite to the marker's displacement on the image.
-                Without inversion, the system becomes unstable — the drone runs away from the target instead of chasing it.
             </p>
             <p>
-                After applying inversion, speed limiting, and possible compensation (e.g., when using only one channel), 
+                After applying speed limiting, and possible compensation (e.g., when using only one channel), 
                 the command is sent via MAVLink to PX4. The loop is closed.
             </p>
             <p>
                 At this point we have a fully functional vision-based control system using AprilTag 
                 with reasonably high robustness to noise, vibration, and short-term marker loss.
             </p>
+            <h4>Results & Flight Behaviour</h4>
             <p>
-                What's next?
+                With the loose configuration and single-channel fallback the drone now:
             </p>
             <ul>
-                <li>Fine-tuning confidence weights and gating thresholds</li>
-                <li>Adding motion prediction (Kalman filter or simple extrapolation)</li>
-                <li>Moving to more challenging conditions: low light, fast rotations, partial occlusions</li>
-                <li>Integration with other sensors (LiDAR, IMU fusion)</li>
+                <li>Stably holds position when the marker is well visible</li>
+                <li>Continues controlled flight even when one axis temporarily drops below threshold</li>
+                <li>Shows smooth transitions between BOTH → single-channel modes</li>
+                <li>Does not oscillate or run away (thanks to adaptive gain scheduling)</li>
             </ul>
             <p>
-                The work has only just begun. But already now the drone can see the marker and try to keep it centered — 
-                and that's a very solid foundation for further experiments.
+                Video demonstration (Gazebo):
+            </p>
+            <p style="text-align:center;">
+                <video controls width="640" height="360"
+                        style="display:inline-block;">
+                  <source src="/blog/assets/videos/2026-01-10/drone_optical_flow_simulation.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </p>
+            <h3>Conclusion</h3>
+            <p>
+                We now have a robust, explainable, and fully custom optical-flow controller 
+                that works reliably even under imperfect conditions. 
+                The combination of per-signal metrics, intelligent gating, and fallback arbitration 
+                turned a previously unstable idea into a working autopilot component.
+            </p>
+            <p>
+                Next steps: <br>
+                <ul>
+                    <li>Fine-tuning confidence weights and gating thresholds</li>
+                    <li>Adding motion prediction (Kalman filter or simple extrapolation)</li>
+                    <li>Moving to more challenging conditions: low light, fast rotations, partial occlusions</li>
+                    <li>Integration with other sensors (LiDAR, IMU fusion)</li>
+                </ul>
+            </p>
+            <p>
+                <a href="https://github.com/Gelassen/drone/blob/main/custom_behavior/optical_flow/optical_flow_v1.py">Source code</a>
             </p>
         </section>
         <section>
