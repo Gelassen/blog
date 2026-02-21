@@ -4,7 +4,7 @@ title: 'Flying Drone DIY, part V: custom autopilot programs -- improving compute
 date: '2026-01-10'
 author: Gelassen
 tags: programming, drones, computer-vision, optical-flow
-modified_time: '2026-02-03'
+modified_time: '2026-02-21'
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +18,31 @@ modified_time: '2026-02-03'
     <article>
         <section>
             <h3>Executive summary</h3>
-            <p>TODO: complete me</p>
+            <p>
+                Innovative custom solution for driving drone over optical flow 
+                gave first satisfactory results. The next steps would be to 
+                continue improve this approach and remove april tags from optical 
+                flow that were additional support for algorithm navigation. 
+            </p>
+            <p>
+                At the previous step standard OpenCV solutions, ML and hybrid 
+                solutions didn't give satisfactory results. Next idea was to 
+                make an attempt to solve the task by extracting all possible 
+                features from the images, estimate their changes, rank them and 
+                apply superset of their input according to the significance.   
+            </p>
+            <p>
+                Results of this R&D work are working visual recognition pipeline 
+                which transform optical flow into driving commands to the drone 
+                with acceptable level of correctness. 
+            </p>
+            <p style="text-align:center;">
+                <video controls width="640" height="360"
+                        style="display:inline-block;">
+                  <source src="/blog/assets/videos/2026-01-10/drone-optical-flow-simulation.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+            </p>
         </section>
         <section>
             <h3>Research & development</h3>
@@ -455,8 +479,8 @@ modified_time: '2026-02-03'
                 </code>
             </pre>
             <p>
-                How does such has been choosen? Based on emperical knowledge 
-                gathered over AI. It is just a start pointm then this weight 
+                How does such has been chosen? Based on empirical knowledge 
+                gathered over AI. It is just a start point then this weight 
                 should be tuned further based on new data. 
             </p>
             <p>
@@ -476,18 +500,67 @@ modified_time: '2026-02-03'
                 </code>
             </pre>
             <h4>Choosing the right signal</h4>
+            <p>
+                At this stage, the system already knows how reliable each individual signal is. 
+                But how do we decide which signals to actually use for control at any given moment?
+            </p>
             <p style="text-align:center;">
                <img src="/blog/assets/images/2026-01-10/signal-metrics-roles.png" style="max-width:100%;height:auto;"/>
             </p>
-            <p></p>
+            <p>
+                For this purpose, we use a two-level arbitration scheme:
+            </p>
+            <ul>
+                <li>First, <strong>SignalGate</strong> filters out completely unreliable channels (using hysteresis and a minimum stability time threshold).</li>
+                <li>Then <strong>Arbitrator</strong> decides what to do next:
+                    <ul>
+                        <li>If both position channels (IMAGE_X and IMAGE_Y) are confident enough → use both (the most accurate mode).</li>
+                        <li>If one channel drops below the threshold → switch to fallback mode and continue control using the remaining strong channel.</li>
+                        <li>If fallback also fails → check ANGLE or OMEGA.</li>
+                        <li>If nothing is selected → command HOLD (0,0,0,0).</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                This approach allows the system to remain operational even during temporary loss of one measurement — 
+                a classic real-world flight problem caused by vibration, glare, or partial marker occlusion.
+            </p>
+
             <h4>Convert signal into drone drive command</h4>
-            <p></p>
+            <p>
+                The final stage is transforming the selected and weighted signals into control commands.
+                This is where the most critical part happens: the sign of the command must be opposite to the marker's displacement on the image.
+                Without inversion, the system becomes unstable — the drone runs away from the target instead of chasing it.
+            </p>
+            <p>
+                After applying inversion, speed limiting, and possible compensation (e.g., when using only one channel), 
+                the command is sent via MAVLink to PX4. The loop is closed.
+            </p>
+            <p>
+                At this point we have a fully functional vision-based control system using AprilTag 
+                with reasonably high robustness to noise, vibration, and short-term marker loss.
+            </p>
+            <p>
+                What's next?
+            </p>
+            <ul>
+                <li>Fine-tuning confidence weights and gating thresholds</li>
+                <li>Adding motion prediction (Kalman filter or simple extrapolation)</li>
+                <li>Moving to more challenging conditions: low light, fast rotations, partial occlusions</li>
+                <li>Integration with other sensors (LiDAR, IMU fusion)</li>
+            </ul>
+            <p>
+                The work has only just begun. But already now the drone can see the marker and try to keep it centered — 
+                and that's a very solid foundation for further experiments.
+            </p>
         </section>
         <section>
             <p>
                 A few related publications:
             </p>
             <p>
+                <a href="https://gelassen.github.io/blog/2025/12/20/flying-drone-diy-part-IV.html">Flying Drone DIY, Part IV: custom autopilot programs</a> <br><br>
+
                 <a href="https://gelassen.github.io/blog/2025/10/18/flying-drone-diy-part-III.html">Flying Drone DIY, Part III: Assembling and Tuning</a> <br><br>
 
                 <a href="https://gelassen.github.io/blog/2025/05/17/flying-drone-diy-part-II.html">Flying drone DIY, part II: configuration for the 1st version</a> <br><br>
