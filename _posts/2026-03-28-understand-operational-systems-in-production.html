@@ -1,0 +1,334 @@
+---
+layout: post
+title: 'Understand operational systems in production'
+date: '2026-03-28'
+author: Gelassen
+tags: 
+modified_time: '2026-03-28'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <section>
+            <h3>Summary</h3>
+            <p>
+                Over passed 7 weeks I have been practicing case studies of software 
+                system's work degradation caused by lack of optimization for OS. The 
+                goal of such practice was better understand operation systems, potential 
+                bottlenecks in production, how to *correctly* diagnose such issues 
+                to fix them.     
+            </p>
+            <p>
+                This publication demonstrates 3 typical scenarios and steps to 
+                diagnose performance issues. Meanwhile it uncovers OS architecture 
+                details which play crucial role in software systems performance.   
+            </p>
+            <p>
+                Disclaimer: such case studies were prepared and reviewed by ChatGpt. 
+                It use pure semi-academic experience which should be verified in 
+                real practice. 
+            </p>
+        </section>
+        <section>
+            <h3>Scenario 1 — "There's a CPU, but it feels like it's not there"</h3>
+            <h4>Context</h4>
+            <p>
+                <ul>
+                    <li>Kubernetes cluster</li>
+                    <li>container with service (single-threaded, CPU-bound)</li>
+                    <li>node: 16 CPUs, 64 GB RAM</li>
+                    <li>stable load</li>    
+                </ul>
+            </p>
+            <h4>Symptoms</h4>
+            <p>
+                <ul>
+                    <li>latency fluctuates (sometimes +50–70%)</li>
+                    <li>container CPU usage: ~60–70%</li>
+                    <li>inside the container:</li>
+                    <pre>
+                        top → the process doesn't reach 100%
+                    </pre>
+                    <li>at the same time:</li>
+                    <li>
+                        <ul>
+                            <li>node CPU isn't fully utilized (~40–50%)</li>
+                            <li>sufficient memory</li>
+                            <li>almost no I/O</li>
+                        </ul>
+                    </li>
+                </ul>
+            </p>
+            <h4>Questions</h4>
+            <p>
+                <ul>
+                    <li>What hypotheses will you come up with? (at least 3)</li>
+                    <li>What will you check first?</li>
+                    <li>What commands will you run?</li>
+                    <li>Where might the "hidden limit" be?</li>
+                </ul>
+            </p>
+            <h4>Discovery</h4>
+            <h5>What hypotheses will you come up with? (at least 3)?</h5>
+            <p>
+                <ul>
+                    <li>A possible quota on CPU usage on the c-group</li>
+                    <li>Host machine takes CPU time from container for itself or another container</li>
+                    <li>CPU is switch often between multiple process dropping cache and others associated resources</li>
+                    <li>Parts of the memory is associated on a different NUMA node</li>
+                </ul>
+            </p>
+            <h5>What will you check first?</h5>
+            <p>
+                It makes sense to start with checking limit for CPU usage setup 
+                on the container. Then check steal time and CPU context switches. 
+                Finally check NUMA node hypotheses. 
+            </p>
+            <h5>What commands will you run?</h5>
+            <p>
+                To check throttling:
+                <pre>
+                    $ cat /sys/fs/cgroup/cpu.max
+                    $ cat /sys/fs/cgroup/cpu.stat
+                </pre>
+                Look for dynamic of nr_throttled & throttled_time
+            </p>
+            <p>
+                To check Kubernetes limits:
+                <pre>
+                    $ kubectl describe pod <pod>
+                </pre>
+                Look for cpu limits & cpu requests
+            </p>
+            <p>
+                To check CPU steal and switch metrics:
+                <pre>
+                    $ top
+                </pre> 
+            </p>
+            <p>
+                To check scheduler:
+                <pre>
+                    $ pidstat -w 1
+                    $ runqlat (bcc)
+                </pre>
+            </p>
+            <p>
+                To check NUMA:
+                <pre>
+                    $ numactl --show
+                    $ numastat
+                </pre>
+            </p>
+            <h5>Where might the "hidden limit" be?</h5>
+            <p>
+                cgroup (cpu.max / cpu.cfs_quota_us) <br>
+                Kubernetes: resources.limits.cpu
+            </p>
+        </section>
+        <section>
+            <h3>Scenario 2 — "There's memory, but the system is slow"</h3>
+            <h4>Context</h4>
+            <p>
+                <ul>
+                    <li>VM in the cloud</li>
+                    <li>8 CPUs, 32 GB RAM</li>
+                    <li>Database (active write)</li>
+                    <li>SSD</li>
+                </ul>
+            </p>
+            <h4>Symptoms</h4>
+            <p>
+                <ul>
+                    <li>CPU ~30–40%</li>
+                    <li>Swap is almost unused</li>
+                    <li>There is free memory (~5–8 GB)</li>
+                    <li>but:</li>
+                    <ul>
+                        <li>latency is increasing</li>
+                        <li>transactions are slowing down</li>
+                        <li>sometimes there are stops of hundreds of milliseconds</li>
+                    </ul>
+                </ul>
+            </p>
+            <h4>Metrics:</h4>
+            <p>
+                <ul>
+                    <li>vmstat: wa → low</li>
+                    <li>vmstat: si/so → almost 0</li>
+                    <li>but: cat /proc/pressure/memory: some avg10=0.20</li>
+                </ul>
+            </p>
+            <h4>Questions</h4>
+            <p>
+                <ul>
+                    <li>Why is the system slow even with "free memory"?</li>
+                    <li>What does memory pressure mean?</li>
+                    <li>What kernel mechanisms can block a process?</li>
+                    <li>What should you check next?</li>
+                </ul>
+            </p>
+            <h4>Discovery</h4>
+            <h5>Why is the system slow even with "free memory"?</h5>
+            <p>
+                Even though there appears to be free memory (~5–8 GB), much of it may be occupied by reclaimable objects like page cache, buffers, or slabs. Processes can experience latency because the kernel may need to perform memory reclaim or compaction to satisfy allocations. Additionally, frequent flushing of dirty pages to disk and subsequent page faults can cause stop-the-world pauses of hundreds of milliseconds, slowing transactions even if CPU usage is moderate and swap is barely used.
+            </p>
+
+            <h5>What does memory pressure mean?</h5>
+            <p>
+                Memory pressure indicates the percentage of time processes spend waiting for memory to become available. It occurs not necessarily because the system is out of free memory, but because the kernel must reclaim pages (from cache, buffers, or slabs) or wait for writeback of dirty pages to free memory. In Linux, this is visible in `/proc/pressure/memory`—for example, `some avg10=0.20` means processes spent ~20% of the last 10 seconds waiting for memory.
+            </p>
+
+            <h5>What kernel mechanisms can block a process?</h5>
+            <p>
+                Key mechanisms include:
+                <ul>
+                    <li><strong>Direct reclaim / kswapd:</strong> the kernel attempts to free pages to satisfy allocations.</li>
+                    <li><strong>Page cache writeback:</strong> processes may wait while dirty pages are flushed to disk.</li>
+                    <li><strong>Mutexes or I/O wait:</strong> processes can block on NVMe queue or filesystem locks, especially with synchronous writes.</li>
+                    <li><strong>Pressure Stall Information (PSI):</strong> indicates how long processes wait due to memory, CPU, or I/O pressure.</li>
+                </ul>
+            </p>
+
+            <h5>What should you check next?</h5>
+            <p>
+                To investigate further:
+                <ul>
+                    <li>Disk queue depth and latency using <code>iostat -x 1</code> to see if NVMe is a bottleneck.</li>
+                    <li>Memory stalls and reclaim activity via <code>/proc/pressure/memory</code> and <code>vmstat 1</code>.</li>
+                    <li>Amount of dirty pages with <code>cat /proc/meminfo | grep Dirty</code> to assess writeback impact.</li>
+                    <li>Database-specific synchronous writes (fsync, commit) that could amplify latency.</li>
+                    <li>Slab and kernel memory usage to identify potential kernel-side bottlenecks.</li>
+                </ul>
+            </p>
+        </section>
+        <section>
+            <h3>Scenario 3 — "The database is killing the disk... but the disk is fast"</h3>
+            <h4>Context</h4>
+            <p>
+                <ul>
+                    <li>PostgreSQL</li>
+                    <li>NVMe SSD</li>
+                    <li>16 CPUs, 64 GB RAM</li>
+                    <li>High write load</li>
+                </ul>
+            </p>
+            <h4>Symptoms</h4>
+            <p>
+                <ul>
+                    <li>CPU ~20–30%</li>
+                    <li>iowait jumps to 15–20%</li>
+                    <li>Query latency is unstable</li>
+                </ul>
+            </p>
+            <h4>Metrics:</h4>
+            <p>
+                <code>
+                    iostat -x:
+
+                        util: ~60%
+                        await: jumps (1ms → 20ms)
+                    /proc/meminfo:
+
+                        Dirty: high
+                        Writeback: increasing
+                </code>
+            </p>
+            <h4>Questions</h4>
+            <p>
+                <ul>
+                    <li>Why can NVMe have such latencies?</li>
+                    <li>What's happening with dirty pages?</li>
+                    <li>How are page cache and fsync related?</li>
+                    <li>Where is the bottleneck: disk or memory?</li>
+                </ul>
+            </p>
+            <h4>Discovery</h4>
+
+            <h5>Why can NVMe have such latencies?</h5>
+                <p>
+                NVMe itself is not inherently slow — typical latency is in tens to hundreds of microseconds. 
+                Observed spikes (1ms → 20ms) indicate not raw device latency, but queuing and system-level effects.
+
+                In this scenario, latency is caused by:
+                <ul>
+                    <li>Writeback pressure: the kernel cannot flush dirty pages fast enough</li>
+                    <li>Queue buildup: bursts of writes create variable queue depth</li>
+                    <li>fsync stalls: processes wait for durability guarantees</li>
+                    <li>Write amplification: many small synchronous writes (e.g., WAL)</li>
+                </ul>
+
+                As a result, NVMe appears "slow", but the delay comes from the interaction between the workload (PostgreSQL) and the kernel writeback subsystem, not from the hardware itself.
+            </p>
+
+            <h5>What's happening with dirty pages?</h5>
+            <p>
+                Dirty pages are memory pages modified in the page cache but not yet written to disk.
+
+                In this case:
+                <ul>
+                    <li>High write workload → rapid accumulation of dirty pages</li>
+                    <li>Writeback starts, but cannot keep up → Writeback increases</li>
+                    <li>Dirty pages approach kernel limits (vm.dirty_ratio / dirty_bytes)</li>
+                </ul>
+
+                When limits are reached, the kernel activates write throttling (balance_dirty_pages):
+                <ul>
+                    <li>Application writes are slowed down</li>
+                    <li>Processes are forced to wait for writeback</li>
+                </ul>
+
+                Dirty pages are not lost — they must eventually be written to disk. The system trades latency for data integrity and stability.
+            </p>
+
+            <h5>How are page cache and fsync related?</h5>
+            <p>
+                PostgreSQL writes data to the page cache first, not directly to disk.
+
+                The flow is:
+                <ul>
+                    <li>Write → data enters page cache (becomes dirty)</li>
+                    <li>fsync() → forces the kernel to flush relevant dirty pages to disk</li>
+                    <li>Process waits until data is physically persisted</li>
+                </ul>
+
+                If writeback is lagging:
+                <ul>
+                    <li>fsync latency increases</li>
+                    <li>Query latency becomes unstable</li>
+                </ul>
+
+                Thus, fsync couples application latency to the state of the kernel writeback subsystem.
+            </p>
+
+            <h5>Where is the bottleneck: disk or memory?</h5>
+                <p>
+                The bottleneck is not purely the disk nor purely memory, but their interaction.
+
+                More precisely:
+                <ul>
+                    <li>The disk is not saturated (util ~60%), so raw throughput is not the limit</li>
+                    <li>Memory (page cache) is accumulating dirty data faster than it can be flushed</li>
+                    <li>The kernel writeback mechanism becomes the limiting factor</li>
+                </ul>
+
+                This leads to:
+                <ul>
+                    <li>Write throttling</li>
+                    <li>Latency spikes</li>
+                    <li>Increased iowait despite moderate disk utilization</li>
+                </ul>
+
+                Therefore, the bottleneck is the writeback pipeline (memory → disk), not a single component in isolation.
+            </p>
+        </section>
+        <section>
+            A few related publications: <br><br>
+
+            <a href="https://gelassen.github.io/blog/2024/06/23/the-modern-education-and-place-of-ai-here.html">The modern education and place of AI here</a> <br>
+            <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">Broad vs Narrow specialisation</a>
+        </section>
+    </body>
+</html>
