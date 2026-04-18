@@ -4,7 +4,7 @@ title: 'Integration of SSDLC into Project Development Process: Risks Assessment 
 date: '2026-04-04'
 author: Gelassen
 tags: 
-modified_time: '2026-04-04'
+modified_time: '2026-04-18'
 ---
 <html>
     <head>
@@ -194,7 +194,274 @@ modified_time: '2026-04-04'
         </section>
         <section>
             <h3>Threat modeling</h3>
-            <p></p>
+
+            <p>
+                Threat modeling is the next stage in SSDLC, based on gathered requirements and evaluated risks.
+                If risk assessment answers the question <em>“what can go wrong”</em>, then threat modeling answers
+                <em>“how it could realistically happen in the system”</em>.
+            </p>
+
+            <p>
+                The primary objective of this stage is not documentation, but validation and execution:
+                to ensure that identified risks are technically plausible, to model realistic attack scenarios,
+                and to define concrete security controls at the architectural level.
+            </p>
+
+            <h4>Objectives</h4>
+            <ul>
+                <li>Validate that risks are technically plausible</li>
+                <li>Identify realistic attack scenarios</li>
+                <li>Define architecture-level security controls</li>
+                <li>Ensure traceability from risks to mitigations</li>
+            </ul>
+
+            <h4>Methodology and standards</h4>
+            <p>
+                The approach combines elements of 
+                <strong>PASTA</strong> (process), 
+                <strong>STRIDE</strong> (threat enumeration), and 
+                <strong>NIST SSDF</strong> (completeness and audit readiness).
+            </p>
+            <p>
+                In practice, a simplified hybrid model was used to balance engineering usability and alignment
+                with industry standards.
+            </p>
+
+            <h4>Assets</h4>
+            <p>
+                The first step is identifying critical assets and their security properties.
+                Threat modeling is always tied to assets, not abstract concepts.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Category</th>
+                        <th>CIA Priority</th>
+                        <th>Related Risks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vote data (ballot)</td>
+                        <td>Vote secrecy & integrity</td>
+                        <td>C + I</td>
+                        <td>R2, R3, R8</td>
+                    </tr>
+                    <tr>
+                        <td>Voter ↔ Vote link</td>
+                        <td>Anonymity</td>
+                        <td>C</td>
+                        <td>R2–R4</td>
+                    </tr>
+                    <tr>
+                        <td>Identity (card + session)</td>
+                        <td>Authentication</td>
+                        <td>I + A</td>
+                        <td>R5, R17</td>
+                    </tr>
+                    <tr>
+                        <td>Client application (Aurora)</td>
+                        <td>Endpoint</td>
+                        <td>I + A</td>
+                        <td>R12, R26</td>
+                    </tr>
+                    <tr>
+                        <td>Backend services + DB</td>
+                        <td>System core</td>
+                        <td>All</td>
+                        <td>Multiple</td>
+                    </tr>
+                    <tr>
+                        <td>Logs</td>
+                        <td>Audit / privacy</td>
+                        <td>C + I</td>
+                        <td>R13, R25</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Trust boundaries</h4>
+            <p>
+                The system is decomposed into trust zones. Each boundary represents a change in trust assumptions
+                and therefore a critical control point.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Boundary</th>
+                        <th>Description</th>
+                        <th>Inside</th>
+                        <th>Outside</th>
+                        <th>Critical Transition</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Client ↔ Network</td>
+                        <td>Untrusted environment</td>
+                        <td>Aurora client</td>
+                        <td>External network</td>
+                        <td>Request submission</td>
+                    </tr>
+                    <tr>
+                        <td>Network ↔ Backend</td>
+                        <td>API perimeter</td>
+                        <td>Application services</td>
+                        <td>External traffic</td>
+                        <td>Secure communication channel</td>
+                    </tr>
+                    <tr>
+                        <td>Identity ↔ Voting</td>
+                        <td>Critical separation boundary</td>
+                        <td>Authentication domain</td>
+                        <td>Voting domain</td>
+                        <td>Anonymous authorization</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Data Flow Diagram (DFD)</h4>
+            <p>
+                A Level 1 Data Flow Diagram (DFD) was constructed to formalize system interactions
+                between external users, client components, backend services, and storage layers.
+            </p>
+
+            <p>
+                The DFD serves as a shared model between engineers and security reviewers and is used as a basis
+                for systematic threat enumeration.
+            </p>
+
+            <h4>STRIDE analysis</h4>
+            <p>
+                Each component was evaluated using STRIDE to ensure coverage across all major threat categories:
+                spoofing, tampering, repudiation, information disclosure, denial of service, and privilege escalation.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>S</th>
+                        <th>T</th>
+                        <th>R</th>
+                        <th>I</th>
+                        <th>D</th>
+                        <th>E</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Client</td>
+                        <td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td>
+                    </tr>
+                    <tr>
+                        <td>Auth Service</td>
+                        <td>✓</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Core Service</td>
+                        <td>—</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td>
+                    </tr>
+                    <tr>
+                        <td>Logging</td>
+                        <td>—</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Threat scenarios</h4>
+            <p>
+                The core artifact of this stage is a set of explicit threat scenarios,
+                structured as:
+            </p>
+            <p><strong>Threat → Vulnerability → Scenario → Control</strong></p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Threat</th>
+                        <th>Vulnerability</th>
+                        <th>Control</th>
+                        <th>Residual Risk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Deanonymization</td>
+                        <td>Correlation attack</td>
+                        <td>Metadata linkage potential</td>
+                        <td>Unlinkability, data minimization</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td>Data manipulation</td>
+                        <td>Integrity violation</td>
+                        <td>Insufficient integrity guarantees</td>
+                        <td>Cryptographic verification, append-only storage</td>
+                        <td>Low–Medium</td>
+                    </tr>
+                    <tr>
+                        <td>Impersonation</td>
+                        <td>Unauthorized access</td>
+                        <td>Weak authentication factors</td>
+                        <td>Multi-factor authentication, session binding</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td>Undetectable attack</td>
+                        <td>Audit evasion</td>
+                        <td>Limited observability</td>
+                        <td>Immutable audit trail, monitoring</td>
+                        <td>High</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Attack scenario illustration</h4>
+            <p>
+                For critical threats, multi-step attack scenarios are considered at a conceptual level.
+                Controls are designed to break potential attack chains at different stages.
+            </p>
+
+            <p>
+                Example: correlation-based deanonymization is mitigated through a combination of
+                access control, data minimization, and cryptographic separation mechanisms.
+            </p>
+
+            <h4>Residual risks and trade-offs</h4>
+            <p>
+                Not all risks can be eliminated. Threat modeling explicitly identifies residual risks
+                and documents acceptance decisions.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Residual Risk</th>
+                        <th>Level</th>
+                        <th>Decision</th>
+                        <th>Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Undetectable insider activity</td>
+                        <td>High</td>
+                        <td>Accepted (trade-off with privacy)</td>
+                        <td>CIO</td>
+                    </tr>
+                    <tr>
+                        <td>Side-channel correlation risks</td>
+                        <td>Medium</td>
+                        <td>Accepted</td>
+                        <td>Security Architect</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
         <section>
             <p>
