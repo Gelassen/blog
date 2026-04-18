@@ -1,0 +1,210 @@
+---
+layout: post
+title: 'Integration of SSDLC into Project Development Process: Risks Assessment and Threat Modeling, stages 1 & 2 from 5'
+date: '2026-04-04'
+author: Gelassen
+tags: 
+modified_time: '2026-04-04'
+---
+<html>
+    <head>
+        <link rel="stylesheet" href=".css/general.css">
+    </head>
+    <body>
+        <section>
+            <h3>Executive summary</h3>
+            <p>
+                This article documents an ongoing SSDLC integration effort, focusing 
+                on practical trade-offs between engineering, management, and 
+                business constraints. SSDLC here is treated not only as a technical 
+                practice, but as an organizational and business decision.
+            </p>
+            <p>
+                Over the past week, I integrated a secure software development 
+                lifecycle (SSDLC) into our development process. The framework 
+                consists of five stages, and this week I completed Stage 1 
+                (risk assessment) and Stage 2 (threat modeling), and began 
+                the security design review.
+            </p>
+            <p>
+                This publication covers the details of integrating SSDLC, 
+                focusing on the first two stages.
+            </p>
+        </section>
+        <section>
+            <h3>Business context</h3>
+            <p>
+                SSDLC competes with delivery speed and product priorities.
+                The decision to adopt SSDLC is fundamentally a trade-off between 
+                risk tolerance and delivery velocity.
+            </p>
+            <p>
+                Back in 2023, I highlighted the importance of 
+                <a href="https://gelassen.github.io/blog/2023/11/22/why-do-you-need-to-setup-ssdlc.html">integrating SSDLC into the development process</a>.
+                Since then, demand has grown even further. Over the past eight years, 
+                implementing security requirements in software has evolved from a 
+                "nice-to-have" into a "must-have" capability.
+            </p>
+            <p>
+                Industry reports shown only banks, PaaS providers, and large 
+                enterprises can consistently afford full SSDLC implementation. 
+                Mid-range businesses can adopt it partially, while smaller 
+                companies often recognize the need but lack the budget.
+            </p>
+            <p>
+                The cost. Salesforce's case study shows 3 months of pure team 
+                training, up to 30% time-to-market increase, ROI return back 
+                after 12 months. For a small team like ours, we expect up to 100% 
+                increase in time-to-market in the first 2 months, up to 20% 
+                increase in time-to-market afterwards.   
+            </p>
+            <p>
+                In our case my origin estimates still looks within expectations, 
+                but threat modelling stage and design review stage shown significant 
+                increase in invested man-hours. Both metrics still fits in estimates 
+                from Salesforce case study adopted to a project of our size and domain.  
+            </p>
+            <p>
+                Talents on worldwide market. Ballpark estimate.
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Capability</th>
+                            <th>% of engineers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Aware</td>
+                            <td>Know what STRIDE / SSDLC is</td>
+                            <td>~20–30%</td>
+                        </tr>
+                        <tr>
+                            <td>Intermediate</td>
+                            <td>Can participate in threat modeling</td>
+                            <td>~10–15%</td>
+                        </tr>
+                        <tr>
+                            <td>Advanced</td>
+                            <td>Can independently model threats</td>
+                            <td>~5–10%</td>
+                        </tr>
+                        <tr>
+                            <td>Expert</td>
+                            <td>Can embed SSDLC into org/process</td>
+                            <td>~2–5%</td>
+                        </tr>
+                        <tr>
+                            <td>Architect-level</td>
+                            <td>Can scale SSDLC across org</td>
+                            <td>~1–3%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p>
+        </section>
+        <section>
+            <h3>Secure software development overview</h3>
+            <p>
+                The secure software development lifecycle (SSDLC) is the 
+                industry's response to the growing number of cyberattacks. 
+                While it does not guarantee protection against vulnerabilities 
+                or exploitation by malicious actors, it significantly reduces 
+                risk and improves cost predictability.
+            </p>
+            <p>
+                The cost of fixing a vulnerability increases exponentially 
+                over time: approximately $100 at the design stage, $1,000 
+                during development, and $10,000 in production. SSDLC shifts 
+                issue detection to earlier stages ("shift-left"), helping 
+                businesses avoid costly incidents.
+            </p>
+            <p>
+                <img src="/blog/assets/images/2023-11-22/ssdlc.jpeg"/>
+            </p> 
+            <p>
+                SSDLC typically consists of five stages:
+                <ol>
+                    <li>Risk assessment</li>
+                    <li>Threat modeling</li>
+                    <li>Security design review</li>
+                    <li>Static code analysis and security scanning</li>
+                    <li>Penetration testing</li>
+                </ol>
+                In essence, SSDLC extends the standard software development 
+                process by embedding security practices into each stage.
+            </p>
+        </section>
+        <section>
+            <h3>Risks assessment</h3>
+            <p>
+                The primary goal of risk assessment was not documentation, but decision-making:
+                <ul>
+                    <li>what to fix now</li>
+                    <li>what to fix later</li>
+                    <li>what to postpone</li>
+                </ul>
+            </p>
+            <p>
+                The intent behind this stage is go through software requirements and 
+                identify potential security risks -- what could goes wrong.
+            </p>
+            <p>
+                The result of this stage is a document which summarise discovered 
+                threats in format: <br><br>
+                <ul>
+                    <li>Requirement</li>
+                    <li>Asset</li>
+                    <li>Threat</li>
+                    <li>Attack vector</li>
+                    <li>Impact / Likelihood / Risk</li>
+                    <li>Controls</li>
+                </ul>  
+            </p>
+            <p>
+                Starting from basic Threat → Risk → Mitigation it evolves further to 
+                something like this: 
+            </p>
+            <p>
+                <img src="/blog/assets/images/2026-04-18/risk-assessment-header.png"/>
+            </p>
+            <p>
+                The table above should became the central artifact used across 
+                engineering and management discussions. <br>
+                <ul>
+                    <li>Owner → responsibility</li>
+                    <li>Priority → planning</li>
+                    <li>Tracking → control of execution</li>
+                </ul>
+            </p>
+            <p>
+                A simplified "Threat → Risk → Mitigation" model looks minimal 
+                necessary and sufficient, but it would not pass mature enterprise 
+                level security audit: <br>
+                
+                <ul>
+                    <li>there is no link to real hacker attacks</li>
+                    <li>there is not clear statement of the cause</li>
+                    <li>there is no way to validate it</li>
+                </ul>
+
+                This led to extend this basic table to the table shown above.
+            </p>
+        </section>
+        <section>
+            <h3>Threat modeling</h3>
+            <p></p>
+        </section>
+        <section>
+            <p>
+                Related publications:
+            </p>
+            <p>
+                <a href="https://gelassen.github.io/blog/2023/11/22/why-do-you-need-to-setup-ssdlc.html">Why you need to setup secure software development lifecycle (SSDLC)</a> <br>
+                <a href="https://gelassen.github.io/blog/2023/10/21/case-study-information-security-of-government-organisation.html">Case study: establish an information security of a government organization</a> <br>
+                <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">Broad vs Narrow specialisation</a>
+            </p>
+        </section>
+    </body>
+</html>
