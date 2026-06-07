@@ -18,18 +18,41 @@ modified_time: '2026-06-07'
     <article>
         <section>
             <h3>Executive summary</h3>
+
             <p>
-                This week I implemented a solution of flaky tests in current 
-                software project of my customer as a part of CI. It solves more important issue 
-                as it my not seen at the first glance and touch more fundamental 
-                problem of software development and that's why it is worth 
-                to write a whole publication about it.
-            <p> 
-                Flaky tests are not the problem. They are a symptom of a much deeper 
-                issue: as project complexity grows, the quality of feedback loops 
-                deteriorates. Once engineers stop trusting feedback, the cost of 
-                every change starts increasing.
+                This article started as a case study on flaky tests and CI automation, but
+                the investigation quickly revealed a deeper problem.
             </p>
+
+            <p>
+                Flaky tests are rarely the root cause. They are often a symptom of growing
+                software complexity. As systems evolve, feedback loops that engineers rely
+                on become less trustworthy. Tests fail when nothing is broken, pipelines
+                become noisy and teams gradually lose confidence in the signals used to
+                validate changes.
+            </p>
+
+            <p>
+                Once trust in feedback is lost, the cost of every change starts increasing.
+                Engineers spend more time investigating failures, planning becomes less
+                predictable and maintenance consumes an ever larger portion of development
+                capacity.
+            </p>
+
+            <p>
+                This publication examines flaky tests through the broader perspective of
+                feedback loops, software complexity and long-term maintainability. It also
+                describes practical measures implemented in a real project and discusses
+                the trade-offs between testing costs, architectural quality and delivery
+                predictability.
+            </p>
+
+            <p>
+                The central argument is simple: flaky tests are not merely a testing
+                problem. They are an early warning signal that system complexity is growing
+                faster than the engineering practices used to control it.
+            </p>
+
         </section>
         <section>
             <h3>Context</h3>
@@ -111,6 +134,14 @@ modified_time: '2026-06-07'
                 stop rely on this as a source of understanding you product 
                 is doing well. You are actually not sure anymore does your 
                 commit break something or not.   
+            </p>
+            <p>
+                By the time production incidents increase, delivery slows 
+                down and maintenance costs become visible, architectural 
+                complexity has often been growing for years. Flaky tests 
+                frequently appear much earlier and may therefore serve as 
+                one of the first warning signals that engineering practices 
+                are no longer keeping pace with system growth.
             </p>
         </section>
         <section>
@@ -269,6 +300,11 @@ modified_time: '2026-06-07'
                 challenging. However, TDD shifts the architecture in a direction where
                 verification becomes cheaper and reliability remains manageable for a much
                 longer period of time.
+            </p>
+            <p>
+                TDD as a common engineering practice might be a topic for holy war. I 
+                keep my proposal here loosely, but they key point is testability must 
+                influence architecture and that's where I stay firm. 
             </p>
 
         </section>
