@@ -1,0 +1,601 @@
+```html
+---
+layout: post
+title: 'Building a University Data & AI Center: solving the chicken-and-egg problem'
+date: '2026-06-07'
+author: Gelassen
+tags:
+modified_time: '2026-06-07'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a University Data & AI Center</title>
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+    <article>
+
+        <section>
+            <h3>Executive Summary</h3>
+
+            <p>
+                Many universities and research organizations are currently investing
+                in Data and AI infrastructure.
+            </p>
+
+            <p>
+                The common assumption is straightforward:
+            </p>
+
+            <ul>
+                <li>acquire servers;</li>
+                <li>deploy a data platform;</li>
+                <li>install AI tooling;</li>
+                <li>attract users.</li>
+            </ul>
+
+            <p>
+                In practice, the opposite challenge often emerges.
+            </p>
+
+            <p>
+                The infrastructure is available, but there are not enough users.
+            </p>
+
+            <p>
+                Potential users are not joining because there are not enough
+                real projects.
+            </p>
+
+            <p>
+                Potential customers are not bringing projects because there are
+                not enough experienced people.
+            </p>
+
+            <p>
+                As a result, organizations face a classic chicken-and-egg problem:
+            </p>
+
+            <ul>
+                <li>no people → no projects;</li>
+                <li>no projects → no people.</li>
+            </ul>
+
+            <p>
+                This article analyzes several possible development strategies for a
+                university Data & AI Center and proposes an organizational model
+                capable of breaking this cycle.
+            </p>
+        </section>
+
+        <section>
+            <h3>The Initial Situation</h3>
+
+            <p>
+                Consider a typical modern Data & AI Center.
+            </p>
+
+            <p>
+                Infrastructure may include:
+            </p>
+
+            <ul>
+                <li>Kubernetes;</li>
+                <li>GPU cluster;</li>
+                <li>Data Lake;</li>
+                <li>Data Warehouse;</li>
+                <li>ETL platform;</li>
+                <li>BI platform;</li>
+                <li>ML platform;</li>
+                <li>API and integration layer.</li>
+            </ul>
+
+            <p>
+                From a technical perspective, such a platform is capable of supporting:
+            </p>
+
+            <ul>
+                <li>analytics;</li>
+                <li>machine learning;</li>
+                <li>scientific computing;</li>
+                <li>data engineering education;</li>
+                <li>business projects.</li>
+            </ul>
+
+            <p>
+                The question is not whether the platform is technically capable.
+            </p>
+
+            <p>
+                The question is:
+            </p>
+
+            <p>
+                <b>What is the primary purpose of the center?</b>
+            </p>
+        </section>
+
+        <section>
+            <h3>The Core Problem</h3>
+
+            <h4>Problem #1: Lack of Specialists</h4>
+
+            <p>
+                The center requires:
+            </p>
+
+            <ul>
+                <li>Data Engineers;</li>
+                <li>ML Engineers;</li>
+                <li>Analysts;</li>
+                <li>Researchers;</li>
+                <li>Graduate students.</li>
+            </ul>
+
+            <p>
+                However, specialists are attracted by:
+            </p>
+
+            <ul>
+                <li>interesting projects;</li>
+                <li>access to data;</li>
+                <li>opportunities for growth;</li>
+                <li>real-world challenges.</li>
+            </ul>
+
+            <p>
+                Without such opportunities, it is difficult to build a sustainable
+                community.
+            </p>
+
+            <h4>Problem #2: Lack of Projects</h4>
+
+            <p>
+                External customers expect:
+            </p>
+
+            <ul>
+                <li>proven expertise;</li>
+                <li>successful case studies;</li>
+                <li>qualified teams;</li>
+                <li>predictable delivery.</li>
+            </ul>
+
+            <p>
+                Without people and experience, attracting projects becomes difficult.
+            </p>
+
+            <h4>Why These Problems Reinforce Each Other</h4>
+
+            <p>
+                This creates a self-reinforcing loop:
+            </p>
+
+            <pre>
+No projects
+      ↓
+No practical experience
+      ↓
+No specialists
+      ↓
+No capability
+      ↓
+No projects
+            </pre>
+
+            <p>
+                Many centers remain trapped in this cycle despite having substantial
+                infrastructure investments.
+            </p>
+        </section>
+
+        <section>
+            <h3>Possible Development Models</h3>
+
+            <h4>Model 1. Educational Platform</h4>
+
+            <p>
+                Primary product:
+            </p>
+
+            <ul>
+                <li>trained specialists.</li>
+            </ul>
+
+            <p>
+                Target audience:
+            </p>
+
+            <ul>
+                <li>students;</li>
+                <li>academic programs;</li>
+                <li>university departments.</li>
+            </ul>
+
+            <p>
+                Success metrics:
+            </p>
+
+            <ul>
+                <li>number of graduates;</li>
+                <li>employment outcomes;</li>
+                <li>practical competencies.</li>
+            </ul>
+
+            <p>
+                <b>Advantages</b>
+            </p>
+
+            <ul>
+                <li>aligns naturally with university mission;</li>
+                <li>predictable user base;</li>
+                <li>stable demand.</li>
+            </ul>
+
+            <p>
+                <b>Disadvantages</b>
+            </p>
+
+            <ul>
+                <li>limited external impact;</li>
+                <li>difficult to justify expensive infrastructure solely through education.</li>
+            </ul>
+
+            <h4>Model 2. Research Computing Center</h4>
+
+            <p>
+                Primary product:
+            </p>
+
+            <ul>
+                <li>scientific research.</li>
+            </ul>
+
+            <p>
+                Target audience:
+            </p>
+
+            <ul>
+                <li>researchers;</li>
+                <li>laboratories;</li>
+                <li>graduate students.</li>
+            </ul>
+
+            <p>
+                Success metrics:
+            </p>
+
+            <ul>
+                <li>publications;</li>
+                <li>grants;</li>
+                <li>scientific output.</li>
+            </ul>
+
+            <p>
+                <b>Advantages</b>
+            </p>
+
+            <ul>
+                <li>strengthens academic reputation;</li>
+                <li>attracts research funding.</li>
+            </ul>
+
+            <p>
+                <b>Disadvantages</b>
+            </p>
+
+            <ul>
+                <li>limited number of users;</li>
+                <li>project-driven funding model;</li>
+                <li>slower growth.</li>
+            </ul>
+
+            <h4>Model 3. Applied Analytics and AI Center</h4>
+
+            <p>
+                Primary product:
+            </p>
+
+            <ul>
+                <li>solutions for external customers.</li>
+            </ul>
+
+            <p>
+                Target audience:
+            </p>
+
+            <ul>
+                <li>government organizations;</li>
+                <li>corporations;</li>
+                <li>industry.</li>
+            </ul>
+
+            <p>
+                Success metrics:
+            </p>
+
+            <ul>
+                <li>revenue;</li>
+                <li>completed projects;</li>
+                <li>customer satisfaction.</li>
+            </ul>
+
+            <h4>Model 4. Open Challenge Platform</h4>
+
+            <p>
+                Conceptually similar to Kaggle.
+            </p>
+
+            <p>
+                Primary product:
+            </p>
+
+            <ul>
+                <li>challenges;</li>
+                <li>competitions;</li>
+                <li>talent discovery.</li>
+            </ul>
+
+            <p>
+                The major challenge is building both sides of the marketplace
+                simultaneously:
+            </p>
+
+            <ul>
+                <li>customers with real problems;</li>
+                <li>participants capable of solving them.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Why Not Do Everything At Once?</h3>
+
+            <p>
+                At first glance all models use the same infrastructure:
+            </p>
+
+            <ul>
+                <li>GPUs;</li>
+                <li>Kubernetes;</li>
+                <li>Spark;</li>
+                <li>ClickHouse;</li>
+                <li>Data Lake.</li>
+            </ul>
+
+            <p>
+                However, they optimize for different outcomes.
+            </p>
+
+            <table border="1" cellpadding="8" cellspacing="0">
+                <tr>
+                    <th>Direction</th>
+                    <th>Primary Success Metric</th>
+                </tr>
+                <tr>
+                    <td>Education</td>
+                    <td>Graduates</td>
+                </tr>
+                <tr>
+                    <td>Research</td>
+                    <td>Publications</td>
+                </tr>
+                <tr>
+                    <td>Applied Projects</td>
+                    <td>Customer Value</td>
+                </tr>
+                <tr>
+                    <td>Open Platform</td>
+                    <td>Community Growth</td>
+                </tr>
+            </table>
+
+            <p>
+                Trying to maximize all four simultaneously creates organizational
+                conflicts and resource competition.
+            </p>
+        </section>
+
+        <section>
+            <h3>Matching Strategic Options With Existing Strengths</h3>
+
+            <p>
+                Typical strengths of a university-based center include:
+            </p>
+
+            <ul>
+                <li>compute infrastructure;</li>
+                <li>GPU resources;</li>
+                <li>students and educational programs;</li>
+                <li>research laboratories;</li>
+                <li>academic expertise.</li>
+            </ul>
+
+            <h4>Strategic Fit Analysis</h4>
+
+            <table border="1" cellpadding="8" cellspacing="0">
+                <tr>
+                    <th>Direction</th>
+                    <th>Infrastructure</th>
+                    <th>Students</th>
+                    <th>Research</th>
+                    <th>External Relations</th>
+                </tr>
+                <tr>
+                    <td>Education</td>
+                    <td>High</td>
+                    <td>Very High</td>
+                    <td>Medium</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>Research</td>
+                    <td>High</td>
+                    <td>Medium</td>
+                    <td>Very High</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Applied Projects</td>
+                    <td>High</td>
+                    <td>High</td>
+                    <td>Medium</td>
+                    <td>Very High</td>
+                </tr>
+                <tr>
+                    <td>Open Challenge Platform</td>
+                    <td>Medium</td>
+                    <td>High</td>
+                    <td>High</td>
+                    <td>High</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h3>Proposed Solution: Hierarchy of Goals</h3>
+
+            <p>
+                Different activities should not compete with each other.
+            </p>
+
+            <p>
+                They should support each other.
+            </p>
+
+            <h4>Foundation Layer: Infrastructure</h4>
+
+            <p>
+                The center provides:
+            </p>
+
+            <ul>
+                <li>compute;</li>
+                <li>storage;</li>
+                <li>analytics;</li>
+                <li>AI tooling.</li>
+            </ul>
+
+            <h4>Level 1: Education</h4>
+
+            <p>
+                Primary mission:
+            </p>
+
+            <p>
+                <b>Training future Data and AI professionals.</b>
+            </p>
+
+            <h4>Level 2: Research</h4>
+
+            <p>
+                Research advances knowledge and increases platform utilization.
+            </p>
+
+            <h4>Level 3: Applied Projects</h4>
+
+            <p>
+                Applied projects provide:
+            </p>
+
+            <ul>
+                <li>real datasets;</li>
+                <li>real business problems;</li>
+                <li>funding;</li>
+                <li>practical experience.</li>
+            </ul>
+
+            <h4>Level 4: Open Challenges and Competitions</h4>
+
+            <p>
+                Competitions are not treated as a standalone business.
+            </p>
+
+            <p>
+                They become a mechanism for:
+            </p>
+
+            <ul>
+                <li>attracting talent;</li>
+                <li>discovering solutions;</li>
+                <li>engaging external partners;</li>
+                <li>expanding the community.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Final Architecture</h3>
+
+            <pre>
+          Open Challenges
+                 ▲
+                 │
+          Applied Projects
+                 ▲
+                 │
+              Research
+                 ▲
+                 │
+             Education
+                 ▲
+                 │
+          Infrastructure
+            </pre>
+
+            <p>
+                Each level strengthens the level below it.
+            </p>
+
+            <p>
+                Instead of competing priorities, the center develops a coherent
+                ecosystem.
+            </p>
+        </section>
+
+        <section>
+            <h3>Conclusion</h3>
+
+            <p>
+                The primary mistake many organizations make is treating
+                infrastructure as the product.
+            </p>
+
+            <p>
+                Infrastructure is not the product.
+            </p>
+
+            <p>
+                The real product is the environment created around it.
+            </p>
+
+            <p>
+                For a university Data & AI Center, the most sustainable model
+                appears to be:
+            </p>
+
+            <ul>
+                <li>education as the primary mission;</li>
+                <li>research as capability development;</li>
+                <li>applied projects as a source of real-world challenges;</li>
+                <li>competitions as a mechanism for ecosystem growth.</li>
+            </ul>
+
+            <p>
+                Such an approach allows the organization to solve the fundamental
+                chicken-and-egg problem:
+            </p>
+
+            <p>
+                Real projects attract talented people, while talented people enable
+                the center to attract increasingly complex projects.
+            </p>
+        </section>
+        <section>
+            Prepared with help of ChatGPT. 
+        </section>
+    </article>
+</body>
+</html>
+```
