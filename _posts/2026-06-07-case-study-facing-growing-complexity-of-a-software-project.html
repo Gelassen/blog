@@ -1,0 +1,410 @@
+---
+layout: post
+title: 'Case Study: Facing Growing Complexity of a Software Project by overcoming flaky tests'
+date: '2026-06-07'
+author: Gelassen
+tags:
+modified_time: '2026-06-07'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building a University Data & AI Center</title>
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+    <article>
+        <section>
+            <h3>Executive summary</h3>
+            <p>
+                This week I implemented a solution of flaky tests in current 
+                software project of my customer as a part of CI. It solves more important issue 
+                as it my not seen at the first glance and touch more fundamental 
+                problem of software development and that's why it is worth 
+                to write a whole publication about it.
+            <p> 
+                Flaky tests are not the problem. They are a symptom of a much deeper 
+                issue: as project complexity grows, the quality of feedback loops 
+                deteriorates. Once engineers stop trusting feedback, the cost of 
+                every change starts increasing.
+            </p>
+        </section>
+        <section>
+            <h3>Context</h3>
+            <h4>Feedback loop as a basis for learning</h4>
+            <p>
+                Feedback loop is a basis of our learning process. We try a dish 
+                and if we don't like it, we try to avoid it in the future, but 
+                if we like it, we try cook it more often. Feedback here is a taste 
+                of the dish we just have cooked a five minutes ago, and based on 
+                this feedback we make a conscious decision to cook it again or not 
+                in the future. 
+            </p>
+            <h4>Feedback loop in software development</h4>
+            <p>
+                In software development we receive such feedback in several ways:
+                <ul>
+                    <li>Compiler in IDE executes our code without errors</li>
+                    <li>Running the code further doesn't show any errors</li>
+                    <li>Tests are passing</li>
+                </ul> 
+                Others less obvious metrics could be added here as well: we get 
+                paid for our work, we get a moral satisfaction of the problem we 
+                have solved, we get promoted to a new rank, customer gives as a 
+                positive feedback and so on.   
+            </p>
+            <p>
+                It is a bit offtopic for this publication, but I worth to 
+                mentioned a fundamental difference between positive feedback 
+                for developer and positive feedback for a business owner.      
+            </p>
+            <p>
+                When engineers are usually happy with things above, the customer 
+                main drivers are end users are happy with the product and 
+                stakeholders return enough on their investments.
+            </p>
+            <p>
+                When this two different parts of stimulus are aligned with each other, 
+                customer and engineer's team goes in the same direction. But 
+                by default there is a gap between them which should be overcame. 
+                That's one of my key points I trailblaze for more than a decade. 
+                (<a href="https://gelassen.github.io/blog/2017/04/25/the-real-goal-behind-your-software-project.html">here</a> and <a href="https://gelassen.github.io/blog/2017/08/12/about-systems-of-coordinates.html">there</a>)) 
+            </p>
+            <h4>Feedback loop built into the process</h4>
+            <p>
+                Engineers goes even further an integrate such feedback loop 
+                into the development process itself -- continuous integration, 
+                continuous delivery, continuous deployment.
+            </p>
+            <p>
+                Each commit into the codebase means new changes, therefore 
+                opens a possibility to break something. CI solves this issue 
+                by automatically compiling the code and execute any other 
+                tasks engineer decides to add on.  
+            </p>
+            <h4>Testing and its automation as a feedback loop amplifier</h4>
+            <p>
+                It was mentioned a bit earlier, but it is important to stress 
+                this point again. When compiling program successfully gives us 
+                signal that from compiler perspective everything is fine, the 
+                program itself could be far from working product. Tests here 
+                and especially automated tests strengthen this feedback even 
+                further.             
+            </p>
+        </section>
+        <section>
+            <h3>Issue #1: tests stops serving as a reliable indicator</h3>
+            <p>
+                When we implemented tests which covers all key user scenarios, 
+                passing all tests means our product do all user actions
+                correctly -- product does its job. In this case looking on the 
+                tests passed is enough to move forward.   
+            </p>
+            <p>
+                But with the growth of the project, we start to face with 
+                situations when tests are flaky -- they are failed, but the 
+                codebase is fine. They require more time and often change 
+                in architecture (there is a view the flaky tests caused by 
+                issues in the software architecture)), but the point is you 
+                stop rely on this as a source of understanding you product 
+                is doing well. You are actually not sure anymore does your 
+                commit break something or not.   
+            </p>
+        </section>
+        <section>
+            <h3>Issue #2: maintaining tests takes more and more time</h3>
+            <p>
+                Another issue comes from the fact tests are also software, they 
+                also requires engineers, engineering time to implement them and 
+                maintain them. They also could have bugs, they also could become 
+                absolete and require refactoring. With the growth of the main 
+                codebase amount of tests grows too, therefore their costs of 
+                development and maintenance.  
+            </p>
+            <p>
+                When the issue #1 appears, together with there costs of issue #2, 
+                we come to the question -- is it worth to invest in tests at all? 
+                Do we need them?  
+            </p>
+        </section>
+        <section>
+            <h3>Solution</h3>
+            <p>
+                The answer is yes, we still need them. Software needs to be verified 
+                it works as expected and all this verification or at least a 
+                part of it should be automated, because automated verification makes 
+                it cheaper. Tests have been serving us well till this point, current 
+                issues means we need to invent something else, but first to improve 
+                situation with the current circumstances.   
+            </p>
+            <p>
+                My investigation with help of ChatGPT shown that software engineers 
+                worldwide face with the same issue. Tests works till some point, but 
+                after project complexity threshold they start to fail and require more 
+                and more time to maintain. No matter how talented engineer is or how 
+                brilliant software architecture is, the complexity of the growing 
+                project causes this issue. Running 100% tests coverage is very 
+                expensive, my personal proposal end-to-end integration tests for 
+                all user scenarios plus unit test per each found bug stop working 
+                either. If they face with same issues, which options to solve 
+                they have tried and which on they end with?     
+            </p>
+            <p>
+                Discovery of the best practices of the market leaders shown several 
+                interesting ideas, but let me describe aggregated solution which 
+                I found reasonable for my case. Each company and project is 
+                different, that's why plain direct transition of practices and 
+                recipes often is bad idea. The working solution is always a 
+                creative process based on your experience with limitations that 
+                exists at this moment and in the nearest future. And I prefer 
+                do it in the LEAN way and experimenting on small part\project 
+                before scaling it further.     
+            </p>
+            <h4>Rerunning tests</h4>
+            <p>
+                The first and probably the simplest mitigation strategy is rerunning failed
+                tests automatically. If a test occasionally fails because of timing issues,
+                unstable external dependencies, network latency or other non-deterministic
+                factors, executing it one more time often produces a successful result.
+            </p>
+            <p>
+                This approach does not solve the root cause of the problem and therefore
+                should not be considered a final solution. However, it significantly reduces
+                the noise level in the feedback loop and allows engineers to focus on real
+                failures instead of investigating false alarms every day.
+            </p>
+            <p>
+                In our case we implemented a separate CI stage which automatically reruns
+                failed tests several times and collects additional metrics. This allows us
+                to distinguish deterministic failures from flaky ones and build statistics
+                around test stability. As a result engineers spend less time restarting
+                pipelines manually and receive a cleaner signal from the testing system.
+            </p>
+
+            <h4>Quarantining tests as a separate stage</h4>
+            <p>
+                The second idea comes from practices used by many large software companies.
+                Once a test is identified as flaky, it should stop blocking delivery of
+                new functionality. Otherwise the entire engineering process becomes hostage
+                to unreliable automation.
+            </p>
+            <p>
+                This does not mean the test should be removed. Instead it is moved into a
+                dedicated quarantine stage. Such tests are still executed, their results
+                are still collected and monitored, but they no longer determine whether
+                the entire pipeline succeeds or fails.
+            </p>
+            <p>
+                This approach creates a clear separation between two different goals:
+                validating business functionality and improving test quality. Product
+                development can continue while engineering teams gradually reduce the
+                technical debt accumulated in the testing infrastructure.
+            </p>
+            <p>
+                In practice this solution turned out to be surprisingly effective because
+                it restores trust in the main CI pipeline. If the main pipeline is green,
+                engineers can reasonably assume that the product is healthy. Failures in
+                the quarantine stage become a separate stream of work instead of random
+                interruptions to daily development.
+            </p>
+
+            <h4>Investing in building a more testable architecture</h4>
+            <p>
+                Eventually every team discovers that flaky tests are often symptoms rather
+                than the disease itself. The deeper cause frequently lies in software
+                architecture.
+            </p>
+            <p>
+                Systems with hidden dependencies, shared mutable state, asynchronous race
+                conditions and tightly coupled components are difficult to test reliably.
+                The testing framework simply exposes problems that already exist inside the
+                design of the system.
+            </p>
+            <p>
+                Therefore part of the solution is investing in architecture that is easier
+                to verify. Clear interfaces, dependency injection, separation of concerns,
+                deterministic behaviour and well-defined boundaries between components
+                reduce both production defects and testing complexity.
+            </p>
+            <p>
+                Such investments rarely provide immediate visible business value, which is
+                why they are often postponed. However, over time they reduce maintenance
+                costs, increase delivery speed and improve confidence in every change made
+                to the codebase.
+            </p>
+
+            <h4>Moving to TDD as a prerequisite for testable architecture by default</h4>
+            <p>
+                Looking further into the future, I came to the conclusion that testability
+                should not be added after the architecture is already built. It should be
+                one of the forces shaping the architecture from the very beginning.
+            </p>
+            <p>
+                It was said earlier many issues with tests came from issues with 
+                software architecture -- architecture wasn't designed with testability 
+                in mind. Many teams has a separation on engineers who write main 
+                code and software engineers who write automated tests. It is 
+                considered cost effective, but this topic shown a fundamental 
+                issue with it -- you can not designed a proper architecture until 
+                you develop test coverage for the product by itself. This cause 
+                all cascade of issues described in the publication.    
+            </p>
+            <p>
+                This is one of the strongest arguments in favour of Test Driven Development.
+                Regardless of discussions around productivity, TDD forces engineers to
+                think about interfaces, boundaries and behaviour before implementation
+                details appear.
+            </p>
+            <p>
+                When a component is difficult to test, it is often a sign that its design
+                can be improved. TDD turns testability into a design constraint and
+                therefore naturally encourages creation of loosely coupled and more
+                maintainable systems.
+            </p>
+            <p>
+                I would not claim that TDD eliminates flaky tests completely. Complexity
+                still grows, external integrations still exist and large systems remain
+                challenging. However, TDD shifts the architecture in a direction where
+                verification becomes cheaper and reliability remains manageable for a much
+                longer period of time.
+            </p>
+
+        </section>
+        <section>
+            <h3>Post scriptum: complexity of projects, exponentially increasing cost of fixing bugs vs linearly increasing cost of tests, trade-offs</h3>
+            <p>
+
+                There is another aspect of this discussion which is worth mentioning.
+
+                Whenever engineers talk about automated testing, the conversation often
+
+                becomes polarized: either tests are considered mandatory for everything,
+
+                or they are treated as unnecessary overhead slowing down delivery.
+
+            </p>
+            <p>
+
+                My experience suggests that reality is much more nuanced. Both approaches
+
+                have costs, and software engineering is largely a discipline of managing
+
+                trade-offs between them.
+
+            </p>
+            <p>
+
+                Software developed without sufficient automated verification creates a high
+
+                level of uncertainty. Engineers spend less time writing and maintaining
+
+                tests today, but they pay for this decision later through debugging,
+
+                production incidents, regression defects and unpredictable delivery dates.
+
+            </p>
+            <p>
+
+                The most problematic consequence is not even the bugs themselves. It is the
+
+                loss of predictability. When the team cannot reliably estimate the effort
+
+                required to validate changes, planning becomes increasingly difficult.
+
+                Delivery dates become less trustworthy, maintenance activities consume a
+
+                growing portion of engineering capacity and every modification carries
+
+                additional risk.
+
+            </p>
+            <p>
+
+                Automated tests are not a silver bullet either. Tests are software
+
+                themselves. They require implementation, maintenance, refactoring and
+
+                occasionally complete redesign. As demonstrated by flaky tests, testing
+
+                infrastructure can become a source of complexity on its own.
+
+            </p>
+            <p>
+
+                However, while tests introduce an additional maintenance cost, they also
+
+                create a more predictable development environment. Teams receive faster
+
+                feedback, defects are discovered earlier and the cost of investigating
+
+                failures becomes more manageable. In practice this additional investment
+
+                often pays for itself through reduced uncertainty.
+
+            </p>
+            <p>
+
+                The deeper issue behind many struggling software projects is the hidden
+
+                growth of development costs over time. As systems become larger, engineers
+
+                gradually spend less time delivering new functionality and more time
+
+                understanding existing code, fixing regressions, maintaining integrations,
+
+                resolving incidents and preserving compatibility with previous decisions.
+
+            </p>
+            <p>
+
+                This phenomenon has been observed repeatedly across the industry. Studies
+
+                and industry reports consistently show that technical debt, architectural
+
+                complexity and insufficient quality controls reduce delivery performance
+
+                and increase operational costs. In many projects the transition happens so
+
+                gradually that it remains unnoticed until maintenance consumes the majority
+
+                of engineering effort.
+
+            </p>
+            <p>
+
+                From this perspective, flaky tests are not merely a testing problem. They
+
+                are an early warning signal indicating that system complexity is growing
+
+                faster than the engineering practices used to control it.
+
+            </p>
+            <p>
+
+                The goal is therefore not to maximize or minimize testing. The goal is to
+
+                maintain a sustainable balance where the cost of verification remains lower
+
+                than the uncertainty it removes. Different teams, products and business
+
+                environments will find this balance at different points.
+
+            </p>
+            <p>
+
+                In the end, software development remains a process of learning. Reliable
+
+                feedback allows teams to learn faster, make better decisions and maintain
+
+                confidence while systems continue to grow. Automated testing, despite all
+
+                its imperfections, remains one of the most effective mechanisms currently
+
+                available to support that learning process.
+
+            </p>
+        </section>
+    </article>
+</body>
