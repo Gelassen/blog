@@ -1,0 +1,743 @@
+---
+layout: post
+title: 'Case study: manufactory knowledge management system (KMS)'
+date: '2026-06-20'
+author: Gelassen
+tags:
+modified_time: '2026-06-20'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+<article>
+    <section>
+        <h3>Executive summary</h3>
+        <p>
+            This week I finished work on a minimum viable product (MVP) for a 
+            manufacturing company that aims to reduce machine downtime and 
+            therefore cut losses.
+        </p>
+        <p>
+            It addresses the following pain point: "We have a machine. Where is 
+            all the information about it, and how can we ensure that this 
+            knowledge doesn't disappear when employees leave?". According to 
+            available statistics, the depreciation rate of fixed assets in the 
+            manufacturing industry is about 50% (Russia). This means that these assets 
+            require continuous maintenance to extend their service life. Although 
+            my personal experience is limited to a single manufacturing company, 
+            it confirms that old machines make up a significant share of physical 
+            assets and that engineers often struggle to find documentation and 
+            accumulated knowledge about how to repair them developed over the years. 
+        </p>
+        <p>
+            The concept is straightforward: every machine gets a QR code. An 
+            engineer scans it and instantly receives access to: 
+            <ul>
+                <li>Technical documentation and service manuals</li>
+                <li>List of breakdowns over the years</li>
+                <li>Who repaired the machine, when it was repaired, and what was done.</li>
+            </ul>
+
+            Such information should significantly reduce repair time by 
+            providing quicker access to documentation and insights into previous 
+            failures, as many issues tend to recur.
+        </p>
+        <p>
+            Tech stack: <br>
+            Kotlin backend, React/TS web client, mobile web client, 
+            Postgres, Docker Compose. 
+        </p>
+    </section>
+    <section>
+        <h3>Market research</h3>
+        <h4>Market capacity</h4>
+        <p>
+            Rosstat reported: 
+            <ul>
+                <li>The depreciation rate of fixed assets in the manufacturing industry is approximately 50%;</li>
+                <li>Machinery and equipment are depreciated at approximately 50–52%;</li>
+                <li>Approximately 18–20% of machinery and equipment are completely worn out.</li>
+            </ul>
+        </p>
+        <p>
+            The situation with machinery assets in the rest of the world doesn't 
+            make a a big difference:
+        </p>
+        <p>
+            <img src="/blog/assets/images/2026-06-20/market-capacity-part-I.png"/>
+        </p> 
+        <p>
+            The next interesting value is a number of manufacturing enterprises 
+            with sufficiently complex and aging equipment where undocumented 
+            knowledge causes downtime, onboarding issues, and dependence on key 
+            personnel.
+        </p>
+        <p>
+            Ballpark formula and estimate are: <br>
+            Target factories = Manufacturing enterprises × % with multi-machine 
+            operations × % suffering from knowledge fragmentation
+        </p>
+        <p>
+            <img src="/blog/assets/images/2026-06-20/market-capacity-part-II.png"/>
+        </p>
+        <h4>Competitor analysis</h4>
+        <p>
+            <table>
+                <tr>
+                    <th>Product Category</th>
+                    <th>Examples</th>
+                    <th>Problems Solved</th>
+                    <th>Weaknesses for This Use Case</th>
+                </tr>
+
+            <tr>
+                <td>Generic Wiki / Documentation Systems</td>
+                <td>Confluence, BookStack, MediaWiki</td>
+                <td>
+                    Documentation management, procedures, onboarding, knowledge sharing
+                </td>
+                <td>
+                    Not machine-centric; no equipment inventory; no breakdown history;
+                    QR workflows must be built manually.
+                </td>
+            </tr>
+
+            <tr>
+                <td>CMMS (Maintenance Systems)</td>
+                <td>openMAINT, MaintainX, UpKeep</td>
+                <td>
+                    Work orders, preventive maintenance, asset tracking,
+                    maintenance scheduling
+                </td>
+                <td>
+                    Optimized for maintenance execution rather than preserving
+                    institutional knowledge; documentation is usually secondary.
+                </td>
+            </tr>
+
+            <tr>
+                <td>MES (Manufacturing Execution Systems)</td>
+                <td>OpenMES, IMES</td>
+                <td>
+                    Production tracking, work orders, routing, scheduling,
+                    shop-floor execution, documentation attached to operations
+                </td>
+                <td>
+                    Documentation is process-centric rather than machine-centric;
+                    historical repair knowledge and troubleshooting experience are
+                    usually not first-class entities.
+                </td>
+            </tr>
+
+            <tr>
+                <td>ERP + MES + QMS Platforms</td>
+                <td>Carbon</td>
+                <td>
+                    Production planning, inventory management, quality control,
+                    business processes, manufacturing operations
+                </td>
+                <td>
+                    Broad enterprise scope increases implementation complexity and
+                    deployment cost; preserving repair knowledge is only a small
+                    subset of the platform.
+                </td>
+            </tr>
+
+            <tr>
+                <td>Enterprise EAM Platforms</td>
+                <td>IBM Maximo, SAP Asset Management</td>
+                <td>
+                    Enterprise asset management, maintenance planning,
+                    analytics, integrations
+                </td>
+                <td>
+                    Expensive; complex deployment; excessive for many SMEs;
+                    long implementation cycles.
+                </td>
+            </tr>
+
+            <tr>
+                <td>File Shares and Network Drives</td>
+                <td>SharePoint, NAS, shared folders</td>
+                <td>
+                    Central storage of manuals and drawings
+                </td>
+                <td>
+                    No machine context; poor searchability; no repair history;
+                    knowledge remains fragmented.
+                </td>
+            </tr>
+
+            <tr>
+                <td>Paper Documentation</td>
+                <td>Binders near machines</td>
+                <td>
+                    Immediate local availability
+                </td>
+                <td>
+                    Easily outdated; difficult to search; impossible to aggregate
+                    organizational knowledge.
+                </td>
+            </tr>
+
+            <tr>
+                <td>Human Memory ("Ask Sergey")</td>
+                <td>Experienced maintenance personnel</td>
+                <td>
+                    Tacit knowledge and undocumented troubleshooting experience
+                </td>
+                <td>
+                    Single point of failure; knowledge disappears with retirement
+                    or employee turnover.
+                </td>
+            </tr>
+
+            </table>
+
+            <h5>Available open-source solutions</h5>
+
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Strengths</th>
+                    <th>Missing for This Use Case</th>
+                </tr>
+
+            <tr>
+                <td>BookStack</td>
+                <td>
+                    Excellent documentation UX, self-hosted, easy deployment
+                </td>
+                <td>
+                    No machine model, no breakdown history, no maintenance context.
+                </td>
+            </tr>
+
+            <tr>
+                <td>MediaWiki</td>
+                <td>
+                    Extremely flexible, mature ecosystem
+                </td>
+                <td>
+                    Requires heavy customization; poor UX for shop-floor engineers.
+                </td>
+            </tr>
+
+            <tr>
+                <td>openMAINT</td>
+                <td>
+                    Asset management and maintenance workflows
+                </td>
+                <td>
+                    Heavy enterprise orientation; knowledge capture is secondary.
+                </td>
+            </tr>
+
+            <tr>
+                <td>Wiki.js</td>
+                <td>
+                    Modern documentation platform
+                </td>
+                <td>
+                    Generic wiki only.
+                </td>
+            </tr>
+
+            <tr>
+                <td>OpenMES</td>
+                <td>
+                    Modern MES for small manufacturers; production tracking;
+                    operational documentation
+                </td>
+                <td>
+                    Optimized for production execution rather than preserving
+                    machine repair knowledge and maintenance history.
+                </td>
+            </tr>
+
+            </table>
+
+            <h5>Available commercial solutions</h5>
+
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Strengths</th>
+                    <th>Weaknesses</th>
+                </tr>
+
+            <tr>
+                <td>MaintainX</td>
+                <td>
+                    Mobile-first CMMS, QR codes, work orders
+                </td>
+                <td>
+                    Primarily maintenance execution rather than organizational
+                    knowledge preservation.
+                </td>
+            </tr>
+
+            <tr>
+                <td>UpKeep</td>
+                <td>
+                    Strong mobile experience, preventive maintenance
+                </td>
+                <td>
+                    Expensive for SMEs; knowledge retention is not its primary
+                    value proposition.
+                </td>
+            </tr>
+
+            <tr>
+                <td>IBM Maximo</td>
+                <td>
+                    Industry-leading EAM capabilities
+                </td>
+                <td>
+                    Very expensive and operationally heavy.
+                </td>
+            </tr>
+
+            <tr>
+                <td>SAP Asset Management</td>
+                <td>
+                    Deep integration into the SAP ecosystem
+                </td>
+                <td>
+                    Significant implementation and consulting costs.
+                </td>
+            </tr>
+
+            <tr>
+                <td>Carbon</td>
+                <td>
+                    ERP + MES + QMS platform covering production,
+                    inventory and quality processes
+                </td>
+                <td>
+                    Broad business scope; machine knowledge preservation is not
+                    the primary focus and may be excessive for SMEs seeking only
+                    equipment documentation and repair history.
+                </td>
+            </tr>
+
+            <tr>
+                <td>IMES</td>
+                <td>
+                    Designed for job shops and discrete manufacturing;
+                    production planning and shop-floor coordination
+                </td>
+                <td>
+                    Strong production orientation but limited emphasis on capturing
+                    tacit maintenance knowledge accumulated around individual
+                    machines over many years.
+                </td>
+            </tr>
+
+            </table>
+
+            <h5>Capability comparison</h5>
+
+            <table>
+                <tr>
+                    <th>Capability</th>
+                    <th>Wiki</th>
+                    <th>CMMS</th>
+                    <th>MES</th>
+                    <th>ERP/MES</th>
+                    <th>Proposed KMS</th>
+                </tr>
+
+            <tr>
+                <td>Documentation management</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>Machine inventory</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>QR access from shop floor</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>Breakdown history</td>
+                <td>❌</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>Capture of repair know-how</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>Fast deployment</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>❌</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>Affordable for SMEs</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>❌</td>
+                <td>✅</td>
+            </tr>
+
+            <tr>
+                <td>Self-hosted open-source option</td>
+                <td>✅</td>
+                <td>⚠️</td>
+                <td>⚠️</td>
+                <td>❌</td>
+                <td>✅</td>
+            </tr>
+
+            </table>
+        </p>
+        <p>
+            Existing solutions tend to optimize one of three concerns:
+            documentation management, maintenance execution, or production
+            execution. Small and medium manufacturers frequently need something
+            simpler: a machine-centric knowledge repository that can be deployed
+            quickly, accessed directly from the shop floor via QR codes, and
+            preserve historical maintenance knowledge that would otherwise remain
+            locked inside individual engineers' heads.
+        </p>
+        <h4>Potential market fit</h4>
+
+        <p>
+            The strongest signal of market fit is not the absence of competitors, but rather the fragmentation of partial solutions.
+            Existing systems typically solve adjacent problems: documentation (wikis), maintenance execution (CMMS), production tracking (MES),
+            or enterprise asset management (EAM). However, none of them treats the machine itself as the central knowledge entity
+            that accumulates operational history over time.
+        </p>
+
+        <p>
+            In practice, most manufacturing companies operate in a hybrid state:
+        </p>
+
+        <ul>
+            <li>formal maintenance systems exist but are underused or partially implemented;</li>
+            <li>documentation is stored in shared folders or paper binders;</li>
+            <li>critical knowledge remains in the heads of a small number of technicians;</li>
+            <li>production and maintenance systems are disconnected.</li>
+        </ul>
+
+        <p>
+            This creates a consistent operational gap: information exists, but it is not accessible in the context where it is needed
+            (at the machine, during failure, under time pressure).
+        </p>
+
+        <p>
+            The proposed system is positioned to fill this gap by unifying three layers:
+        </p>
+
+        <ul>
+            <li><b>static knowledge</b> (manuals, procedures, documentation),</li>
+            <li><b>historical operational knowledge</b> (breakdowns, repairs, patterns),</li>
+            <li><b>contextual access layer</b> (QR-based retrieval directly at the machine).</li>
+        </ul>
+
+        <p>
+            This combination is particularly relevant in environments with:
+        </p>
+
+        <ul>
+            <li>heterogeneous equipment fleets (different generations and vendors),</li>
+            <li>limited digital integration between systems,</li>
+            <li>high dependency on experienced technicians,</li>
+            <li>cost-sensitive production where downtime is still expensive but not digitized away.</li>
+        </ul>
+
+        <p>
+            From a geographic perspective, these conditions are not confined to a single region.
+            They are common across Eastern Europe, parts of Western Europe (notably SME manufacturing sectors),
+            the United States industrial mid-market, and rapidly industrializing economies in Asia.
+        </p>
+
+        <p>
+            The most promising segment is not the most advanced factories, but rather the “in-between” segment:
+            companies that are large enough to suffer from knowledge fragmentation, but too small or too fragmented
+            to justify heavy enterprise systems such as SAP or IBM Maximo.
+        </p>
+
+        <p>
+            In this sense, the product does not compete directly with MES or ERP systems. Instead, it operates as a
+            lightweight layer above them — or alongside them — focused exclusively on preserving and operationalizing
+            machine-level knowledge.
+        </p>
+
+        <p>
+            A practical indicator of product-market fit would be the moment when maintenance teams stop asking:
+        </p>
+
+        <blockquote>
+            “Where is the manual for this machine?”
+        </blockquote>
+
+        <p>
+            and instead begin asking:
+        </p>
+
+        <blockquote>
+            “What has historically been done when this machine failed in this way?”
+        </blockquote>
+
+        <p>
+            That shift represents a transition from documentation-centric behavior to knowledge-centric behavior,
+            which is the core value proposition of the system.
+        </p>
+
+        <p>
+            Finally, the adoption curve is likely to follow a bottom-up pattern. Initial usage is driven by a single workshop,
+            production line, or maintenance team. Once the value of reduced downtime and faster troubleshooting becomes visible,
+            the system can expand horizontally across the factory and vertically across multiple sites.
+        </p>
+
+        <h4>How much to charge for this product to stay attractive for the customer?</h4>
+        <p>
+            Knowledge management systems are somewhat unusual products because they are
+            difficult to evaluate in isolation. Customers do not buy documentation,
+            QR codes, or a searchable wiki. They buy fewer hours of stopped production,
+            less dependence on individual experts, and faster recovery when something
+            eventually breaks.
+        </p>
+        <p>
+            Therefore, pricing should not be benchmarked against generic wiki software
+            such as Confluence or SharePoint. It should be benchmarked against the
+            financial impact of equipment downtime.
+        </p>
+        <p>
+            A simple ROI model can be expressed as:
+        </p>
+        <pre>
+            Annual benefit =
+                downtime reduction
+            + reduced time spent searching for information
+            + faster onboarding of engineers
+            + avoided losses from knowledge leaving the company
+        </pre>
+        <p>
+            Consider a small factory:
+        </p>
+        <ul>
+            <li>100 machines;</li>
+            <li>6 maintenance technicians;</li>
+            <li>15 significant breakdowns per year;</li>
+            <li>2 hours saved per incident;</li>
+            <li>Downtime cost: €2,000 per hour.</li>
+        </ul>
+        <p>
+            Downtime savings alone are:
+        </p>
+        <pre>
+            15 × 2 × €2,000 = €60,000 per year
+        </pre>
+        <p>
+            If the system also saves engineers twenty minutes per day previously spent
+            searching for manuals, drawings, and historical repair information, the
+            labour savings can easily exceed another €10,000–15,000 annually.
+        </p>
+        <p>
+            Even conservative assumptions quickly produce annual benefits in the range
+            of €50,000–100,000 for a medium-sized factory.
+        </p>
+        <p>
+            As a rule of thumb, industrial software remains an easy purchasing decision
+            when its annual cost is below 10% of the measurable value it creates.
+        </p>
+        <p>
+            This leads to an interesting conclusion. Although the product itself is
+            technically simple, its value proposition is not. A system that saves a
+            factory €50,000 per year should not be sold for €200 simply because it is
+            "only a documentation system".
+        </p>
+        <p>
+            A more reasonable pricing strategy might look as follows:
+        </p>
+        <table>
+            <tr>
+                <th>Customer profile</th>
+                <th>Typical savings</th>
+                <th>Suggested annual price</th>
+            </tr>
+            <tr>
+                <td>Small workshop (10–30 machines)</td>
+                <td>€5k–20k</td>
+                <td>€500–2k</td>
+            </tr>
+            <tr>
+                <td>Medium factory (30–200 machines)</td>
+                <td>€20k–100k</td>
+                <td>€2k–10k</td>
+            </tr>
+            <tr>
+                <td>Large plant (200+ machines)</td>
+                <td>€100k+</td>
+                <td>€10k–30k+</td>
+            </tr>
+        </table>
+        <p>
+            Regional purchasing power should also be taken into account.
+        </p>
+        <table>
+            <tr>
+                <th>Market</th>
+                <th>Indicative annual price range</th>
+            </tr>
+            <tr>
+                <td>Russia and Eastern Europe</td>
+                <td>€500–5,000</td>
+            </tr>
+            <tr>
+                <td>Western Europe</td>
+                <td>€2,000–15,000</td>
+            </tr>
+            <tr>
+                <td>United States</td>
+                <td>€3,000–20,000</td>
+            </tr>
+        </table>
+        <p>
+            The pricing model should probably scale with the customer's complexity:
+            number of machines, number of users, or number of production sites. Such
+            metrics are easy to understand and correlate reasonably well with the value
+            generated by the system.
+        </p>
+        <p>
+            The product is better described as a form of insurance
+            against knowledge loss and expensive production downtime. If a factory
+            believes the system can prevent even a single serious incident per year,
+            paying several thousand euros annually becomes a rational business decision.
+        </p>
+    </section>
+    <section>
+        <h3>Architecture</h3>
+        <p>
+            <img src="/blog/assets/images/2026-06-20/market-capacity-part-I.png"/>
+        </p> 
+        <h4>High-Level Flow:</h4>
+        <p>
+            User (operator/technician on shop floor) → opens Web Client (React/TS) on mobile/desktop. <br><br>
+            Presses Scan → uses device camera (rear preferred) to read QR/Barcode on equipment. <br><br>
+            Frontend calls Backend → GET /api/v1/machine/barcode/{barcode}. <br><br>
+            Backend returns machine data or redirects to /machines/{id}. <br><br>
+            Machine Card shows: documentation, maintenance history, solutions to past issues, attachments (PDFs, videos, schemas).
+        </p>
+        <h4>Deployment View (Docker Compose)</h4>
+        <p>
+            <ul>
+                <li>
+                    Services:
+                    <ul>
+                        <li>web / web-prod → React frontend (port 3000)</li>
+                        <li>server → Kotlin Spring Boot backend (port 8080 + Swagger)</li>
+                        <li>database → PostgreSQL</li>   
+                    </ul>
+                </li>
+                <li>Profiles: prod and dev</li>
+                <li>All self-hosted, easy one-command deploy.</li>
+            </ul>
+        </p>
+        <h4>Strengths</h4>
+        <p>
+            <ul>
+                <li>Mobile-first with strong Android/Chrome focus.</li>
+                <li>Simple, maintainable stack.</li>
+                <li>QR-driven navigation = core differentiator for shop-floor use.</li>
+            </ul>
+        </p>
+    </section>
+    <section>
+        <h3>Market entry strategy</h3>
+
+        <p>
+            This section describes a rough vision of how the product is expected to enter the market
+            and evolve from early validation to scalable sales. 
+        </p>
+
+        <h4>Phase 1 — Validation</h4>
+        <ul>
+            <li>Landing page with clear product positioning and use cases</li>
+            <li>Public GitHub repository (transparency + trust for technical buyers)</li>
+            <li>1–3 pilot factories for real-world testing</li>
+            <li>Manual outreach to maintenance engineers and plant managers</li>
+            <li>No or minimal paid advertising</li>
+        </ul>
+
+        <p>
+            Goal: validate that the system is actually used in real workflows and that a full usage loop exists
+            (scan → find knowledge → solve problem → repeat usage).
+        </p>
+
+        <h4>Phase 2 — Proof of value</h4>
+        <ul>
+            <li>Derive at least one concrete case study from a pilot factory</li>
+            <li>Refine positioning based on real feedback from technicians and managers</li>
+            <li>Improve onboarding and first-time setup experience</li>
+            <li>Introduce first paying customers, even at small scale</li>
+        </ul>
+
+        <p>
+            Goal: confirm willingness to pay and validate that the product is perceived as economically valuable,
+            not just “useful software”.
+        </p>
+
+        <h4>Phase 3 — Early scaling</h4>
+        <ul>
+            <li>Targeted advertising to specific industrial niches (not broad marketing)</li>
+            <li>Outbound outreach via LinkedIn and industry networks</li>
+            <li>Initial reseller or sales partners, but only after messaging is stable and proven</li>
+        </ul>
+
+        <p>
+            Goal: establish a repeatable acquisition channel that can consistently generate new customers
+            without relying on founder-led sales alone.
+        </p>
+
+        <h4>Phase 4 — Sales expansion</h4>
+        <ul>
+            <li>Hire regional sales representatives</li>
+            <li>Expand into EU and US industrial markets</li>
+            <li>Build localized sales and onboarding processes</li>
+        </ul>
+
+        <p>
+            Goal: transition from founder-driven distribution to a structured sales organization capable of scaling
+            across regions and industries.
+        </p>
+    </section>
+</article>
