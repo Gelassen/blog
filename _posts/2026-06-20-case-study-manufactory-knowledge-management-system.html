@@ -52,6 +52,9 @@ modified_time: '2026-06-20'
             Kotlin backend, React/TS web client, mobile web client, 
             Postgres, Docker Compose. 
         </p>
+        <p>
+            <a href="https://github.com/Gelassen/manufactory-knowledge-management-system">Github repository</a>
+        </p>
     </section>
     <section>
         <h3>Market research</h3>
@@ -647,7 +650,7 @@ modified_time: '2026-06-20'
     <section>
         <h3>Architecture</h3>
         <p>
-            <img src="/blog/assets/images/2026-06-20/market-capacity-part-I.png"/>
+            <img src="/blog/assets/images/2026-06-20/architecture-diagram.jpg"/>
         </p> 
         <h4>High-Level Flow:</h4>
         <p>
@@ -738,6 +741,135 @@ modified_time: '2026-06-20'
         <p>
             Goal: transition from founder-driven distribution to a structured sales organization capable of scaling
             across regions and industries.
+        </p>
+    </section>
+
+    <section>
+        <h3>Pricing model</h3>
+
+        <p>
+            The product follows a hybrid distribution model combining open-source self-hosting with a paid SaaS offering
+            and optional enterprise services. This structure is designed to maximize adoption in early stages while
+            enabling sustainable monetization in environments where reliability, integration, and operational support are critical.
+        </p>
+
+        <h4>1. Open-source (self-hosted) model</h4>
+
+        <ul>
+            <li>Free and open-source core product</li>
+            <li>Full access to source code and deployment configuration</li>
+            <li>Self-hosted deployment on customer infrastructure (on-premise or private cloud)</li>
+            <li>No licensing fees or vendor lock-in</li>
+            <li>Community-driven or internal support responsibility</li>
+        </ul>
+
+        <p>
+            This model is intended to enable fast adoption and low-friction evaluation in real production environments.
+            It is particularly suitable for companies with internal IT capacity and a preference for infrastructure control.
+        </p>
+
+        <p>
+            The open-source version includes the core functionality:
+            machine registry, QR-based access to documentation, and basic maintenance history tracking.
+        </p>
+
+        <h4>2. SaaS (managed platform) model</h4>
+
+        <ul>
+            <li>Fully hosted and managed deployment</li>
+            <li>Automated updates, monitoring, and backups</li>
+            <li>Operational support and maintenance included</li>
+            <li>Secure access management and system administration</li>
+        </ul>
+
+        <p>
+            The SaaS version is not only a hosting alternative, but an operational layer designed for production environments
+            where uptime, simplicity, and reduced internal IT burden are critical.
+        </p>
+
+        <p>
+            In addition to the core features, the SaaS platform may include capabilities that are difficult to replicate
+            in self-hosted deployments, such as:
+        </p>
+
+        <ul>
+            <li>Multi-site synchronization across factories</li>
+            <li>Centralized administration of distributed equipment fleets</li>
+            <li>Audit logs and operational traceability</li>
+            <li>Advanced backup and disaster recovery mechanisms</li>
+        </ul>
+
+        <p>
+            Pricing is based on operational scale (number of machines, users, or sites) and level of service.
+        </p>
+
+        <h4>3. Enterprise support and integration services</h4>
+
+        <ul>
+            <li>Onboarding and guided deployment in production environments</li>
+            <li>Integration with existing MES, ERP, or CMMS systems</li>
+            <li>Data migration from legacy documentation systems</li>
+            <li>Technical support tailored to operational requirements</li>
+        </ul>
+
+        <p>
+            This layer addresses the reality of industrial environments where adoption often depends not only on software,
+            but on successful integration into existing processes and infrastructure.
+        </p>
+
+        <h4>4. Customisation and extension model</h4>
+
+        <p>
+            The platform is designed to be extensible to accommodate specific workflows, machine types, and organizational needs.
+            Customisation typically includes:
+        </p>
+
+        <ul>
+            <li>Custom feature development on top of the core system</li>
+            <li>Specialized UI/UX adaptations for shop-floor usage</li>
+            <li>Integration with proprietary systems or internal tools</li>
+            <li>Private extensions maintained for individual customers</li>
+        </ul>
+
+        <p>
+            Customisation is handled on a project basis and is priced individually depending on scope, complexity,
+            and long-term maintenance requirements.
+        </p>
+
+        <h4>5. Product evolution perspective</h4>
+
+        <p>
+            The pricing structure reflects an expected evolution of the product over time.
+        </p>
+
+        <p>
+            In early stages, value is primarily delivered through ease of adoption and transparency via the open-source core.
+            As deployments mature, value shifts toward operational reliability, integration depth, and cross-site coordination.
+        </p>
+
+        <p>
+            In later stages, the product is expected to evolve from a documentation and access layer into a
+            machine-centric operational knowledge system, where higher-value capabilities such as
+            pattern recognition, recurring failure analysis, and decision support become increasingly important.
+        </p>
+
+        <p>
+            This progression allows the product to remain accessible for small deployments while gradually increasing
+            monetization potential as organizational dependency on the system grows.
+        </p>
+
+        <h4>Summary</h4>
+
+        <ul>
+            <li>Open-source core ensures fast adoption and trust-building</li>
+            <li>SaaS monetizes operational convenience and reliability</li>
+            <li>Enterprise services cover integration and deployment complexity</li>
+            <li>Customisation enables adaptation to real-world industrial variability</li>
+        </ul>
+
+        <p>
+            The model is intentionally designed to start as an accessible tool and evolve into a critical operational layer
+            in manufacturing environments where knowledge retention and downtime reduction have direct financial impact.
         </p>
     </section>
 </article>
