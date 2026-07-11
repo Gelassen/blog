@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Mini BI system for university, part I'
+title: 'Lightweight BI system for university, part I'
 date: '2026-07-11'
 author: Gelassen
 tags: 
@@ -11,7 +11,7 @@ modified_time: '2026-07-11'
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini BI system for university, part I</title>
+    <title>Lightweight BI system for university, part I</title>
     <link rel="stylesheet" href=".css/general.css">
 </head>
 <body>
@@ -126,6 +126,112 @@ modified_time: '2026-07-11'
             </p>
         </section>
         <section>
+            <h3>Ethical constraints and system limitations</h3>
+
+            <p>
+                As the engineer designing this system, I have to assume that users will
+                rely on its outputs when making real-world decisions. In practice, this
+                means they delegate part of their cognitive work to the system. If the
+                analytical process is flawed or the conclusions are misleading, the
+                resulting harm extends far beyond a single incorrect prediction.
+            </p>
+
+            <p>
+                There is currently no algorithm capable of modelling the full complexity
+                of the real world. Every analytical model is necessarily incomplete and
+                operates under assumptions and uncertainty. Consequently, fully
+                autonomous machine analytics cannot be considered universally correct by
+                design. An important responsibility of the system is therefore to make
+                its own limitations visible rather than creating an illusion of
+                certainty.
+            </p>
+
+            <p>
+                Based on these principles, the reporting model was designed together
+                with a Large Language Model (LLM) to support human reasoning rather than
+                replace it. The objective is not to generate authoritative answers but
+                to provide transparent, evidence-based analytical assistance. This
+                design philosophy is consistent with the direction taken by several
+                state-of-the-art analytical platforms while introducing explicit
+                mechanisms for uncertainty and alternative explanations.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Design principle</th>
+                        <th>Typical LLM assistants<br>(ChatGPT, Copilot, Gemini, Claude)</th>
+                        <th>Enterprise decision-support systems<br>(e.g. Palantir AIP)</th>
+                        <th>Proposed architecture</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Separate observations from conclusions</td>
+                        <td>Partially</td>
+                        <td>Yes</td>
+                        <td><strong>Explicitly enforced</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Evidence supporting every conclusion</td>
+                        <td>Available when sources exist</td>
+                        <td>Yes</td>
+                        <td><strong>Mandatory (Finding → Evidence)</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Explain reasoning</td>
+                        <td>Partial</td>
+                        <td>Strong</td>
+                        <td><strong>Integrated into every insight</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Represent uncertainty explicitly</td>
+                        <td>Limited</td>
+                        <td>Partial</td>
+                        <td><strong>Dedicated uncertainty model</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Consider alternative explanations</td>
+                        <td>Occasional</td>
+                        <td>Supported</td>
+                        <td><strong>Mandatory section of every report</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Separate recommendations from observations</td>
+                        <td>Usually mixed</td>
+                        <td>Generally separated</td>
+                        <td><strong>Architecturally separated</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Auditability and traceability</td>
+                        <td>Limited</td>
+                        <td>High</td>
+                        <td><strong>Designed as a core capability</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Human remains the final decision maker</td>
+                        <td>Yes</td>
+                        <td>Yes</td>
+                        <td><strong>Explicit design principle</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                The proposed architecture intentionally follows an <em>evidence-first</em>
+                approach instead of a traditional <em>LLM-first</em> workflow. Rather
+                than allowing the language model to generate conclusions directly from
+                raw data, the system first derives measurable indicators, produces
+                findings supported by evidence, estimates confidence, records
+                alternative explanations, and only then formulates recommendations.
+                This preserves transparency, improves auditability, and ensures that
+                responsibility for the final decision always remains with the human
+                expert.
+            </p>
+
+        </section>
+
+        <section>
             <h3>Solution</h3>
             <!-- architecture diagram -->
             <h4>Existing LMS data model</h4>
@@ -213,7 +319,7 @@ modified_time: '2026-07-11'
             <h4>Visualization layer</h4>
 
             <p>
-                <img src="/blog/assets/images/2026-07-11/data-visualization.png"></img>
+                <img src="/blog/assets/images/2026-07-11/data-visualisation.png"></img>
             </p>
 
             <p>
