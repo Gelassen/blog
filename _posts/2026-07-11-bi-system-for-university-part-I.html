@@ -18,7 +18,58 @@ modified_time: '2026-07-11'
     <article>
         <section>
             <h3>Executive summary</h3>
-            <p></p>
+
+            <p>
+                This project demonstrates the development of a lightweight Business Intelligence
+                system for a university Learning Management System (LMS), designed to help
+                instructors identify learning patterns, detect at-risk students, and reduce
+                the time required to review student performance.
+            </p>
+
+            <p>
+                The primary objective is to decrease manual analysis of a student group from
+                approximately <strong>40 minutes to 5–10 minutes</strong> by providing
+                explainable analytics instead of relying on black-box AI models. Because the
+                customer prohibits the use of Large Language Models (LLMs) for educational
+                decision-making, the solution follows <strong>Explainable AI (xAI)</strong>
+                principles, where every recommendation is accompanied by evidence, alternative
+                interpretations, confidence levels, and known limitations.
+            </p>
+
+            <p>
+                The project was implemented under several practical constraints, including
+                limited development time, restricted access to the production LMS, and strict
+                personal data protection requirements. To overcome these limitations,
+                a <strong>synthetic data generator</strong> was developed to reproduce the
+                structure and statistical characteristics of the real LMS database while
+                avoiding the use of sensitive student information.
+            </p>
+
+            <p>
+                The resulting system consists of four major components:
+            </p>
+
+            <ul>
+                <li>a synthetic LMS data generator for development and testing;</li>
+                <li>an incremental analytics engine that processes only changed data instead of recomputing the entire dataset;</li>
+                <li>an explainable rule-based analytics pipeline that transforms raw LMS events into actionable educational insights;</li>
+                <li>an interactive Streamlit dashboard for visual exploration of student performance, engagement, risks, and recommendations.</li>
+            </ul>
+
+            <p>
+                Unlike traditional BI dashboards that primarily display aggregated metrics,
+                the system focuses on <strong>decision support</strong>. It combines
+                quantitative indicators with structured explanations, helping instructors
+                understand not only <em>what</em> happened, but also <em>why</em>, how
+                confident the system is, and which interventions should be considered.
+            </p>
+
+            <p>
+                Although the current implementation covers only part of the requested
+                functionality, it establishes a modular architecture that can be extended
+                with additional analytical models, visualization capabilities, and
+                educational recommendations without fundamental redesign.
+            </p>
         </section>
         <section>
             <h3>About the customer</h3>
@@ -165,7 +216,18 @@ modified_time: '2026-07-11'
                 <img src="/blog/assets/images/2026-07-11/data-visualization.png"></img>
             </p>
 
-            <p>The BI system uses <strong>Streamlit</strong> as the visualization framework, providing an interactive dashboard for exploring student performance data. The visualization layer is organized into several functional tabs, each serving a specific analytical purpose.</p>
+            <p>
+                The BI system uses <strong>Streamlit</strong> as the visualization framework, 
+                providing an interactive dashboard for exploring student performance data. 
+                The visualization layer is organized into several functional tabs, each 
+                serving a specific analytical purpose.
+            </p>
+            <p>
+                Streamlit is chosen for its rapid development capabilities. Until 
+                this moment it has been sufficient, but further complexity of BI 
+                insights will initiate migration for more rich solutions like 
+                Tableau or others.  
+            </p>
 
             <p><strong>Technology stack:</strong></p>
             <ul>
@@ -248,10 +310,193 @@ modified_time: '2026-07-11'
                 <li><strong>Aggregated computations</strong> — pre-computed metrics in analytics database for fast retrieval</li>
             </ul>
             <h4>BI analytics</h4>
-            <p></p>
+            <p>The analytics engine is an <strong>asynchronous Python application</strong> that processes LMS data through a pipeline architecture, transforming raw question results into actionable insights with explainable AI principles.</p>
+
+            <p><strong>Core components:</strong></p>
+
+            <h5>1. Data Ingestion Layer</h5>
+            <ul>
+                <li><strong>Database Repository</strong> — async SQLAlchemy queries for topics, assignments, question results, and activity data</li>
+                <li><strong>Changes Repository</strong> — tracks unprocessed entity changes (topics, assignments, question results, students, activity) for incremental processing</li>
+                <li><strong>Pipeline Lock Repository</strong> — ensures only one pipeline instance runs at a time using PostgreSQL advisory locks</li>
+            </ul>
+
+            <h5>2. State Builder</h5>
+            <ul>
+                <li><strong>Hydration Repository</strong> — resolves topic IDs from changed entities (e.g., maps question_results → assignments → topics)</li>
+                <li><strong>Analytics State Builder</strong> — assembles a complete <code>AnalyticsState</code> object containing all data needed for a batch (topics, assignments, question results, activity)</li>
+            </ul>
+
+            <h5>3. Processing Pipeline</h5>
+            <ul>
+                <li><strong>Metrics Engine</strong> — computes 11 metrics per topic: accuracy, error distribution (logical/arithmetic/terminology), average score, completion rate, difficulty, pressure, and engagement</li>
+                <li><strong>Rule Engine</strong> — evaluates 7 rules (LowAccuracy, LogicalError, ArithmeticError, TerminologyError, HighPressure, EngagementMismatch, StableHighPerformance) against each topic's metrics</li>
+                <li><strong>Explanation Engine</strong> — generates human-readable reports with hypotheses, severity levels, confidence scores, alternative explanations, and recommended actions</li>
+            </ul>
+
+            <h5>4. Persistence Layer</h5>
+            <ul>
+                <li>Saves all results atomically in a single transaction: metrics → findings → evidence → explanations → alternative explanations → recommended actions → uncertainty notes → limitations → missing context</li>
+                <li>Creates an <code>AnalyticsRun</code> record to track each execution</li>
+                <li>Marks processed changes as acknowledged</li>
+            </ul>
+
+            <p><strong>Execution flow:</strong></p>
+            <ol>
+                <li>Scheduler runs periodically (default: 300 seconds)</li>
+                <li><strong>Acquire lock</strong> — prevent concurrent runs</li>
+                <li><strong>Load changes</strong> — fetch unprocessed entity changes</li>
+                <li><strong>Build impact</strong> — resolve affected topic IDs from changes</li>
+                <li><strong>Hydrate state</strong> — load all data for impacted topics</li>
+                <li><strong>Compute metrics</strong> — aggregate question results by topic</li>
+                <li><strong>Apply rules</strong> — detect patterns and anomalies</li>
+                <li><strong>Generate explanations</strong> — create human-readable reports</li>
+                <li><strong>Persist results</strong> — save to database atomically</li>
+                <li><strong>Acknowledge changes</strong> — mark as processed</li>
+                <li><strong>Release lock</strong> — allow next run</li>
+            </ol>
+
+            <p><strong>Key design decisions:</strong></p>
+            <ul>
+                <li><strong>Incremental processing</strong> — processes only changed data using the <code>changed_entities</code> table, avoiding full recomputation</li>
+                <li><strong>Batch isolation</strong> — each batch runs in its own transaction with rollback on failure</li>
+                <li><strong>Separation of concerns</strong> — metrics, rules, and explanations are independent modules</li>
+                <li><strong>Explainable AI (xAI)</strong> — outputs are human-readable with hypotheses, evidence, alternatives, and uncertainty notes — no black-box LLMs</li>
+                <li><strong>Confidence scoring</strong> — each finding includes a confidence level (high/medium/low) based on rule score</li>
+                <li><strong>Uncertainty tracking</strong> — limitations and missing context are stored alongside each finding</li>
+            </ul>
+
+            <p><strong>Data model:</strong></p>
+            <ul>
+                <li><strong>Topics</strong> — core domain entity with difficulty and target_mean</li>
+                <li><strong>Assignments</strong> — linked to topics, each with type, max_score, due_date</li>
+                <li><strong>Question Results</strong> — per-question scores with error_type classification</li>
+                <li><strong>Activity Weekly</strong> — forum posts, resource views, quiz launches for engagement calculation</li>
+            </ul>
+
+            <p><strong>Output artifacts:</strong></p>
+            <ul>
+                <li><strong>topic_metrics</strong> — 11 numerical indicators per topic</li>
+                <li><strong>findings</strong> — detected patterns with severity and confidence</li>
+                <li><strong>finding_evidence</strong> — raw metrics supporting each finding</li>
+                <li><strong>explanations</strong> — human-readable hypotheses with confidence</li>
+                <li><strong>alternative_explanations</strong> — other possible interpretations</li>
+                <li><strong>recommended_actions</strong> — actionable suggestions for instructors</li>
+                <li><strong>uncertainty_notes</strong> — limitations and missing context</li>
+            </ul>
             <h4>Docker orchestration</h4>
-            <h4>Incremental data update</h4>
-            <p></p>
+            <p>
+                Each part of the BI system is packed into docker container and 
+                orchestrated by docker-compose. This allows to run the system 
+                on any machine with docker installed without any additional 
+                configuration.
+            </p>
+            <h4>Incremental analytics</h4>
+
+            <p>The system implements an <strong>incremental batch processing</strong> approach to avoid full recomputation of analytics on every data change. Instead of recalculating all topics, it detects which entities have changed, resolves the affected topics, and recomputes only those topics.</p>
+
+            <p><strong>How it works:</strong></p>
+            <ol>
+                <li><strong>Change tracking</strong> — database triggers register every INSERT/UPDATE/DELETE on source tables (topics, assignments, question_results, activity_weekly) into the <code>changed_entities</code> table</li>
+                <li><strong>Impact resolution</strong> — the pipeline resolves which topic IDs are affected by each changed entity (e.g., question_result → assignment → topic)</li>
+                <li><strong>State hydration</strong> — loads only the data needed for impacted topics</li>
+                <li><strong>Computation</strong> — runs metrics, rules, and explanation engines on the hydrated subset</li>
+                <li><strong>Acknowledgment</strong> — marks changed entities as processed after successful persistence</li>
+            </ol>
+
+            <p><strong>Comparison with industry approaches:</strong></p>
+
+            <table border="1" cellpadding="6" style="border-collapse: collapse; width: 100%; font-size: 0.9em;">
+                <thead style="background: #f0f0f0;">
+                    <tr>
+                        <th style="text-align: left;">Approach</th>
+                        <th style="text-align: left;">Granularity</th>
+                        <th style="text-align: left;">Latency</th>
+                        <th style="text-align: left;">Complexity</th>
+                        <th style="text-align: left;">Use case</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Full recomputation</strong><br><small>(traditional BI)</small></td>
+                        <td>Entire dataset</td>
+                        <td>Minutes–hours</td>
+                        <td>Low</td>
+                        <td>Daily batch reports</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stream processing</strong><br><small>(Apache Flink, Kafka Streams)</small></td>
+                        <td>Event-level</td>
+                        <td>Milliseconds–seconds</td>
+                        <td>Very high</td>
+                        <td>Real-time dashboards, fraud detection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lambda architecture</strong><br><small>(batch + stream layers)</small></td>
+                        <td>Hybrid</td>
+                        <td>Mixed</td>
+                        <td>High</td>
+                        <td>Large-scale data platforms</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Materialized views</strong><br><small>(PostgreSQL, ClickHouse)</small></td>
+                        <td>Pre-aggregated</td>
+                        <td>Sub-second</td>
+                        <td>Medium</td>
+                        <td>Read-optimized analytics</td>
+                    </tr>
+                    <tr style="background: #e6f3ff;">
+                        <td><strong>Incremental batch (our system)</strong></td>
+                        <td>Topic-level (impact set)</td>
+                        <td>1–5 minutes</td>
+                        <td>Medium</td>
+                        <td>Educational analytics with explainable AI</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Where our approach sits:</strong></p>
+            <ul>
+                <li><strong>vs. Full recomputation</strong> — significantly faster (topics scale ~10x better), avoids redundant processing of unchanged data</li>
+                <li><strong>vs. Stream processing</strong> — simpler to implement and debug, no complex state management; trade-off is higher latency (minutes vs. milliseconds)</li>
+                <li><strong>vs. Materialized views</strong> — more flexible because we can run arbitrary Python logic (rules, explanations, uncertainty notes), not just SQL aggregations</li>
+                <li><strong>vs. Lambda</strong> — intentionally minimal; one batch pipeline is sufficient for the domain</li>
+            </ul>
+
+            <p><strong>Key differentiators:</strong></p>
+            <ul>
+                <li><strong>Explainability built-in</strong> — every incrementally computed finding includes hypothesis, evidence, alternatives, and confidence</li>
+                <li><strong>Transactional integrity</strong> — each batch runs in a database transaction; rollback on failure prevents partial results</li>
+                <li><strong>Deadlock safety</strong> — pipeline locks ensure only one run executes at a time</li>
+                <li><strong>Idempotent processing</strong> — each change is processed exactly once (<code>processed</code> flag)</li>
+                <li><strong>Auditable</strong> — every run is stored in <code>analytics_runs</code> with source snapshot and status</li>
+            </ul>
+
+            <p><strong>Limitations and future improvements:</strong></p>
+            <ul>
+                <li><strong>No real-time updates</strong> — 5-minute batch interval is acceptable for education analytics but not for live dashboards</li>
+                <li><strong>Simple impact resolution</strong> — topic-level granularity; fine-grained (student-level or question-level) recomputation would reduce work further</li>
+                <li><strong>No windowing</strong> — changes accumulate; a sliding time window would allow purging old changes from the queue</li>
+                <li><strong>Observability</strong> — currently lacks monitoring of queue size, processing time, and failure rates</li>
+            </ul>
+
+            <p>The incremental batch approach is a pragmatic choice that balances complexity, performance, and maintainability. It fits the educational analytics domain perfectly — where near-real-time insights with explainable AI are more valuable than sub-second latency.</p>
+        </section>
+        <section>
+            <h3>Next steps</h3>
+            <p>
+                Only part of the requirements has been implemented. Next steps 
+                would require further extension to meet with all current 
+                requirements from stakeholders. 
+            </p>
+        </section>
+        <section>
+            <h3>Related publications</h3>
+            <p>
+                <a href="https://gelassen.github.io/blog/2020/12/05/housing-price-prediction.html">Case study: ML. Housing price prediction</a> <br>
+                <a href="https://gelassen.github.io/blog/2024/11/02/case-study-developing-forecast-sales-system-for-a-major-airline.html">Case study: developing forecast sales system for a major airline</a> <br>
+                <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">Broad vs Narrow specialisation</a>
+            </p>
         </section>
     </article>
 </body>
