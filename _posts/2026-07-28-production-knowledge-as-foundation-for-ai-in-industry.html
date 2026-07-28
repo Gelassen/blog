@@ -1,0 +1,440 @@
+---
+layout: post
+title: 'Production Knowledge as the Foundation for AI in Industry'
+date: '2026-07-28'
+author: Gelassen
+tags:
+modified_time: '2026-07-28'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+<article>
+<section>
+<h3>Executive Summary</h3>
+<p>
+        Most discussions about Artificial Intelligence in manufacturing start with technology:
+        large language models, computer vision, predictive analytics, or digital twins.
+        The usual sequence is familiar — first choose a technology, then look for problems it might solve.
+</p>
+<p>
+        This analysis takes the opposite approach.
+</p>
+<p>
+        It starts with real production problems observed across Russian and international manufacturing enterprises.
+        Only after identifying the most persistent and costly problems does it examine where digital tools and AI can actually help.
+</p>
+<p>
+        The central finding is straightforward:
+</p>
+<blockquote>
+        The majority of recurring operational problems in manufacturing are not caused by the absence of modern AI models.
+        They are caused by the absence of an effective system for capturing, storing, searching, and reusing production knowledge —
+        what can be called the digital memory of the enterprise.
+</blockquote>
+<p>
+        The working hypothesis is therefore:
+</p>
+<p>
+        <strong>The primary constraint on effective AI adoption in industry today is not the maturity of the models themselves,
+        but the lack of high-quality, structured, and accumulated production knowledge.
+        AI can significantly improve operational efficiency only when it has something real to work with.</strong>
+</p>
+<p>
+        Recommended sequence:
+</p>
+<ul>
+<li>Build a unified digital knowledge base (the enterprise’s digital memory).</li>
+<li>Establish reliable data accumulation and documentation practices.</li>
+<li>Deploy intelligent services on top of that foundation (semantic search, recurring failure analysis, recommendations, automated documentation, prediction).</li>
+</ul>
+<p>
+        This post is a preliminary analysis based on open sources.
+        The hypothesis requires field verification through interviews on actual production sites.
+</p>
+</section>
+
+<section>
+<h3>Why a Roadmap for AI Cannot Start with Technology</h3>
+<p>
+        A serious roadmap for AI in manufacturing should not begin with model selection, platforms, or infrastructure.
+</p>
+<p>
+        It should begin with a more fundamental question:
+</p>
+<p>
+        <strong>Which production problems actually need to be solved?</strong>
+</p>
+<p>
+        Skipping this step produces collections of fashionable digital initiatives that have little measurable impact on productivity.
+</p>
+<p>
+        The principle used here is simple:
+</p>
+<blockquote>
+        First — real production problems.
+        Then — analysis of their causes.
+        Then — evaluation of existing digital tools.
+        Only then — the role of Artificial Intelligence.
+</blockquote>
+<p>
+        This is the approach used by leading industrial research centres and is the only reliable way to avoid technology for technology’s sake.
+</p>
+</section>
+
+<section>
+<h3>Methodology</h3>
+<h4>Sources and priorities</h4>
+<p>
+        The analysis prioritised materials closest to primary sources:
+</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>Interviews with engineers, maintenance technicians, shift supervisors, process engineers, production managers</td>
+</tr>
+<tr>
+<td>A</td>
+<td>Government productivity studies</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Academic papers based on shop-floor interviews</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Industry association materials</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Company annual reports and conference materials</td>
+</tr>
+<tr>
+<td>D</td>
+<td>Consulting reports</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Press releases</td>
+</tr>
+</tbody>
+</table>
+<p>
+        The review covered Russian enterprises as well as material from Germany, the United States, Japan, China,
+        Fraunhofer studies, ethnographic research of production processes, and maintenance organisation literature.
+</p>
+<p>
+        The goal was not statistical representativeness, but identification of patterns that appear independently
+        of country, industry, and level of digitalisation.
+</p>
+
+<h4>Use of AI tools</h4>
+<p>
+        Modern AI tools were used for search, aggregation, structuring, and preliminary analysis of open sources.
+        This expanded the volume of material examined and accelerated pattern detection.
+</p>
+<p>
+        At the same time, the limitations are clear: possible incomplete sampling, interpretation errors,
+        data quality issues, and publication bias. All conclusions remain preliminary working hypotheses
+        that require verification through direct interviews on industrial sites.
+</p>
+
+<h4>Research limitations</h4>
+<p>
+        A full AI roadmap cannot be built from internet sources alone. Field research is required.
+</p>
+<p>
+        A minimally representative sample would include at least ten enterprises from one industry,
+        with interviews across the full range of roles: machine operators, maintenance engineers, repair teams,
+        shift supervisors, process engineers, quality specialists, IT staff, production managers, and plant leadership.
+</p>
+<p>
+        Only such a sample can reliably identify systemic problems, quantify economic impact,
+        and determine which digitalisation directions deliver the highest return.
+</p>
+</section>
+
+<section>
+<h3>Map of Recurring Production Problems</h3>
+<p>
+        Despite large differences in countries, automation levels, and IT landscapes,
+        the most frequently reported problems show a striking degree of consistency.
+        Most of them have little to do with the absence of AI.
+</p>
+
+<h4>Workforce-related</h4>
+<ul>
+<li>Loss of production knowledge when experienced employees leave or retire</li>
+<li>Shortage of qualified specialists</li>
+<li>Long onboarding time for new engineers</li>
+<li>Dependence on a small number of key experts</li>
+</ul>
+
+<h4>Information-related</h4>
+<ul>
+<li>Time spent searching for information before equipment repair</li>
+<li>Missing or incomplete repair history</li>
+<li>Absence of a unified knowledge base</li>
+<li>Knowledge scattered across paper journals, Excel files, email, shared folders, and individual memory</li>
+<li>Difficulty finding similar past cases</li>
+<li>Outdated or incomplete technical documentation</li>
+</ul>
+
+<h4>Organisational</h4>
+<ul>
+<li>Information transfer between shifts</li>
+<li>Heavy manual documentation burden</li>
+<li>Loss of information in handovers</li>
+<li>Duplication of records</li>
+</ul>
+
+<h4>Operational</h4>
+<ul>
+<li>Long fault diagnosis times</li>
+<li>Repetition of previously known errors</li>
+<li>Insufficient time for preventive maintenance</li>
+<li>Extended equipment downtime</li>
+</ul>
+
+<h4>Causal model</h4>
+<pre>
+Experienced specialists leave
+            ↓
+Loss of production knowledge
+            ↓
+Absence of a unified digital memory
+            ↓
+Long information search  ·  Repeated errors  ·  Slow onboarding
+            ↓
+Lost time and money
+</pre>
+<p>
+        Virtually all of the most common problems are downstream effects of one root cause:
+        the lack of an effective system for accumulating and using production knowledge.
+</p>
+</section>
+
+<section>
+<h3>Why This Matters Now</h3>
+<p>
+        Knowledge management problems have existed for decades.
+        Several converging factors make them critical today.
+</p>
+
+<h4>Aging engineering workforce</h4>
+<p>
+        A significant share of the most experienced specialists is approaching retirement.
+        Simultaneously, enterprises face a shortage of younger engineers.
+        When 20–25 % of the workforce over 55 leaves, undocumented knowledge leaves with them.
+</p>
+
+<h4>Increasing equipment complexity</h4>
+<p>
+        Modern machines require deeper and more specialised knowledge for operation and maintenance.
+</p>
+
+<h4>Accumulation of digital data</h4>
+<p>
+        Enterprises already hold large volumes of electronic documentation, repair logs, photos, and other records.
+        Most of this material remains fragmented and underused.
+</p>
+
+<h4>Maturity of language models</h4>
+<p>
+        For the first time, modern language models can work effectively with large volumes of internal enterprise documentation
+        in natural language — <em>provided</em> that knowledge has first been captured and structured.
+</p>
+</section>
+
+<section>
+<h3>Proposed Direction: Digital Memory of the Enterprise</h3>
+<p>
+        The working hypothesis follows directly from the problem map:
+</p>
+<blockquote>
+        The main constraint on AI adoption in industry is not the insufficient maturity of AI models,
+        but the shortage of high-quality, structured, and accumulated production knowledge.
+</blockquote>
+<p>
+        If confirmed by field research, the first stage of digital transformation should be
+        the creation of a unified digital memory of the enterprise.
+</p>
+<p>
+        Such a system should bring together:
+</p>
+<ul>
+<li>technical documentation</li>
+<li>repair history</li>
+<li>photos and video</li>
+<li>diagnostic results</li>
+<li>work instructions</li>
+<li>engineer recommendations</li>
+<li>shift logs</li>
+<li>accumulated practical operating experience</li>
+</ul>
+<p>
+        Once this foundation exists, AI becomes a natural next step rather than an isolated project.
+        Typical uses include:
+</p>
+<ul>
+<li>intelligent (semantic) search</li>
+<li>analysis of recurring failures</li>
+<li>detection of operating patterns</li>
+<li>recommendations for engineers</li>
+<li>support for new employees (onboarding)</li>
+<li>automated documentation</li>
+<li>analysis of accumulated statistics</li>
+<li>prediction of potential equipment failures</li>
+</ul>
+<p>
+        In short, AI starts working on the enterprise’s own experience instead of generic internet knowledge.
+</p>
+
+<h4>Recommended sequence</h4>
+<p>
+        <strong>Stage 1 — Unified production knowledge base</strong><br>
+        Object-oriented digital card for every equipment unit.
+        Integration with existing ERP, MES, CMMS, and file stores
+        (a layer on top of current systems, not a replacement).
+</p>
+<p>
+        <strong>Stage 2 — Reliable data accumulation and documentation culture</strong><br>
+        Simplified input (mobile, voice, photo), incentives for staff, data quality control, versioning.
+</p>
+<p>
+        <strong>Stage 3 — Intelligent services</strong><br>
+        Semantic search with source citations, recurring failure analysis, recommendations,
+        automated documentation, prediction.
+</p>
+
+<h4>Organisational conditions for success</h4>
+<p>
+        Technology alone is insufficient. Critical conditions include:
+</p>
+<ul>
+<li>dedicated time and incentives for documentation (otherwise data entry remains formal)</li>
+<li>interfaces designed for shop-floor reality (mobile devices, gloves, noise)</li>
+<li>data quality control</li>
+<li>integration with the existing system landscape rather than creation of another silo</li>
+<li>ability to operate in a closed contour (on-prem / private cloud), compliance with critical information infrastructure requirements,
+            and use of domestic language models or the ability to fine-tune them</li>
+</ul>
+</section>
+
+<section>
+<h3>Practical Example: Manufacturing Knowledge Management System (MKMS)</h3>
+<p>
+        One possible implementation of the approach described above is the
+        Manufacturing Knowledge Management System (MKMS).
+</p>
+<p>
+        MKMS is positioned as the first infrastructural layer of digital transformation,
+        not as a complete AI solution. Its primary purpose is to form the digital memory of the enterprise
+        by giving every equipment unit its own digital card that consolidates documentation,
+        repair history, media, and engineer comments.
+</p>
+<p>
+        This creates the foundation on which intelligent search, analysis, and decision-support services can later be built.
+</p>
+<ul>
+<li><a href="https://gelassen.github.io/blog/2026/06/20/case-study-manufactory-knowledge-management-system.html">Case Study</a></li>
+<li><a href="https://gelassen.github.io/manufactory-knowledge-management-system/">Project documentation</a></li>
+<li><a href="https://github.com/Gelassen/manufactory-knowledge-management-system">Source code</a></li>
+</ul>
+
+<h4>What digital memory does <em>not</em> solve</h4>
+<p>
+        Creating a digital memory of the enterprise does not eliminate:
+</p>
+<ul>
+<li>physical wear of equipment</li>
+<li>lack of investment</li>
+<li>design errors</li>
+<li>capacity shortages</li>
+<li>the need for genuine engineering expertise</li>
+</ul>
+<p>
+        It does, however, substantially reduce the time and knowledge losses that occur
+        at almost every stage of the equipment life cycle,
+        and it creates the necessary conditions for effective subsequent use of AI.
+</p>
+</section>
+
+<section>
+<h3>Next Step: Field Verification</h3>
+<p>
+        The logical next stage is verification of the working hypothesis on a representative sample
+        of industrial enterprises (for example, in Moscow) through structured interviews
+        conducted directly on production sites.
+</p>
+<p>
+        Objectives:
+</p>
+<ul>
+<li>confirm or adjust the problem map and priorities</li>
+<li>assess current maturity of production knowledge management</li>
+<li>collect quantitative data (search time, share of documented repairs, onboarding cost)</li>
+<li>formulate a grounded AI roadmap based on real needs rather than technology expectations</li>
+</ul>
+<p>
+        A minimum sample of 8–12 enterprises from one or two priority industries,
+        with interviews covering the full range of roles listed earlier, would provide a solid empirical base.
+</p>
+</section>
+
+<section>
+<h3>Conclusion</h3>
+<p>
+        Discussion of Artificial Intelligence in manufacturing should not begin with models, platforms, or computing infrastructure.
+</p>
+<p>
+        The primary task is to create the conditions under which enterprise knowledge becomes accessible,
+        accumulated, structured, and suitable for analysis.
+</p>
+<p>
+        Production knowledge should be treated as a strategic asset of the enterprise —
+        alongside equipment, technology, people, and intellectual property.
+</p>
+<p>
+        Artificial Intelligence does not create this asset.
+        It only makes it possible to use the knowledge the enterprise has already accumulated
+        (or managed to preserve) far more effectively.
+</p>
+<p>
+        Building the digital memory of the enterprise is therefore a necessary preparatory stage
+        for any serious application of AI in industry.
+</p>
+<p>
+        The next step is field verification of this hypothesis.
+        Only after such verification will it be possible to construct a justified AI roadmap
+        grounded in the real needs of modern manufacturing rather than in technological expectations.
+</p>
+</section>
+
+<section>
+<h3>Related Publications</h3>
+<a href="https://gelassen.github.io/blog/2026/06/20/case-study-manufactory-knowledge-management-system.html">
+        Case study: manufactory knowledge management system (KMS)
+</a> <br>
+<a href="https://gelassen.github.io/blog/2026/07/02/artificial-intelligence-applied-to-the-government.html">
+        AI applied to the Government: Transforming Public Administration into a Self-Learning System
+</a> <br>
+<a href="https://gelassen.github.io/blog/2026/06/19/artificial-intelligence-in-education-and-management.html">
+        Artificial Intelligence in Education and Management: Strategic Framework, Risks, and Practical Implications
+</a>
+</section>
+</article>
+</body>
+</html>
