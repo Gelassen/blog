@@ -1,270 +1,703 @@
----
-layout: post
-title: 'Digital Memory of Medical Institutions: Turning Clinical Experience into a System Asset'
-date: '2026-08-18'
-author: Gelassen
-tags:
-modified_time: '2026-08-18'
----
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href=".css/general.css">
+
+<title>Digital Memory of Medical Institutions</title>
+
 </head>
-<body>
-<article>
-<section>
-<h3>Executive Summary</h3>
-<p>
-        Artificial Intelligence is no longer a peripheral technology. It has the potential to become a next driver of industrial revolution. Using AI is rapidly shifting from “nice to have” to “must have”: it will increasingly differentiate competitive products and services from ineffective ones. Therefore applying AI thoughtfully to government work is essential — just as it is essential for the economy and other critical domains.
-</p>
-<p>
-        Earlier work established the broader strategic frame. In <a href="https://gelassen.github.io/blog/2026/06/19/artificial-intelligence-in-education-and-management.html">Artificial Intelligence in Education and Management</a> the central thesis was formulated: AI has already ceased to be merely an auxiliary tool and is becoming a factor of productivity, competitiveness, organisational and governmental management, and labour-market structure. The same analysis underlined the systemic risks that accompany uncontrolled adoption and the necessity of controlled, human-centred deployment.
-</p>
-<p>
-        Subsequent research in manufacturing revealed a concrete missing piece. The analysis <a href="https://gelassen.github.io/blog/2026/07/28/production-knowledge-as-foundation-for-ai-in-industry.html">Production Knowledge as the Foundation for AI in Industry</a> showed that the majority of recurring operational problems are not caused by the absence of modern AI models. They are caused by the absence of an effective system for capturing, storing, searching and reusing production knowledge — the digital memory of the enterprise. Without structured accumulated experience, AI has nothing real to work with.
-</p>
-<p>
-        Healthcare exhibits a strikingly similar pattern, amplified by additional domain-specific blockers. Russian healthcare already stores vast volumes of medical information. EGISZ, REMD, regional systems and local MIS successfully answer one question:
-</p>
-<p>
-<strong>“What data exists about this patient?”</strong>
-</p>
-<p>
-        They answer a second, equally important question far less well:
-</p>
-<p>
-<strong>“What was done in similar cases — and what was the outcome?”</strong>
-</p>
-<p>
-        As a result, clinical experience remains local. The knowledge of a leading federal centre does not reliably reach a physician in a primary-care clinic. Similar cases are rediscovered again and again. When an experienced specialist leaves, part of the institution’s practical memory leaves with them.
-</p>
-<p>
-        Recent practical work on a university BI system demonstrated how such decision-support infrastructure can be built with explicit traceability and understanding of outcomes. In <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">Lightweight BI system for university, part I</a> every recommendation is accompanied by evidence, alternative interpretations, confidence levels and known limitations. The architecture deliberately separates observations from conclusions and keeps the human expert as the final decision maker — principles that transfer directly to clinical settings.
-</p>
-<p>
-        These three lines of work converge on a single practical proposal for the government healthcare system: create a missing infrastructure layer — a <strong>Digital Memory of Medical Institutions</strong>.
-</p>
-<p>
-        It sits on top of the existing digital infrastructure. It does not replace EGISZ, clinical guidelines, MIS or the physician. It turns accumulated documents and clinical decisions into structured, reusable, explainable experience that any connected doctor can access.
-</p>
-<p>
+
+<body> <article class="proposal">
+
+<!-- =========================================================
+     Executive Summary
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Executive Summary</h2>
+
+    <p>
+        Artificial Intelligence is no longer a peripheral technology.
+        It has the potential to become a next driver of industrial revolution.
+        Using AI is rapidly shifting from “nice to have” to “must have”:
+        it will increasingly differentiate competitive products and services
+        from ineffective ones. Therefore applying AI thoughtfully to government
+        work is essential — just as it is essential for the economy and other
+        critical domains.
+    </p>
+
+    <p>
+        Earlier work established the broader strategic frame.
+        In
+        <a href="https://gelassen.github.io/blog/2026/06/19/artificial-intelligence-in-education-and-management.html"
+           target="_blank"
+           rel="noopener noreferrer">
+            Artificial Intelligence in Education and Management
+        </a>
+        the central thesis was formulated: AI has already ceased to be merely
+        an auxiliary tool and is becoming a factor of productivity,
+        competitiveness, organisational and governmental management,
+        and labour-market structure. The same analysis underlined the systemic
+        risks that accompany uncontrolled adoption and the necessity of
+        controlled, human-centred deployment.
+    </p>
+
+    <p>
+        Subsequent research in manufacturing revealed a concrete missing piece.
+        The analysis
+        <a href="https://gelassen.github.io/blog/2026/07/28/production-knowledge-as-foundation-for-ai-in-industry.html"
+           target="_blank"
+           rel="noopener noreferrer">
+            Production Knowledge as the Foundation for AI in Industry
+        </a>
+        showed that the majority of recurring operational problems are not
+        caused by the absence of modern AI models. They are caused by the
+        absence of an effective system for capturing, storing, searching and
+        reusing production knowledge — the digital memory of the enterprise.
+        Without structured accumulated experience, AI has less reliable
+        organisational knowledge to work with.
+    </p>
+
+    <p>
+        Healthcare exhibits a strikingly similar pattern, amplified by
+        additional domain-specific blockers. Russian healthcare already
+        stores vast volumes of medical information. EGISZ, REMD, regional
+        systems and local MIS successfully answer one important question:
+    </p>
+
+    <p>
+        <strong>“What data exists about this patient?”</strong>
+    </p>
+
+    <p>
+        They can also contain information about clinical decisions, treatments
+        and subsequent events. However, this information is not necessarily
+        transformed into a reusable, cross-institutional body of clinical
+        experience that can be systematically searched and compared.
+    </p>
+
+    <p>
+        This leads to a second, equally important question:
+    </p>
+
+    <p>
+        <strong>
+            “What was done in similar documented cases — and what happened afterwards?”
+        </strong>
+    </p>
+
+    <p>
+        As a result, much clinical experience remains local or difficult to reuse.
+        The knowledge accumulated in a leading federal centre does not reliably
+        become available as structured, comparable experience to a physician
+        in a primary-care clinic. Similar cases may be rediscovered again and
+        again. When an experienced specialist leaves, part of the institution’s
+        practical memory may become difficult to recover and transfer.
+    </p>
+
+    <p>
+        Recent practical work on a university BI system demonstrated how such
+        decision-support infrastructure can be built with explicit traceability
+        and understanding of outcomes. In
+        <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html"
+           target="_blank"
+           rel="noopener noreferrer">
+            Lightweight BI system for university, part I
+        </a>
+        every recommendation is accompanied by evidence, alternative
+        interpretations, confidence levels and known limitations. The
+        architecture deliberately separates observations from conclusions
+        and keeps the human expert as the final decision maker — principles
+        that transfer directly to clinical settings.
+    </p>
+
+    <p>
+        These three lines of work converge on a single practical proposal
+        for the government healthcare system: create a missing infrastructure
+        layer — a <strong>Digital Memory of Medical Institutions</strong>.
+    </p>
+
+    <p>
+        It sits on top of the existing digital infrastructure. It does not
+        replace EGISZ, clinical guidelines, MIS or the physician. It turns
+        accumulated documents and documented clinical decisions into
+        structured, reusable, explainable clinical experience that can be
+        made available to authorised connected physicians.
+    </p>
+
+    <p>
         The core idea is simple and powerful:
-</p>
-<blockquote>
-        Existing medical documents should become raw material for institutional clinical memory, not the final product of the system.
-</blockquote>
-<p>
-        All of the above opens significant opportunities as well as new risks. It is important to understand both. The main factors behind this proposal, however, remain clear: without a systematic way to accumulate and reuse real clinical experience, the healthcare system cannot fully benefit from AI, cannot equalise access to expertise, and cannot turn the knowledge it already possesses into a durable institutional asset.
-</p>
+    </p>
+
+    <blockquote>
+        Existing medical documents should become raw material for institutional
+        clinical memory, not the final product of the system.
+    </blockquote>
+
+    <p>
+        All of the above opens significant opportunities as well as new risks.
+        It is important to understand both. The main factors behind this
+        proposal, however, remain clear: without a systematic way to accumulate
+        and reuse real clinical experience, the healthcare system cannot fully
+        exploit AI for learning from its own accumulated practice, cannot
+        effectively reduce dependence on the location of expertise, and cannot
+        turn the knowledge it already possesses into a durable institutional asset.
+    </p>
+
+    <p>
+        This is a conceptual proposal and only the beginning of a much larger
+        path towards implementing such an innovation. Many technical, clinical,
+        organisational, legal, ethical and security challenges remain to be
+        discovered, understood and overcome. The purpose of this proposal is
+        not to claim that all of these questions have already been solved, but
+        to define a potentially valuable direction for further work.
+    </p>
+
+    <p>
+        This proposal has been prepared for the
+        <strong>Ministry of Health of the Russian Federation</strong>
+        as a conceptual starting point for discussion and further investigation.
+    </p>
 </section>
 
-<section>
-<h3>The Problem: Data Without Memory</h3>
-<p>
-        Healthcare systems excel at recording events. They are far weaker at turning those events into transferable knowledge.
-</p>
-<p>
+
+<!-- =========================================================
+     The Problem
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>The Problem: Data Without Memory</h2>
+
+    <p>
+        Healthcare systems excel at recording events. They are far weaker
+        at turning those events into transferable institutional knowledge.
+    </p>
+
+    <p>
         Today clinical experience is fragmented across:
-</p>
-<ul>
-<li>individual physicians,</li>
-<li>separate institutions,</li>
-<li>incompatible MIS,</li>
-<li>paper notes and informal conversations.</li>
-</ul>
-<p>
+    </p>
+
+    <ul>
+        <li>individual physicians,</li>
+        <li>separate institutions,</li>
+        <li>incompatible MIS,</li>
+        <li>paper notes and informal conversations.</li>
+    </ul>
+
+    <p>
         Consequences are concrete:
-</p>
-<ul>
-<li>A primary-care doctor rarely sees the full decision path and outcomes from a specialised centre.</li>
-<li>Similar complex cases are solved from scratch instead of building on previous results.</li>
-<li>Data exchanged between organisations often arrives in a form that is hard to analyse or reuse.</li>
-<li>Every new MIS integration is custom and expensive.</li>
-<li>When a key specialist retires or moves, a significant part of hard-won practical knowledge disappears.</li>
-</ul>
-<p>
-        The system remembers documents. It does not systematically remember <em>what worked</em>.
-</p>
+    </p>
+
+    <ul>
+        <li>
+            A primary-care doctor rarely sees the full documented decision
+            path and subsequent outcomes from a specialised centre.
+        </li>
+        <li>
+            Similar complex cases are solved from scratch instead of building
+            on previous documented results.
+        </li>
+        <li>
+            Data exchanged between organisations often arrives in a form
+            that is hard to analyse or reuse.
+        </li>
+        <li>
+            Every new MIS integration is custom and expensive.
+        </li>
+        <li>
+            When a key specialist retires or moves, a significant part of
+            hard-won practical knowledge may become difficult to recover
+            and transfer.
+        </li>
+    </ul>
+
+    <p>
+        The system records clinical events and documents. It does not
+        systematically transform those records into a reusable memory of
+        <em>
+            what happened after particular clinical decisions in comparable cases
+        </em>.
+    </p>
 </section>
 
-<section>
-<h3>Proposed Solution: Three Linked Functions</h3>
-<h4>1. Capture experience as structured clinical cases</h4>
-<p>
-        Every case is represented as a linked chain:
-</p>
-<p>
-<strong>Observations → Decision → Treatment → Outcome</strong>
-</p>
-<p>
-        Context, data limitations and confidence level are preserved. The result is not another free-text note, but a reusable clinical case that can be compared, searched and explained.
-</p>
-<h4>2. Make experience available to the treating physician</h4>
-<p>
-        When a doctor works with a new patient, the system surfaces similar historical cases and shows:
-</p>
-<ul>
-<li>decisions that were made,</li>
-<li>treatment options that were applied,</li>
-<li>observed outcomes,</li>
-<li>degree of similarity,</li>
-<li>alternative hypotheses that were considered,</li>
-<li>known limitations of the recommendation.</li>
-</ul>
-<p>
-        This is not a black-box answer. It is traceable decision support grounded in real practice.
-</p>
-<h4>3. Create a single integration hub</h4>
-<p>
-        MIS no longer need to build point-to-point integrations with every other system. They connect once to a common interface and use a shared clinical-case format. The Digital Memory becomes both a working tool for physicians and a practical standardisation point for the exchange of clinical experience.
-</p>
+
+<!-- =========================================================
+     Proposed Solution
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Proposed Solution: Three Linked Functions</h2>
+
+    <div class="proposal-subsection">
+        <h3>1. Capture experience as structured clinical cases</h3>
+
+        <p>
+            Every case is represented as a linked chain:
+        </p>
+
+        <p class="concept-chain">
+            <strong>Observations → Decision → Treatment → Outcome</strong>
+        </p>
+
+        <p>
+            Context, data limitations and confidence level are preserved.
+            The result is not another free-text note, but a reusable clinical
+            case that can be compared, searched and explained.
+        </p>
+
+        <p>
+            An important distinction must be preserved throughout the process:
+            documented clinical facts are not the same as reconstructed clinical
+            reasoning. Where the reasoning behind a decision is inferred from
+            available documentation, the system should explicitly identify it
+            as reconstructed rather than presenting it as an observed fact.
+        </p>
+    </div>
+
+    <div class="proposal-subsection">
+        <h3>2. Make experience available to the treating physician</h3>
+
+        <p>
+            When a doctor works with a new patient, the system surfaces similar
+            historical cases and shows:
+        </p>
+
+        <ul>
+            <li>decisions that were made,</li>
+            <li>treatment options that were applied,</li>
+            <li>observed outcomes,</li>
+            <li>degree of similarity and the factors contributing to it,</li>
+            <li>alternative hypotheses that were considered,</li>
+            <li>known limitations of the recommendation.</li>
+        </ul>
+
+        <p>
+            Similarity itself is not a guarantee of clinical equivalence.
+            The system should therefore make clear why historical cases were
+            considered similar, what relevant information is missing, and how
+            strong the resulting evidence is.
+        </p>
+
+        <p>
+            This is not a black-box answer. It is traceable decision support
+            grounded in documented real practice, with explicit boundaries
+            on what can and cannot be inferred from that practice.
+        </p>
+
+        <p>
+            In particular, an observed association between a treatment and
+            a favourable outcome in historical cases should not automatically
+            be interpreted as proof that the treatment caused the outcome.
+            Differences in patient characteristics, disease severity, selection
+            of treatment, physician expertise and other factors may influence
+            observed results.
+        </p>
+    </div>
+
+    <div class="proposal-subsection">
+        <h3>3. Create a single integration hub</h3>
+
+        <p>
+            MIS no longer need to build point-to-point integrations with every
+            other system. They connect once to a common interface and use a
+            shared clinical-case format. The Digital Memory becomes both a
+            working tool for physicians and a practical standardisation point
+            for the exchange of clinical experience.
+        </p>
+
+        <p>
+            Such an interface requires not only technical interoperability
+            but also semantic standardisation: common definitions, terminology,
+            identifiers, units, classifications and rules for representing
+            the meaning and provenance of clinical information. A common API
+            alone is not sufficient if connected systems interpret the same
+            data differently.
+        </p>
+    </div>
 </section>
 
-<section>
-<h3>Positioning: The Missing Layer</h3>
-<p>
-        Existing classes of solutions solve important but different problems:
-</p>
-<table>
-<thead>
-<tr>
-<th>Class of solutions</th>
-<th>What they give the physician</th>
-<th>What they do not give</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Clinical decision support &amp; predictive analytics (Webbiomed, MosMedAI and similar)</td>
-<td>Risk scores, preliminary diagnoses, EMR analysis</td>
-<td>Shared memory of real cases with outcomes across institutions</td>
-</tr>
-<tr>
-<td>Evidence engines (UpToDate, DynaMed, ClinicalKey, OpenEvidence)</td>
-<td>Access to guidelines and scientific literature</td>
-<td>Reuse of the healthcare system’s own clinical experience</td>
-</tr>
-<tr>
-<td>Medical AI search tools</td>
-<td>Fast retrieval of normative and clinical sources</td>
-<td>Accumulation of real practical outcomes</td>
-</tr>
-<tr>
-<td>EHR-native solutions</td>
-<td>Support inside one MIS or hospital network</td>
-<td>Cross-system clinical memory layer</td>
-</tr>
-<tr>
-<td>Federated learning / research platforms</td>
-<td>Ability to train models without moving raw data</td>
-<td>A mass-scale, day-to-day working tool for practising physicians</td>
-</tr>
-</tbody>
-</table>
-<p>
-<strong>Our niche is different.</strong>
-</p>
-<p>
-        This is not “another medical AI”. It is infrastructure for the accumulation and reuse of clinical experience.
-</p>
-<p>
+
+<!-- =========================================================
+     Positioning
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Positioning: The Missing Layer</h2>
+
+    <p>
+        Existing classes of solutions solve important but different problems.
+        They may overlap with some functions described here, but they are not
+        primarily designed to provide a persistent, cross-institutional memory
+        of documented clinical experience and observed outcomes as a day-to-day
+        working layer for physicians:
+    </p>
+
+    <div class="table-wrapper">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th scope="col">Class of solutions</th>
+                    <th scope="col">What they give the physician</th>
+                    <th scope="col">
+                        What they typically do not provide as their primary function
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>
+                        Clinical decision support &amp; predictive analytics
+                        (Webbiomed, MosMedAI and similar)
+                    </td>
+                    <td>
+                        Risk scores, preliminary diagnoses, EMR analysis
+                    </td>
+                    <td>
+                        Persistent shared memory of documented real cases with
+                        outcomes across institutions
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Evidence engines
+                        (UpToDate, DynaMed, ClinicalKey, OpenEvidence)
+                    </td>
+                    <td>
+                        Access to guidelines and scientific literature
+                    </td>
+                    <td>
+                        Systematic reuse of the healthcare system’s own
+                        accumulated clinical experience
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Medical AI search tools</td>
+                    <td>
+                        Fast retrieval of normative and clinical sources
+                    </td>
+                    <td>
+                        Systematic accumulation and reuse of real-world
+                        institutional outcomes
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>EHR-native solutions</td>
+                    <td>
+                        Support inside one MIS or hospital network
+                    </td>
+                    <td>
+                        A cross-system clinical memory layer spanning
+                        participating institutions
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Federated learning / research platforms</td>
+                    <td>
+                        Ability to train models without moving raw data
+                    </td>
+                    <td>
+                        A mass-scale, day-to-day working tool for practising
+                        physicians that exposes comparable historical cases
+                        and their documented outcomes
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>
+        <strong>Our niche is different.</strong>
+    </p>
+
+    <p>
+        This is not “another medical AI”. It is infrastructure for the
+        accumulation and reuse of clinical experience.
+    </p>
+
+    <p>
         The market today mostly answers:
-</p>
-<p>
-<strong>“What does medicine recommend?”</strong>
-</p>
-<p>
+    </p>
+
+    <p>
+        <strong>“What does medicine recommend?”</strong>
+    </p>
+
+    <p>
         The proposed system adds a second, equally necessary question:
-</p>
-<p>
-<strong>“What actually happened in real similar cases — and what was the result?”</strong>
-</p>
-<p>
-        The combination of evidence-based knowledge and real-world clinical memory is the natural foundation for the next generation of physician decision support.
-</p>
+    </p>
+
+    <p>
+        <strong>
+            “What actually happened in real similar documented cases — and what was the result?”
+        </strong>
+    </p>
+
+    <p>
+        The combination of evidence-based knowledge and real-world clinical
+        memory can become a foundation for the next generation of physician
+        decision support. The two sources of knowledge should complement each
+        other rather than be treated as interchangeable: evidence describes
+        what is supported by research and established medical knowledge, while
+        clinical memory describes what has been observed in the participating
+        healthcare system.
+    </p>
 </section>
 
-<section>
-<h3>Value for the Healthcare System</h3>
-<h4>For the physician</h4>
-<ul>
-<li>Faster orientation in complex cases.</li>
-<li>Access to the experience of leading centres without leaving the working MIS.</li>
-<li>Transparent recommendations: the doctor sees the supporting cases, confidence and limitations.</li>
-</ul>
-<h4>For the system</h4>
-<ul>
-<li>Clinical experience becomes a systemic asset instead of personal knowledge that walks out the door.</li>
-<li>Quality of care becomes less dependent on the particular institution a patient happens to reach.</li>
-<li>A single interface creates a practical standardisation point for different MIS.</li>
-</ul>
-<p>
-<strong>Core principle</strong><br>
-        Final clinical responsibility always remains with the physician.<br>
-        The system must show not only a conclusion, but the evidence it rests on and the boundaries of its applicability.
-</p>
+
+<!-- =========================================================
+     Value
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Value for the Healthcare System</h2>
+
+    <div class="proposal-subsection">
+        <h3>For the physician</h3>
+
+        <ul>
+            <li>Faster orientation in complex cases.</li>
+            <li>
+                Access to the experience of leading centres without leaving
+                the working MIS.
+            </li>
+            <li>
+                Transparent recommendations: the doctor sees the supporting
+                cases, confidence and limitations.
+            </li>
+        </ul>
+    </div>
+
+    <div class="proposal-subsection">
+        <h3>For the system</h3>
+
+        <ul>
+            <li>
+                Clinical experience becomes a systemic asset instead of
+                personal knowledge that walks out the door.
+            </li>
+            <li>
+                Quality of care can become less dependent on the particular
+                institution a patient happens to reach.
+            </li>
+            <li>
+                A single interface creates a practical standardisation point
+                for different MIS.
+            </li>
+        </ul>
+    </div>
+
+    <div class="principle">
+        <h3>Core principle</h3>
+
+        <p>
+            Final clinical responsibility always remains with the physician.
+        </p>
+
+        <p>
+            The system must show not only a conclusion, but the evidence
+            it rests on and the boundaries of its applicability.
+        </p>
+    </div>
 </section>
 
-<section>
-<h3>Pilot Proposal: Start Where Experience Matters Most</h3>
-<p>
-        We propose to begin with <strong>neurology</strong> — a domain in which differential diagnosis is complex, accumulated expert experience is especially valuable, and access to specialised centres is uneven.
-</p>
-<h4>Pilot contour</h4>
-<ul>
-<li>1–2 large neurological centres → sources of expert clinical experience</li>
-<li>Several primary-care and inpatient institutions → users of the system</li>
-<li>1–2 MIS vendors → validation of the standard connection model</li>
-</ul>
-<h4>What the pilot must verify</h4>
-<ul>
-<li><strong>Value</strong> — Does search time for analogous cases and tactical decision-making decrease?</li>
-<li><strong>Quality</strong> — Are real cases and outcomes structured completely and correctly enough?</li>
-<li><strong>Trust</strong> — Do physicians find the recommendations useful, understandable and verifiable?</li>
-<li><strong>Integration</strong> — Can an external MIS connect to a single interface without a custom bilateral integration?</li>
-<li><strong>Safety</strong> — Does the de-identification, traceability and recommendation-limitation model work in a closed or federated environment?</li>
-</ul>
+
+<!-- =========================================================
+     Pilot
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Pilot Proposal: Start Where Experience Matters Most</h2>
+
+    <p>
+        We propose to begin with <strong>neurology</strong> — a domain in
+        which differential diagnosis is complex, accumulated expert experience
+        is especially valuable, and access to specialised centres is uneven.
+    </p>
+
+    <div class="proposal-subsection">
+        <h3>Pilot contour</h3>
+
+        <ul>
+            <li>
+                1–2 large neurological centres → sources of expert clinical experience
+            </li>
+            <li>
+                Several primary-care and inpatient institutions → users of the system
+            </li>
+            <li>
+                1–2 MIS vendors → validation of the standard connection model
+            </li>
+        </ul>
+    </div>
+
+    <div class="proposal-subsection">
+        <h3>What the pilot must verify</h3>
+
+        <ul>
+            <li>
+                <strong>Value</strong> — Does search time for analogous cases
+                and tactical decision-making decrease?
+            </li>
+            <li>
+                <strong>Quality</strong> — Are real cases, decisions, relevant
+                context and outcomes structured completely and correctly enough?
+            </li>
+            <li>
+                <strong>Trust</strong> — Do physicians find the recommendations
+                useful, understandable and verifiable?
+            </li>
+            <li>
+                <strong>Integration</strong> — Can an external MIS connect
+                to a single interface without a custom bilateral integration
+                while preserving semantic consistency?
+            </li>
+            <li>
+                <strong>Safety</strong> — Does the de-identification,
+                access-control, traceability and recommendation-limitation
+                model work in a closed or federated environment?
+            </li>
+            <li>
+                <strong>Evidence quality</strong> — Can the system distinguish
+                documented observations from reconstructed reasoning and observed
+                associations from conclusions that would require causal evidence?
+            </li>
+            <li>
+                <strong>Privacy</strong> — Can sufficient clinical context
+                be preserved for useful case comparison without creating
+                unacceptable re-identification risks?
+            </li>
+        </ul>
+    </div>
 </section>
 
-<section>
-<h3>Roadmap</h3>
-<ol>
-<li>Discuss the concept with the relevant departments of the Ministry of Health of Russia and interested National Medical Research Centres.</li>
-<li>Form a working group (clinicians, digitalisation specialists, legal experts, MIS developers).</li>
-<li>Develop a minimal clinical-case standard and the technical assignment for the pilot.</li>
-<li>Launch a limited pilot and evaluate it against pre-agreed metrics.</li>
-<li>If the hypothesis is confirmed — define the path to scaling, federated connection of regions, and further standardisation of clinical-experience exchange.</li>
-</ol>
+
+<!-- =========================================================
+     Roadmap
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Roadmap</h2>
+
+    <ol>
+        <li>
+            Discuss the concept with the relevant departments of the Ministry
+            of Health of Russia and interested National Medical Research Centres.
+        </li>
+
+        <li>
+            Form a working group (clinicians, digitalisation specialists,
+            legal experts, information-security specialists, data architects
+            and MIS developers).
+        </li>
+
+        <li>
+            Develop a minimal clinical-case standard, semantic model and the
+            technical assignment for the pilot.
+        </li>
+
+        <li>
+            Define governance, access-control, privacy, provenance and
+            clinical-safety requirements before connecting real clinical data.
+        </li>
+
+        <li>
+            Launch a limited pilot and evaluate it against pre-agreed metrics.
+        </li>
+
+        <li>
+            If the hypothesis is confirmed — define the path to scaling,
+            federated connection of regions, and further standardisation
+            of clinical-experience exchange.
+        </li>
+    </ol>
 </section>
 
-<section>
-<h3>Closing Thought</h3>
-<p>
-        EGISZ already helps the healthcare system remember which documents were created.
-</p>
-<p>
-        The next step is to teach the system to remember what actually happened in clinical practice and which decisions led to which outcomes.
-</p>
-<p>
-        Digital Memory of Medical Institutions is a proposal to build exactly that layer — an infrastructure of reusable clinical experience that raises the quality of care, reduces dependence on individual specialists, and makes the collective knowledge of Russian medicine available to every physician who needs it.
-</p>
+
+<!-- =========================================================
+     Closing Thought
+     ========================================================= -->
+
+<section class="proposal-section">
+    <h2>Closing Thought</h2>
+
+    <p>
+        EGISZ already helps the healthcare system remember which documents
+        were created and which information was recorded.
+    </p>
+
+    <p>
+        The next step is to help the system systematically transform
+        documented clinical practice into reusable experience: what was
+        observed, which decisions were made, what treatment followed,
+        and what outcomes were subsequently observed.
+    </p>
+
+    <p>
+        Digital Memory of Medical Institutions is a proposal to build exactly
+        that layer — an infrastructure of reusable clinical experience that
+        can raise the quality of care, reduce dependence on individual
+        specialists, and make the collective knowledge of Russian medicine
+        more accessible to every authorised physician who needs it.
+    </p>
+
+    <p>
+        This proposal is intentionally conceptual. It is not a claim that
+        the complete technical, clinical, legal or organisational solution
+        has already been designed. It is the beginning of a much larger
+        journey towards implementing an innovation of this scale. Many
+        challenges will only become visible through practical work, and
+        they will have to be discovered, tested and overcome step by step.
+    </p>
+
+    <p>
+        The objective of the proposal is therefore not to replace clinical
+        judgement or established medical science, but to create the
+        infrastructure through which the healthcare system can learn more
+        systematically from its own documented experience while preserving
+        evidence, uncertainty, provenance and human responsibility.
+    </p>
 </section>
 
-<section>
-<h3>Related Publications</h3>
-<a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">
-        Lightweight BI system for university, part I
-</a> <br>
-<a href="https://gelassen.github.io/blog/2026/07/02/artificial-intelligence-applied-to-the-government.html">
-        AI applied to the Government: Transforming Public Administration into a Self-Learning System
-</a> <br>
-<a href="https://gelassen.github.io/blog/2026/07/28/production-knowledge-as-foundation-for-ai-in-industry.html">
-        Production Knowledge as the Foundation for AI in Manufacturing Industry
-</a>
+
+<!-- =========================================================
+     Related Publications
+     ========================================================= -->
+
+<section class="proposal-section related-publications">
+    <h2>Related Publications</h2>
+
+    <ul>
+        <li>
+            <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html"
+               target="_blank"
+               rel="noopener noreferrer">
+                Lightweight BI system for university, part I
+            </a>
+        </li>
+
+        <li>
+            <a href="https://gelassen.github.io/blog/2026/07/02/artificial-intelligence-applied-to-the-government.html"
+               target="_blank"
+               rel="noopener noreferrer">
+                AI applied to the Government: Transforming Public Administration
+                into a Self-Learning System
+            </a>
+        </li>
+
+        <li>
+            <a href="https://gelassen.github.io/blog/2026/07/28/production-knowledge-as-foundation-for-ai-in-industry.html"
+               target="_blank"
+               rel="noopener noreferrer">
+                Production Knowledge as the Foundation for AI in Manufacturing Industry
+            </a>
+        </li>
+    </ul>
 </section>
-</article>
-</body>
-</html>
+
+</article> </body> </html>
