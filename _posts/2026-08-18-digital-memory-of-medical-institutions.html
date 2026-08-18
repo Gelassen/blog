@@ -67,9 +67,13 @@ modified_time: '2026-08-18'
 
     <p>
         Healthcare exhibits a strikingly similar pattern, amplified by
-        additional domain-specific blockers. Russian healthcare already
-        stores vast volumes of medical information. EGISZ, REMD, regional
-        systems and local MIS successfully answer one important question:
+        additional domain-specific blockers.
+    </p>
+
+    <p>
+        Russian healthcare already stores vast volumes of medical information.
+        EGISZ, REMD, regional systems and local MIS successfully answer one
+        important question:
     </p>
 
     <p>
@@ -78,9 +82,9 @@ modified_time: '2026-08-18'
 
     <p>
         They can also contain information about clinical decisions, treatments
-        and subsequent events. However, this information is not necessarily
-        transformed into a reusable, cross-institutional body of clinical
-        experience that can be systematically searched and compared.
+        and subsequent events. However, the existence of these records does
+        not automatically turn them into reusable institutional clinical
+        experience.
     </p>
 
     <p>
@@ -94,61 +98,129 @@ modified_time: '2026-08-18'
     </p>
 
     <p>
-        As a result, much clinical experience remains local or difficult to reuse.
-        The knowledge accumulated in a leading federal centre does not reliably
-        become available as structured, comparable experience to a physician
-        in a primary-care clinic. Similar cases may be rediscovered again and
-        again. When an experienced specialist leaves, part of the institution’s
-        practical memory may become difficult to recover and transfer.
+        Today, the answer to this question is often difficult to obtain
+        systematically. Clinical experience remains distributed across
+        institutions, systems and documents. Similar cases may be rediscovered
+        repeatedly. Valuable experience accumulated in one medical institution
+        may remain difficult to reuse elsewhere. When an experienced specialist
+        leaves, part of the institution’s practical memory may also become
+        difficult to recover and transfer.
     </p>
 
     <p>
-        Recent practical work on a university BI system demonstrated how such
-        decision-support infrastructure can be built with explicit traceability
-        and understanding of outcomes. In
-        <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html"
-           target="_blank"
-           rel="noopener noreferrer">
-            Lightweight BI system for university, part I
-        </a>
-        every recommendation is accompanied by evidence, alternative
-        interpretations, confidence levels and known limitations. The
-        architecture deliberately separates observations from conclusions
-        and keeps the human expert as the final decision maker — principles
-        that transfer directly to clinical settings.
+        The missing capability is therefore not simply another repository of
+        medical data.
+    </p>
+
+    <p>
+        It is the ability to
+        <strong>
+            turn accumulated medical records and documented clinical decisions
+            into reusable institutional knowledge
+        </strong>.
     </p>
 
     <p>
         These three lines of work converge on a single practical proposal
         for the government healthcare system: create a missing infrastructure
-        layer — a <strong>Digital Memory of Medical Institutions</strong>.
+        layer — a
+        <strong>Digital Memory of Medical Institutions</strong>.
     </p>
 
     <p>
         It sits on top of the existing digital infrastructure. It does not
-        replace EGISZ, clinical guidelines, MIS or the physician. It turns
-        accumulated documents and documented clinical decisions into
-        structured, reusable, explainable clinical experience that can be
-        made available to authorised connected physicians.
+        replace EGISZ, clinical guidelines, MIS or the physician. Data
+        standardisation, integration and aggregation from existing systems
+        are necessary technical prerequisites, but they are not the primary
+        goal.
     </p>
 
     <p>
-        The core idea is simple and powerful:
+        The primary goal is to transform documented clinical practice into a
+        <strong>
+            structured, reusable and traceable body of institutional clinical
+            experience
+        </strong>.
+    </p>
+
+    <p>
+        The core idea is simple:
     </p>
 
     <blockquote>
-        Existing medical documents should become raw material for institutional
-        clinical memory, not the final product of the system.
+        <strong>
+            Existing medical documents should become raw material for
+            institutional clinical memory, not the final product of the system.
+        </strong>
     </blockquote>
 
     <p>
+        Such a system should not merely provide a recommendation such as:
+    </p>
+
+    <blockquote>
+        “In similar cases, X was recommended.”
+    </blockquote>
+
+    <p>
+        It should make it possible to trace that recommendation back to the
+        documented cases, clinical decisions and outcomes from which the
+        institutional knowledge was derived.
+    </p>
+
+    <p>
+        This is an important distinction from a conventional generative AI
+        assistant. The value is not only in producing a plausible answer,
+        but in making its institutional basis inspectable.
+    </p>
+
+    <p>
+        <strong>
+            The system should not ask a physician simply to trust an AI-generated
+            conclusion. It should allow the physician to understand and verify
+            why that conclusion was reached.
+        </strong>
+    </p>
+
+    <p>
+        Recent practical work on a university BI system demonstrated how such
+        decision-support infrastructure can be built with explicit traceability,
+        alternative interpretations, confidence levels and known limitations.
+        In
+        <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html"
+           target="_blank"
+           rel="noopener noreferrer">
+            Lightweight BI system for university, part I
+        </a>
+        the architecture deliberately separates observations from conclusions
+        and keeps the human expert as the final decision maker — principles
+        that transfer directly to clinical settings.
+    </p>
+
+    <p>
+        A Digital Memory of Medical Institutions could therefore provide
+        healthcare with a capability that existing information systems do not
+        fully provide: the ability to
+        <strong>
+            learn systematically from its own documented clinical practice
+        </strong>.
+    </p>
+
+    <p>
+        This could reduce dependence on the physical location of expertise,
+        preserve institutional knowledge, reduce repeated rediscovery of
+        similar clinical approaches, and create a durable knowledge asset
+        from experience that is already being accumulated by the healthcare
+        system.
+    </p>
+
+    <p>
         All of the above opens significant opportunities as well as new risks.
-        It is important to understand both. The main factors behind this
-        proposal, however, remain clear: without a systematic way to accumulate
-        and reuse real clinical experience, the healthcare system cannot fully
-        exploit AI for learning from its own accumulated practice, cannot
-        effectively reduce dependence on the location of expertise, and cannot
-        turn the knowledge it already possesses into a durable institutional asset.
+        Clinical data is highly sensitive, historical experience may contain
+        errors or local biases, and inappropriate generalisation from previous
+        cases can be dangerous. Privacy, security, access control, clinical
+        validation, legal responsibility and governance must therefore be
+        considered integral parts of such a system.
     </p>
 
     <p>
