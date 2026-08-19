@@ -3,7 +3,7 @@ author:
   name: Dmitry Kazakov
   email: dmitrii.kazakov@gmail.com
 description: > # this means to ignore newlines until "show_excerpts:"
-  Publications for my clients and readers on software engineering and social topics. https://www.youtube.com/channel/UCEjmNNX-Z6I2OypTm1PYopw/videos
+  Publications for my clients and readers on software engineering and social topics.
 
 show_excerpts: false # set to true to show excerpts on the homepage
 
@@ -26,8 +26,8 @@ minima:
   social_links:
     github:  Gelassen
     linkedin: dmkazakov
-    # youtube: channel/UCEjmNNX-Z6I2OypTm1PYopw/videos
-    youtube_channel: UCEjmNNX-Z6I2OypTm1PYopw
+    # youtube: 
+    # youtube_channel:
     # youtube_channel_name: Demos
     github_username:  Gelassen
     linkedin_username: dmkazakov
