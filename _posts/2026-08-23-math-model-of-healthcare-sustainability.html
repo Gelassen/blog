@@ -1,0 +1,1042 @@
+---
+layout: post
+title: 'Medical Workforce Capacity Model to support top management decisions'
+date: '2026-08-23'
+author: Gelassen
+tags: healthcare, workforce, model, demography, russia, capacity, reproduction, policy
+modified_time: '2026-08-23'
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medical Workforce Capacity Model</title>
+    <link rel="stylesheet" href="./css/general.css" />
+    <script type="text/javascript" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+  </head>
+  <body>
+    <article>
+
+      <!-- ========== SUMMARY ========== -->
+      <section>
+        <h3>Summary</h3>
+        <p>
+          The Russian healthcare system faces not merely a question of the current number of physicians.
+        </p>
+        <p>
+          A more fundamental question is this:
+        </p>
+        <blockquote>
+          <strong>
+            Is the healthcare system capable of independently reproducing sufficient medical capacity
+            amidst demographic shifts in the population, the aging of the physician corps, the retirement
+            of senior generations, changes in the attractiveness of medical education, and the rise of
+            alternatives for young specialists?
+          </strong>
+        </blockquote>
+        <p>
+          This question is fundamentally different from "How many doctors does Russia need?"
+        </p>
+        <p>
+          The number of physicians is only one variable. For system sustainability, the following
+          factors are simultaneously important:
+        </p>
+        <ul>
+          <li>physician numbers;</li>
+          <li>age structure;</li>
+          <li>specialty;</li>
+          <li>region;</li>
+          <li>actual employment;</li>
+          <li>professional longevity;</li>
+          <li>influx of new specialists;</li>
+          <li>residency completion;</li>
+          <li>retention of physicians in the profession;</li>
+          <li>working conditions;</li>
+          <li>income relative to alternative professions;</li>
+          <li>productivity;</li>
+          <li>digitalization;</li>
+          <li>preservation of institutional medical experience.</li>
+        </ul>
+        <p>
+          In 2026, signals emerged that warrant separate analysis.
+        </p>
+        <p>
+          On one hand, the Ministry of Health reports that for 20,000 budget‑funded residency positions,
+          39,000 applications were submitted, and therefore considers it premature to speak of a
+          systemic shortfall.
+        </p>
+        <p>
+          On the other hand, major medical universities reported hundreds of unfilled budget‑funded
+          residency positions and announced additional enrollment. As of mid‑August, vacancies were
+          reported at Pirogov Russian National Research Medical University, Sechenov First Moscow
+          State Medical University, the Russian Medical Academy of Continuing Professional Education,
+          and other institutions.
+        </p>
+        <p>
+          These observations do not contradict each other. Overall competition may remain high, while
+          simultaneously individual regions, specialties, or targeted positions may experience candidate
+          shortages.
+        </p>
+        <p>
+          This is precisely why what is needed is not a single competition statistic, but a dynamic
+          model of medical workforce reproduction.
+        </p>
+        <p>
+          <strong>It is proposed to create a Medical Workforce Capacity Model (MWCM).</strong>
+        </p>
+        <p>
+          Its task is not to provide a "precise forecast through 2045," but to determine:
+        </p>
+        <ul>
+          <li>which parameters determine the sustainability of the medical system;</li>
+          <li>which of them are most sensitive;</li>
+          <li>where shortages emerge first;</li>
+          <li>what effect each individual parameter change produces;</li>
+          <li>what the delay is between a policy decision and its result;</li>
+          <li>which measures compensate for demographic decline;</li>
+          <li>where the boundary lies between temporary shortage and self‑sustaining workforce crisis.</li>
+        </ul>
+      </section>
+
+      <!-- ========== 1. THE PROBLEM ========== -->
+      <section>
+        <h3>1. The Problem</h3>
+        <p>
+          Traditional workforce planning often relies on metrics such as:
+        </p>
+        <ul>
+          <li>physicians per 10,000 population;</li>
+          <li>number of graduates;</li>
+          <li>number of budget‑funded places;</li>
+          <li>number of vacancies;</li>
+          <li>number of applications;</li>
+          <li>average physician age.</li>
+        </ul>
+        <p>
+          These indicators are necessary but insufficient.
+        </p>
+        <p>
+          For example, a system can simultaneously have a large number of students, high competition
+          for medical schools, physician shortages in regions, an excess of candidates for some
+          specialties, unfilled positions in others, a large number of older physicians, growing
+          workload, and increasing healthcare expenditures.
+        </p>
+        <p>
+          This is not a contradiction. It is the result of different parts of the system moving at
+          different speeds.
+        </p>
+      </section>
+
+      <!-- ========== 2. CORE IDEA ========== -->
+      <section>
+        <h3>2. Core Idea of the Model</h3>
+        <p>
+          It is proposed to distinguish between the number of physicians \(D_t\) and effective
+          medical capacity \(EC_t\).
+        </p>
+        <p>
+          Effective capacity is determined not only by the number of physicians:
+        </p>
+        \[
+          EC_t = D_t \times A_t \times P_t
+        \]
+        <p>where:</p>
+        <ul>
+          <li>\(D_t\) — number of physicians;</li>
+          <li>\(A_t\) — actual availability of physicians for clinical work;</li>
+          <li>\(P_t\) — productivity per physician.</li>
+        </ul>
+        <p>
+          A 10% increase in the number of physicians does not necessarily mean a 10% increase in
+          medical capacity. If at the same time bureaucratic burden has grown, actual employment has
+          decreased, or patients have become more complex, the effect may be substantially smaller.
+          Conversely, automation of part of the work may increase effective capacity with an almost
+          unchanged number of physicians.
+        </p>
+      </section>
+
+      <!-- ========== 3. REPRODUCTION ========== -->
+      <section>
+        <h3>3. Reproduction of the Physician Corps</h3>
+        <p>
+          The number of physicians changes as a stock affected by flows:
+        </p>
+        \[
+          D_{t+1} = D_t + N_t + I_t - R_t - L_t
+        \]
+        <p>where:</p>
+        <ul>
+          <li>\(N_t\) — new physicians entering practice;</li>
+          <li>\(I_t\) — immigration inflow;</li>
+          <li>\(R_t\) — exit from the profession due to age;</li>
+          <li>\(L_t\) — other losses: leaving clinical medicine, career change, emigration,
+            transition to administrative roles, etc.</li>
+        </ul>
+        <p>
+          This yields the first key indicator — the physician reproduction rate:
+        </p>
+        \[
+          RR_t = \frac{N_t + I_t}{R_t + L_t}
+        \]
+        <p>Interpretation:</p>
+        <ul>
+          <li>\(RR > 1\) — generation is reproducing;</li>
+          <li>\(RR = 1\) — approximate equilibrium;</li>
+          <li>\(RR < 1\) — the physician stock begins to structurally contract.</li>
+        </ul>
+        <p>
+          What matters is not only the national \(RR\), but also \(RR\) by region and specialty.
+        </p>
+      </section>
+
+      <!-- ========== 4. GENERATIONAL CHANGE ========== -->
+      <section>
+        <h3>4. Why Generational Change Is a Separate Problem</h3>
+        <p>
+          The physician corps has an age structure. Therefore, it is necessary to model age groups:
+          25–29, 30–34, 35–39, 40–44, 45–49, 50–54, 55–59, 60–64, 65–69, 70+.
+        </p>
+        <p>
+          This allows us to see not only the current shortage, but also the future wave of attrition.
+          Particularly important is the situation where the younger generation is smaller than the
+          older generation approaching retirement. In this case, the problem becomes partially
+          predetermined.
+        </p>
+      </section>
+
+      <!-- ========== 5. LOSS OF EXPERIENCE ========== -->
+      <section>
+        <h3>5. Loss of Experience — A Separate Component of Risk</h3>
+        <p>
+          The departure of a physician means the loss of not just one working unit. In some cases,
+          along with the physician, the system loses accumulated clinical experience, the ability to
+          recognize rare cases, knowledge of local processes, mentoring skills, informal
+          problem‑solving approaches, and institutional memory.
+        </p>
+        <p>
+          Therefore, capacity loss ≠ numerical loss. In some specialties, capacity loss significantly
+          exceeds numerical loss.
+        </p>
+        <p>
+          This is precisely where this model connects with the previously proposed concept of
+          <em>Digital Memory of Medical Institutions</em> — the preservation and reuse of accumulated
+          clinical experience. The concept envisions creating an infrastructure layer atop existing
+          medical information systems that transforms documented practice into structured,
+          traceable, and reusable institutional memory.
+        </p>
+      </section>
+
+      <!-- ========== 6. EDUCATIONAL PIPELINE ========== -->
+      <section>
+        <h3>6. The Educational Pipeline</h3>
+        <p>
+          A physician does not appear in the system immediately after the state decides to increase
+          the number of budget‑funded places. Simplistically:
+        </p>
+        \[
+          S_t \rightarrow M_t \rightarrow G_t \rightarrow O_t \rightarrow N_t
+        \]
+        <p>
+          where \(S_t\) — potential applicant pool; \(M_t\) — admitted; \(G_t\) — graduates;
+          \(O_t\) — those completing required specialization; \(N_t\) — entering practice.
+        </p>
+        <p>
+          Thus, a budget‑funded place ≠ a future physician. There are several filters between them.
+        </p>
+      </section>
+
+      <!-- ========== 7. CHOICE OF MEDICINE ========== -->
+      <section>
+        <h3>7. A Young Person's Choice of Medicine</h3>
+        <p>
+          The number of potential physicians depends not only on demography. Simplistically:
+        </p>
+        \[
+          N_t = S_t \times C_t \times G_t \times O_t \times R_t
+        \]
+        <p>
+          where \(C_t\) — probability of choosing a medical career. It depends on expected income,
+          duration of training, working conditions, professional autonomy, prestige, legal liability,
+          emotional burden, career advancement opportunities, geographic mobility, residency
+          conditions, and alternative careers.
+        </p>
+      </section>
+
+      <!-- ========== 8. PRICE OF ALTERNATIVES ========== -->
+      <section>
+        <h3>8. The Price of Alternatives</h3>
+        <p>
+          For a young person, medicine does not compete with "nothing." It competes with IT,
+          engineering, finance, entrepreneurship, management, applied science, and other
+          high‑skilled professions.
+        </p>
+        <p>
+          Therefore, it is necessary to account for the opportunity cost of choosing medicine
+          (\(OC\)): alternative income + flexibility + mobility + speed to income + career
+          opportunities.
+        </p>
+        <p>
+          Even a high absolute physician salary may be insufficient if the relative attractiveness
+          of alternatives is growing faster.
+        </p>
+      </section>
+
+      <!-- ========== 9. WORKING CONDITIONS ========== -->
+      <section>
+        <h3>9. Working Conditions</h3>
+        <p>
+          The attractiveness of the profession is determined not only by income. Simplistically:
+        </p>
+        \[
+          MA = f(\text{Income}, \text{Autonomy}, \text{Conditions}, \text{Prestige},
+          \text{Mobility}, \text{Technology}, \text{Training Duration}, \text{Legal Risk},
+          \text{Alternatives})
+        \]
+        <p>
+          What is particularly important is that some parameters affect multiple stages
+          simultaneously: working conditions → admission → residency → entry into the profession
+          → retention.
+        </p>
+        <p>
+          Therefore, improving working conditions may have a greater systemic effect than simply
+          increasing the number of budget‑funded places.
+        </p>
+      </section>
+
+      <!-- ========== 10. MEDICAL DEMAND ========== -->
+      <section>
+        <h3>10. Medical Demand</h3>
+        <p>
+          It is also necessary to model the other side of the system:
+        </p>
+        \[
+          H_t = \text{Population}_t \times \text{AgeIntensity}_t \times \text{Morbidity}_t
+          \times \text{MedicalIntensity}_t
+        \]
+        <p>
+          where Population — population size; AgeIntensity — intensity of medical care depending on
+          age; Morbidity — disease structure; MedicalIntensity — intensity of medical technology use.
+        </p>
+        <p>
+          Therefore, a decline in population does not necessarily mean a decline in demand for
+          medical care. Population aging may compensate for or exceed the effect of population decline.
+        </p>
+      </section>
+
+      <!-- ========== 11. TECHNOLOGY AS MULTIPLIER ========== -->
+      <section>
+        <h3>11. Technology as a Multiplier of Workforce Capacity</h3>
+        <p>
+          In the model, technology should not be viewed solely as a way to "replace a physician."
+          It is more useful to view it as a multiplier \(EC_t = D_t \times A_t \times P_t\), where
+          \(P_t\) can increase through documentation automation, AI, clinical decision support
+          systems, telemedicine, automation of routine operations, improved information exchange,
+          task redistribution, and digital memory of the medical organization.
+        </p>
+      </section>
+
+      <!-- ========== 12. DIGITAL MEMORY ========== -->
+      <section>
+        <h3>12. Digital Memory as an Element of Workforce Sustainability</h3>
+        <p>
+          If a specialist's practical experience is preserved only in their memory, then the
+          specialist's departure leads to a loss of experience. If the experience is structured and
+          accessible to the next generation, the specialist's departure leads to partial transfer of
+          experience.
+        </p>
+        <p>
+          Therefore:
+          \(\text{KnowledgeRetention} \rightarrow \text{Productivity} \rightarrow
+          \text{EffectiveCapacity}\).
+        </p>
+        <p>
+          At the same time, digital memory should not replace the physician, clinical guidelines,
+          evidence‑based medicine, or medical responsibility. Documented practice must be
+          distinguished from proven causal effect.
+        </p>
+      </section>
+
+      <!-- ========== 13. CONTROLLABLE PARAMETERS ========== -->
+      <section>
+        <h3>13. Controllable Parameters of the Model</h3>
+        <p>
+          The main practical purpose of the model is not forecasting for its own sake. It should
+          answer the question: which parameter must be changed to obtain a specific result?
+        </p>
+        <p>Key levers:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>What We Change</th>
+              <th>Direct Effect</th>
+              <th>Delay</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>N</strong></td>
+              <td>number of new physicians</td>
+              <td>increases workforce stock</td>
+              <td>high</td>
+              <td>slow</td>
+            </tr>
+            <tr>
+              <td><strong>R</strong></td>
+              <td>retirement age / conditions</td>
+              <td>retains physicians</td>
+              <td>low–medium</td>
+              <td>fast/medium</td>
+            </tr>
+            <tr>
+              <td><strong>L</strong></td>
+              <td>departure from profession</td>
+              <td>reduces losses</td>
+              <td>medium</td>
+              <td>medium</td>
+            </tr>
+            <tr>
+              <td><strong>A</strong></td>
+              <td>clinical work time share</td>
+              <td>increases available capacity</td>
+              <td>low</td>
+              <td>fast</td>
+            </tr>
+            <tr>
+              <td><strong>P</strong></td>
+              <td>productivity</td>
+              <td>increases effective capacity</td>
+              <td>low–medium</td>
+              <td>fast/medium</td>
+            </tr>
+            <tr>
+              <td><strong>C</strong></td>
+              <td>medical attractiveness</td>
+              <td>increases future inflow</td>
+              <td>high</td>
+              <td>slow</td>
+            </tr>
+            <tr>
+              <td><strong>OC</strong></td>
+              <td>alternative attractiveness</td>
+              <td>reduces future inflow</td>
+              <td>high</td>
+              <td>slow</td>
+            </tr>
+            <tr>
+              <td><strong>K</strong></td>
+              <td>knowledge retention</td>
+              <td>reduces knowledge loss</td>
+              <td>medium</td>
+              <td>medium</td>
+            </tr>
+            <tr>
+              <td><strong>I</strong></td>
+              <td>immigration</td>
+              <td>rapidly increases stock</td>
+              <td>low</td>
+              <td>fast</td>
+            </tr>
+            <tr>
+              <td><strong>H</strong></td>
+              <td>healthcare organization</td>
+              <td>changes required capacity</td>
+              <td>medium</td>
+              <td>medium</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ========== 14. USE FOR MANAGEMENT ========== -->
+      <section>
+        <h3>14. How the Model Can Be Used for Management</h3>
+        <p>
+          This is a fundamental part of the model. The goal is to turn analysis into a
+          decision‑making tool of the form: goal → parameter → magnitude of change → delay →
+          expected effect → side effects.
+        </p>
+
+        <h4>14.1. Goal 1. Rapidly Increase Available Medical Capacity</h4>
+        <p>
+          The fastest levers: \(A\uparrow\) and \(P\uparrow\). That is, reducing bureaucracy,
+          automating documentation, redistributing tasks, improving scheduling, eliminating
+          downtime, digital tools.
+        </p>
+        <p>
+          Advantage: results can appear significantly sooner than a new physician completes training.
+        </p>
+
+        <h4>14.2. Goal 2. Reduce Future Workforce Shortages</h4>
+        <p>
+          The main lever is \(N\uparrow\). But \(N\) can be increased in several ways:
+        </p>
+        <ul>
+          <li>Option A: increase the number of students → effect through the duration of the
+            educational cycle;</li>
+          <li>Option B: increase the proportion of graduates who continue training (\(O\uparrow\));</li>
+          <li>Option C: increase the proportion of graduates who remain in the profession
+            (\(Retention\uparrow\)).</li>
+        </ul>
+        <p>
+          In most cases, B and C may be cheaper than endlessly increasing the input flow.
+        </p>
+
+        <h4>14.3. Goal 3. Stop Generational Decline</h4>
+        <p>
+          The main indicator: \(RR = \text{New Physicians} / \text{Departing Physicians}\).
+          To achieve \(RR \ge 1\), both sides can be influenced.
+        </p>
+        <p><strong>Increase the numerator:</strong></p>
+        <ul>
+          <li>increase input;</li>
+          <li>improve residency;</li>
+          <li>improve working conditions;</li>
+          <li>increase retention of young specialists;</li>
+          <li>attract immigration.</li>
+        </ul>
+        <p><strong>Decrease the denominator:</strong></p>
+        <ul>
+          <li>make continued work by senior physicians more attractive;</li>
+          <li>reduce administrative burden;</li>
+          <li>create part‑time employment;</li>
+          <li>use the experience of senior physicians as a mentoring resource.</li>
+        </ul>
+        <p>
+          This is far more rational than trying to solve everything solely by increasing enrollment.
+        </p>
+
+        <h4>14.4. Goal 4. Reduce Regional Shortages</h4>
+        <p>
+          Here, changing the national \(D\) may achieve almost nothing. It is necessary to
+          influence \(RR\) by region and specialty.
+        </p>
+        <p>
+          Main levers: regional salary, housing, career trajectory, educational infrastructure,
+          possibility of returning to a major center after mandatory service, remote support,
+          access to expert experience from leading centers.
+        </p>
+        <p>
+          If a physician is in a region but gains access to institutional experience from a leading
+          center, the effective capacity of the regional system can grow without the physical
+          relocation of the physician.
+        </p>
+
+        <h4>14.5. Goal 5. Maintain Quality as the Physician Corps Ages</h4>
+        <p>
+          Main parameter: \(K = \text{KnowledgeRetention}\). It can be enhanced through mentoring,
+          structured experience transfer, digital memory, case‑based learning, documentation of
+          complex cases, connecting leading centers with peripheral institutions.
+        </p>
+
+        <h4>14.6. Goal 6. Increase Effective Capacity Without Proportional Growth in Numbers</h4>
+        <p>
+          This is the most technological path: \(P\uparrow\). If the number of physicians is
+          unchanged (\(D = const\)), but \(A\uparrow\) or \(P\uparrow\), then \(EC\uparrow\).
+        </p>
+        <p>
+          This is precisely why automation, AI, and work organization improvements should be viewed
+          not as a separate digital program, but as part of workforce policy.
+        </p>
+      </section>
+
+      <!-- ========== 15. SENSITIVITY ========== -->
+      <section>
+        <h3>15. Model Sensitivity</h3>
+        <p>
+          For a first approximation, it is convenient to use relative changes. If
+          \(EC = D \times A \times P\), then for small changes:
+        </p>
+        \[
+          \frac{\Delta EC}{EC} \approx \frac{\Delta D}{D} + \frac{\Delta A}{A} + \frac{\Delta P}{P}
+        \]
+        <p>
+          This is a very important result. It means that a 10% increase in effective capacity can
+          potentially be achieved through different combinations:
+        </p>
+        <ul>
+          <li>Option A: \(D +10\%\);</li>
+          <li>Option B: \(A +10\%\);</li>
+          <li>Option C: \(P +10\%\);</li>
+          <li>Option D: \(D +3\%,\ A +3\%,\ P +4\%\).</li>
+        </ul>
+        <p>
+          That is, the state's task is not necessarily to maximize the number of physicians. It is
+          necessary to find the cheapest and fastest way to increase the product of three factors.
+        </p>
+      </section>
+
+      <!-- ========== 16. POLICY APPROACH ========== -->
+      <section>
+        <h3>16. Why This Changes the Policy Approach</h3>
+        <p>
+          Suppose it is necessary to increase effective capacity by 15%. There are four
+          fundamentally different strategies.
+        </p>
+        <p>
+          <strong>Strategy 1 — education only: \(D +15\%\).</strong> Results appear in years.
+        </p>
+        <p>
+          <strong>Strategy 2 — productivity only: \(P +15\%\).</strong> Results may appear
+          significantly faster.
+        </p>
+        <p>
+          <strong>Strategy 3 — work organization: \(A +15\%\).</strong> Part of the effect may be
+          achieved even faster.
+        </p>
+        <p>
+          <strong>Strategy 4 — combined: \(D +5\%,\ A +5\%,\ P +5\%\).</strong>
+        </p>
+        <p>
+          In first approximation: \(1.05 \times 1.05 \times 1.05 \approx 1.158\) — that is, about
+          15.8% additional effective capacity.
+        </p>
+        <p>
+          This is not a forecast of a specific medical effect. It is a demonstration of the model's
+          principle: several moderate changes can yield greater results than attempting to radically
+          change a single parameter.
+        </p>
+      </section>
+
+      <!-- ========== 17. DELAY ========== -->
+      <section>
+        <h3>17. The Most Important Constraint: Delay</h3>
+        <p>Parameters have different speeds of impact.</p>
+        <p><strong>Fast:</strong></p>
+        <ul>
+          <li>work organization;</li>
+          <li>reduction of administrative burden;</li>
+          <li>automation;</li>
+          <li>FTE changes;</li>
+          <li>part of immigration decisions.</li>
+        </ul>
+        <p><strong>Medium:</strong></p>
+        <ul>
+          <li>physician retention;</li>
+          <li>workload redistribution;</li>
+          <li>mentoring;</li>
+          <li>digital memory.</li>
+        </ul>
+        <p><strong>Slow:</strong></p>
+        <ul>
+          <li>change in professional attractiveness;</li>
+          <li>change in educational flow;</li>
+          <li>training of new specialists;</li>
+          <li>demographic structure.</li>
+        </ul>
+        <p>
+          Therefore, a rational strategy must use a portfolio of levers with different time horizons.
+        </p>
+      </section>
+
+      <!-- ========== 18. SCENARIOS ========== -->
+      <section>
+        <h3>18. Scenarios 2026–2045</h3>
+        <p>
+          The scenarios presented are purely illustrative and serve to demonstrate the system's
+          sensitivity to parameter changes. They are not forecasts and do not claim quantitative
+          accuracy.
+        </p>
+        <p>
+          <strong>Scenario A — Demographic Stress.</strong> Assumes a decline in the number of
+          young cohorts, high physician workload, continued retirement of older generations, weak
+          improvement in conditions, low productivity growth. Result: \(RR < 1\) over a prolonged
+          interval. The system enters self‑sustaining deficit.
+        </p>
+        <p>
+          <strong>Scenario B — Inertial.</strong> Gradual increase in training, moderate salary
+          increases, moderate digitalization, maintaining the current system structure. Result:
+          shortage does not necessarily become catastrophic, but remains chronic. This is the most
+          dangerous scenario due to its external appearance of stability.
+        </p>
+        <p>
+          <strong>Scenario C — Improved Attractiveness.</strong> Changes: income↑, autonomy↑,
+          conditions↑, administrative burden↓, career flexibility↑. Result appears with delay,
+          since first the young person's choice changes, then education, then residency, then entry
+          into the profession.
+        </p>
+        <p>
+          <strong>Scenario D — Productivity First.</strong> Physician numbers grow moderately.
+          But \(P\uparrow\) through automation, AI, clinical information systems, task
+          redistribution, digital memory, process improvement. This scenario allows partial
+          compensation of demographic pressure without proportional growth in physician numbers.
+        </p>
+        <p>
+          <strong>Scenario E — Systemic Transformation.</strong> Simultaneously
+          \(N\uparrow,\ Retention\uparrow,\ A\uparrow,\ P\uparrow,\ KnowledgeRetention\uparrow\),
+          and targeted management of Region × Specialty × Age. This is the most sustainable scenario.
+        </p>
+      </section>
+
+      <!-- ========== 19. WHAT THE MODEL SHOWS ========== -->
+      <section>
+        <h3>19. What the Model Should Actually Show Decision‑Makers</h3>
+        <p>
+          The output should answer not "In 2045 there will be 720 thousand physicians," but:
+        </p>
+        <ul>
+          <li>What medical capacity is needed?</li>
+          <li>What capacity will we obtain under current policy?</li>
+          <li>Where does the gap arise?</li>
+          <li>Which parameter is the main constraint?</li>
+          <li>What happens if we change only this parameter?</li>
+          <li>In how many years will the effect appear?</li>
+          <li>What is the cost of changing the parameter?</li>
+          <li>What risks arise when changing it?</li>
+        </ul>
+        <p>
+          This transforms the model from an analytical report into a decision‑making tool.
+        </p>
+      </section>
+
+      <!-- ========== 20. EARLY WARNING INDICATORS ========== -->
+      <section>
+        <h3>20. Recommended Early Warning Indicators</h3>
+        <p>It is proposed to regularly track:</p>
+        <ul>
+          <li>Reproduction rate \(RR = \text{New Physicians} / \text{Departing Physicians}\);</li>
+          <li>Transition rate from graduates to practice \(TCR\);</li>
+          <li>Retention rate \(R_5\);</li>
+          <li>Age risk — proportion of physicians above a given threshold;</li>
+          <li>Clinical employment share \(A = \text{Clinical time} / \text{Total working time}\);</li>
+          <li>Productivity \(P\);</li>
+          <li>Knowledge loss index — proportion of critical competencies associated with physicians
+            approaching retirement;</li>
+          <li>Regional \(RR\) for each region‑specialty combination.</li>
+        </ul>
+      </section>
+
+      <!-- ========== 21. DECISIONS TO COMPARE ========== -->
+      <section>
+        <h3>21. What Decisions the Model Allows Comparison Of</h3>
+        <p>The model should allow questions such as:</p>
+        <ul>
+          <li>What gives more effect: +10% budget‑funded places or reducing administrative burden by
+            10%?</li>
+          <li>What is more effective: increasing salary or increasing professional longevity?</li>
+          <li>What effect will automating 20% of administrative work have?</li>
+          <li>How many additional physicians can we avoid training if productivity grows by 5%?</li>
+          <li>Which specialties require enrollment increases, and which primarily require condition
+            improvements?</li>
+          <li>What happens if the retirement of the older generation accelerates by five years?</li>
+          <li>How will the system change if retention of young physicians increases by 10 percentage
+            points?</li>
+        </ul>
+        <p>
+          These are precisely the questions that have direct value for state policy.
+        </p>
+      </section>
+
+      <!-- ========== 22. LIMITATIONS ========== -->
+      <section>
+        <h3>22. Model Limitations</h3>
+
+        <h4>22.1. "All Models Are Wrong, but Some Are Useful"</h4>
+        <p>
+          Any model is a simplification of reality. Therefore, "All models are wrong, but some are
+          useful" is not a decorative caveat, but a principle for interpreting this document.
+        </p>
+        <p>
+          MWCM should not be used as a machine that produces the "true number of physicians for
+          2045." Its purpose is different:
+        </p>
+        <ul>
+          <li>identify dependencies;</li>
+          <li>compare scenarios;</li>
+          <li>detect sensitive parameters;</li>
+          <li>identify early signals;</li>
+          <li>assess delays;</li>
+          <li>test the robustness of decisions.</li>
+        </ul>
+        <p>
+          If data or assumptions change, the model results should change with them.
+        </p>
+
+        <h4>22.2. Data Limitations</h4>
+        <p>
+          A full‑fledged model requires data not presented in this conceptual document in a unified
+          form: physician age, specialty, region, actual FTE, departure from the profession,
+          transition between public and private sectors, graduate and resident trajectories, actual
+          workload, productivity, medical demand by age groups.
+        </p>
+        <p>
+          Therefore, numerical scenarios should be viewed as sensitivity scenarios, not as an
+          official demographic forecast.
+        </p>
+
+        <h4>22.3. Causality Limitation</h4>
+        <p>
+          Correlation does not imply causation. For example, salary growth does not guarantee
+          increased enrollment because working conditions, prestige, alternative professions,
+          educational requirements, and regional mobility may change simultaneously. Therefore,
+          model parameters must be empirically validated.
+        </p>
+      </section>
+
+      <!-- ========== 23. AUTHOR'S LIMITATIONS ========== -->
+      <section>
+        <h3>23. Author's Limitations</h3>
+        <p>
+          The author is not a physician, health economist, or specialist in Russian healthcare
+          organization. Therefore, this document is not an expert medical opinion.
+        </p>
+        <p>
+          Nevertheless, the author has experience directly useful for framing the proposed task.
+        </p>
+        <p><strong>Author's Strengths</strong></p>
+        <p>
+          The author has worked for over 15 years as an independent software engineer, involved in
+          software systems development, system architecture, R&amp;D, complex system modeling,
+          information security, analytical systems construction, information systems integration,
+          knowledge management, AI application and automation, and research on the relationship
+          between technology and productivity.
+        </p>
+        <p>
+          The author's previous work
+          <em>"How many software engineers the economy could support?"</em> addressed a similar
+          framing: not simply estimating the number of specialists, but modeling the economic
+          capacity of a system to support a certain number of high‑skilled workers, accounting for
+          productivity, feedback, implementation time, and other parameters.
+        </p>
+        <p>
+          That work also uses the principle that changing one system parameter can substantially
+          change its steady state. This approach is transferred to the present model.
+        </p>
+        <p><strong>Missing Experience</strong></p>
+        <p>
+          The author lacks practical experience as a physician, clinical practice, healthcare
+          facility management experience, access to restricted healthcare workforce statistics, or
+          full‑scale expertise in health economics.
+        </p>
+        <p>
+          Therefore, medical specialists, demographers, health economists, and representatives of
+          regional healthcare systems should be considered mandatory participants in the next stage
+          of model development.
+        </p>
+        <p>
+          The strength of the present work is the systemic problem framing and model architecture,
+          not a claim that the author possesses medical expertise.
+        </p>
+      </section>
+
+      <!-- ========== 24. RELATED RESEARCH ========== -->
+      <section>
+        <h3>24. Related Research by the Author</h3>
+        <p>
+          Below are publications directly related to the methodology and problem framing of the
+          present model.
+        </p>
+
+        <p>
+          <strong>1. How many software engineers the economy could support?</strong><br />
+          October 2025. This work is the direct methodological predecessor of the present model.
+          It examines base economic capacity, supporting population, productivity, feedback,
+          implementation time, success of product creation, exports, automation, and the
+          possibility of expanding the natural limit of the system through productivity growth.
+        </p>
+        <p>
+          Link:
+          <a href="https://gelassen.github.io/blog/2025/10/09/how-many-sofware-engineers-the-economy-could-support.html">
+            https://gelassen.github.io/blog/2025/10/09/how-many-sofware-engineers-the-economy-could-support.html
+          </a>
+        </p>
+
+        <p>
+          <strong>2. Bridging gaps in economy, politics, diplomacy and warfare: review and next steps, Part II</strong><br />
+          February 2026. This work describes the development of the author's systems approach to
+          complex system analysis: network dependencies, multi‑level causal relationships,
+          scenario thinking, and working with uncertainty. These methods are used in the present
+          document when constructing the medical workforce reproduction model.
+        </p>
+        <p>
+          Link:
+          <a href="https://gelassen.github.io/blog/2026/02/03/bridging-gaps-in-economy-politics-diplomacy-warfare-review-part-II.html">
+            https://gelassen.github.io/blog/2026/02/03/bridging-gaps-in-economy-politics-diplomacy-warfare-review-part-II.html
+          </a>
+        </p>
+
+        <p>
+          <strong>3. Digital Memory of Medical Institutions: Turning Clinical Experience into a System Asset</strong><br />
+          August 2026. This work examines the creation of digital memory of medical institutions as
+          an infrastructure layer that transforms accumulated clinical practice into structured and
+          traceable institutional knowledge. In the context of the workforce model, this can be
+          viewed as one mechanism: KnowledgeRetention → Productivity → EffectiveCapacity.
+        </p>
+        <p>
+          Link:
+          <a href="https://gelassen.github.io/blog/2026/08/18/digital-memory-of-medical-institutions.html">
+            https://gelassen.github.io/blog/2026/08/18/digital-memory-of-medical-institutions.html
+          </a>
+        </p>
+
+        <p>
+          This set of publications demonstrates a consistent methodological line: from modeling
+          the capacity of a system for high‑skilled human capital — through systems and scenario
+          analysis — to applying these methods directly to healthcare and preservation of medical
+          experience.
+        </p>
+        <p>
+          It is important to emphasize: medical expertise should come from the Ministry of Health,
+          physicians, demographers, and health economists. The author's competence is system
+          architecture, modeling, technology, and complex system analysis.
+        </p>
+      </section>
+
+      <!-- ========== 25. PROPOSED PILOT ========== -->
+      <section>
+        <h3>25. Proposed Pilot</h3>
+        <p>
+          To transform the concept into a working tool, it is proposed to begin not by building a
+          massive state information system, but with an analytical pilot.
+        </p>
+        <p><strong>The pilot should include:</strong></p>
+        <ul>
+          <li>3–5 regions with different demographic situations;</li>
+          <li>5–10 specialties;</li>
+          <li>several large medical organizations;</li>
+          <li>medical universities;</li>
+          <li>residency programs;</li>
+          <li>data on physician age structure.</li>
+        </ul>
+        <p>
+          It is desirable to reconstruct dynamics for at least 2015–2026 and build scenarios for
+          2026–2045.
+        </p>
+      </section>
+
+      <!-- ========== 26. PROTOTYPE DELIVERABLES ========== -->
+      <section>
+        <h3>26. What the First Prototype Should Deliver</h3>
+        <p>The first prototype should answer at least five questions:</p>
+        <ul>
+          <li>Where does \(RR < 1\) already exist?</li>
+          <li>Which specialties are most sensitive to the departure of the older generation?</li>
+          <li>Which regions will be unable to reproduce their own workforce stock?</li>
+          <li>Which parameter has the greatest impact on effective capacity?</li>
+          <li>Which measures yield results most quickly?</li>
+        </ul>
+        <p>
+          The pilot is considered successful if it allows ranking 3–5 specific measures by the
+          ratio of "effect / lag / cost" for selected specialties and regions.
+        </p>
+      </section>
+
+      <!-- ========== 27. DESIRED OUTCOME ========== -->
+      <section>
+        <h3>27. Desired Outcome</h3>
+        <p>
+          The final result should not be a single number. What is needed is a map of workforce
+          sustainability: Region × Specialty × Generation × Scenario.
+        </p>
+        <p>
+          Such a format is far more useful than a single indicator like "Russia is short by N
+          physicians."
+        </p>
+      </section>
+
+      <!-- ========== 28. MAIN CONCLUSION ========== -->
+      <section>
+        <h3>28. Main Conclusion</h3>
+        <p>
+          The Russian healthcare workforce problem should be viewed not as a task to
+          "train more physicians."
+        </p>
+        <p>
+          A more precise formulation is:
+          <em>
+            "ensure the reproduction of sufficient effective medical capacity amidst demographic
+            changes in the population and physician generations."
+          </em>
+        </p>
+        <p>
+          To achieve this, it is necessary to simultaneously manage: quantity + age + specialty +
+          geography + retention + conditions + productivity + technology + knowledge.
+        </p>
+      </section>
+
+      <!-- ========== 29. STRATEGIC PRINCIPLE ========== -->
+      <section>
+        <h3>29. Strategic Principle</h3>
+        <p>
+          If a shortage arises today, a solution through increasing student numbers may come too late.
+        </p>
+        <p>
+          If the older generation is retiring today, training a new specialist will not compensate
+          for it immediately.
+        </p>
+        <p>
+          If a physician spends a significant portion of working time not on clinical activity,
+          increasing headcount may be less effective than eliminating organizational losses.
+        </p>
+        <p>
+          If unique experience disappears with the physician, a new diploma alone is insufficient
+          to fully replace the lost capability of the system.
+        </p>
+        <p>
+          Therefore, workforce policy must simultaneously operate on three horizons:
+        </p>
+        <ul>
+          <li>
+            <strong>Today:</strong> \(A\uparrow,\ P\uparrow\) — increase the effective capacity
+            of the existing corps.
+          </li>
+          <li>
+            <strong>3–7 years:</strong> \(Retention\uparrow,\ KnowledgeRetention\uparrow\) —
+            preserve people and experience.
+          </li>
+          <li>
+            <strong>7–15+ years:</strong> \(N\uparrow,\ RR \ge 1\) — ensure generational
+            reproduction.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ========== 30. CONCLUSION ========== -->
+      <section>
+        <h3>30. Conclusion</h3>
+        <p>
+          The most dangerous mistake would be to wait until statistics show an obvious nationwide
+          physician shortage. By that time, a significant part of the process will already be
+          irreversible: the younger generation will have chosen other professions, the age
+          structure of the physician corps will have shifted, specialists will have retired, and
+          the educational cycle will no longer allow rapid replenishment of the deficit.
+        </p>
+        <p>
+          Therefore, a transition from reactive workforce policy to an early warning system is
+          necessary.
+        </p>
+        <p>
+          The proposed model does not claim to be able to precisely predict the state of Russian
+          healthcare in 2045. It proposes something else: to make visible the parameters on which
+          that future depends.
+        </p>
+        <p>
+          If the model shows that to achieve a specific goal it is sufficient to change a certain
+          parameter by a certain magnitude, this creates a foundation for rational choice between
+          alternative state measures.
+        </p>
+        <p>
+          This is precisely why the ultimate goal should not be maximizing the number of physicians.
+        </p>
+        <p>
+          <strong>Goal: maximize sustainable effective medical capacity</strong>
+        </p>
+        <p>
+          while maintaining quality of care, patient safety, professional responsibility of
+          physicians, accessibility of care, institutional memory, and the system's ability to
+          reproduce itself across generations.
+        </p>
+        <p>
+          It is proposed to consider the Medical Workforce Capacity Model as a conceptual
+          foundation for further joint research with medical specialists, demographers, health
+          economists, educational organizations, and regional healthcare authorities.
+        </p>
+      </section>
+
+    </article>
+  </body>
+</html>
