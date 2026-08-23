@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Medical Workforce Capacity Model to support top management decisions'
+title: 'Medical Workforce Capacity Model: Demography, Generational Change, and System Sustainability'
 date: '2026-08-23'
 author: Gelassen
 tags: healthcare, workforce, model, demography, russia, capacity, reproduction, policy
@@ -101,6 +101,28 @@ modified_time: '2026-08-23'
         </ul>
       </section>
 
+      <!-- ========== WHAT THE MODEL DOES NOT DO ========== -->
+      <section>
+        <h3>What the Model Does NOT Do</h3>
+        <p>
+          To avoid misinterpretation, it is essential to state clearly what MWCM is <em>not</em>:
+        </p>
+        <ul>
+          <li>It is <strong>not</strong> a demographic forecast of the total number of physicians in 2045.</li>
+          <li>It is <strong>not</strong> a detailed workforce plan for the entire country.</li>
+          <li>It is <strong>not</strong> a justification for indiscriminately increasing or decreasing
+            budget‑funded places without considering specialty and region.</li>
+          <li>It is <strong>not</strong> a substitute for clinical expertise or evidence‑based medicine.</li>
+          <li>It is <strong>not</strong> an excuse to lower training standards or quality of care.</li>
+          <li>It is <strong>not</strong> a crystal ball — it is a tool for exploring dependencies,
+            comparing scenarios, and identifying leverage points.</li>
+        </ul>
+        <p>
+          The model is useful precisely because it makes visible the trade‑offs and time lags that
+          are otherwise hidden in aggregated statistics.
+        </p>
+      </section>
+
       <!-- ========== 1. THE PROBLEM ========== -->
       <section>
         <h3>1. The Problem</h3>
@@ -146,8 +168,10 @@ modified_time: '2026-08-23'
         <p>where:</p>
         <ul>
           <li>\(D_t\) — number of physicians;</li>
-          <li>\(A_t\) — actual availability of physicians for clinical work;</li>
-          <li>\(P_t\) — productivity per physician.</li>
+          <li>\(A_t\) — actual availability of physicians for clinical work (share of working time
+            spent on direct patient care);</li>
+          <li>\(P_t\) — productivity per physician (e.g., number of consultations or procedures
+            per unit of clinical time).</li>
         </ul>
         <p>
           A 10% increase in the number of physicians does not necessarily mean a 10% increase in
@@ -204,6 +228,24 @@ modified_time: '2026-08-23'
           Particularly important is the situation where the younger generation is smaller than the
           older generation approaching retirement. In this case, the problem becomes partially
           predetermined.
+        </p>
+      </section>
+
+      <!-- ========== 4.5 REGIONAL RISK ========== -->
+      <section>
+        <h3>4.5. Regional Heterogeneity as a Separate Risk</h3>
+        <p>
+          National averages mask deep regional disparities. Even if the national \(RR = 1\),
+          individual regions may have \(RR = 0.6\) while others have \(RR = 1.4\).
+        </p>
+        <ul>
+          <li>National aggregates hide crisis points;</li>
+          <li>Physician mobility between regions is limited;</li>
+          <li>Solutions must be tailored to specific regional and specialty contexts.</li>
+        </ul>
+        <p>
+          Therefore, the model should output a <strong>map of \(RR\) by region and specialty</strong>,
+          not a single national number.
         </p>
       </section>
 
@@ -338,6 +380,27 @@ modified_time: '2026-08-23'
         </p>
       </section>
 
+      <!-- ========== 11.5 QUALITY COEFFICIENT ========== -->
+      <section>
+        <h3>11.5. Quality as a Multiplier</h3>
+        <p>
+          Increasing the number of physicians does not automatically preserve or improve quality.
+          If numerical growth is achieved by lowering admission standards, reducing clinical
+          training, or overburdening mentors, the effective capacity may actually decline.
+        </p>
+        <p>
+          Therefore, we introduce a <strong>quality coefficient \(Q_t\)</strong> — the fraction of
+          physicians who meet clinical competency standards.
+        </p>
+        \[
+          EC_t = D_t \times A_t \times P_t \times Q_t
+        \]
+        <p>
+          \(Q_t\) can be estimated via certification results, peer reviews, or patient outcomes.
+          It ensures that policy makers do not equate "more doctors" with "better care."
+        </p>
+      </section>
+
       <!-- ========== 12. DIGITAL MEMORY ========== -->
       <section>
         <h3>12. Digital Memory as an Element of Workforce Sustainability</h3>
@@ -378,78 +441,22 @@ modified_time: '2026-08-23'
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><strong>N</strong></td>
-              <td>number of new physicians</td>
-              <td>increases workforce stock</td>
-              <td>high</td>
-              <td>slow</td>
-            </tr>
-            <tr>
-              <td><strong>R</strong></td>
-              <td>retirement age / conditions</td>
-              <td>retains physicians</td>
-              <td>low–medium</td>
-              <td>fast/medium</td>
-            </tr>
-            <tr>
-              <td><strong>L</strong></td>
-              <td>departure from profession</td>
-              <td>reduces losses</td>
-              <td>medium</td>
-              <td>medium</td>
-            </tr>
-            <tr>
-              <td><strong>A</strong></td>
-              <td>clinical work time share</td>
-              <td>increases available capacity</td>
-              <td>low</td>
-              <td>fast</td>
-            </tr>
-            <tr>
-              <td><strong>P</strong></td>
-              <td>productivity</td>
-              <td>increases effective capacity</td>
-              <td>low–medium</td>
-              <td>fast/medium</td>
-            </tr>
-            <tr>
-              <td><strong>C</strong></td>
-              <td>medical attractiveness</td>
-              <td>increases future inflow</td>
-              <td>high</td>
-              <td>slow</td>
-            </tr>
-            <tr>
-              <td><strong>OC</strong></td>
-              <td>alternative attractiveness</td>
-              <td>reduces future inflow</td>
-              <td>high</td>
-              <td>slow</td>
-            </tr>
-            <tr>
-              <td><strong>K</strong></td>
-              <td>knowledge retention</td>
-              <td>reduces knowledge loss</td>
-              <td>medium</td>
-              <td>medium</td>
-            </tr>
-            <tr>
-              <td><strong>I</strong></td>
-              <td>immigration</td>
-              <td>rapidly increases stock</td>
-              <td>low</td>
-              <td>fast</td>
-            </tr>
-            <tr>
-              <td><strong>H</strong></td>
-              <td>healthcare organization</td>
-              <td>changes required capacity</td>
-              <td>medium</td>
-              <td>medium</td>
-            </tr>
+            <tr><td><strong>N</strong></td><td>number of new physicians</td><td>increases workforce stock</td><td>high</td><td>slow</td></tr>
+            <tr><td><strong>R</strong></td><td>retirement age / conditions</td><td>retains physicians</td><td>low–medium</td><td>fast/medium</td></tr>
+            <tr><td><strong>L</strong></td><td>departure from profession</td><td>reduces losses</td><td>medium</td><td>medium</td></tr>
+            <tr><td><strong>A</strong></td><td>clinical work time share</td><td>increases available capacity</td><td>low</td><td>fast</td></tr>
+            <tr><td><strong>P</strong></td><td>productivity</td><td>increases effective capacity</td><td>low–medium</td><td>fast/medium</td></tr>
+            <tr><td><strong>C</strong></td><td>medical attractiveness</td><td>increases future inflow</td><td>high</td><td>slow</td></tr>
+            <tr><td><strong>OC</strong></td><td>alternative attractiveness</td><td>reduces future inflow</td><td>high</td><td>slow</td></tr>
+            <tr><td><strong>K</strong></td><td>knowledge retention</td><td>reduces knowledge loss</td><td>medium</td><td>medium</td></tr>
+            <tr><td><strong>I</strong></td><td>immigration</td><td>rapidly increases stock</td><td>low</td><td>fast</td></tr>
+            <tr><td><strong>H</strong></td><td>healthcare organization</td><td>changes required capacity</td><td>medium</td><td>medium</td></tr>
+            <tr><td><strong>Q</strong></td><td>quality standards</td><td>increases effective capacity</td><td>medium</td><td>medium</td></tr>
           </tbody>
         </table>
+        <p>
+          Note that \(Q\) is now an explicit lever, reinforcing that quality is not automatic.
+        </p>
       </section>
 
       <!-- ========== 14. USE FOR MANAGEMENT ========== -->
@@ -532,6 +539,11 @@ modified_time: '2026-08-23'
           structured experience transfer, digital memory, case‑based learning, documentation of
           complex cases, connecting leading centers with peripheral institutions.
         </p>
+        <p>
+          Additionally, \(Q\) must be monitored — older physicians may have deep experience but
+          also may face cognitive decline or outdated practices. The model should allow for
+          differential \(Q\) by age group.
+        </p>
 
         <h4>14.6. Goal 6. Increase Effective Capacity Without Proportional Growth in Numbers</h4>
         <p>
@@ -544,29 +556,77 @@ modified_time: '2026-08-23'
         </p>
       </section>
 
-      <!-- ========== 15. SENSITIVITY ========== -->
+      <!-- ========== 15. SENSITIVITY WITH REALISTIC EXAMPLE ========== -->
       <section>
-        <h3>15. Model Sensitivity</h3>
+        <h3>15. Model Sensitivity and a Realistic Example</h3>
         <p>
           For a first approximation, it is convenient to use relative changes. If
-          \(EC = D \times A \times P\), then for small changes:
+          \(EC = D \times A \times P \times Q\), then for small changes:
         </p>
         \[
-          \frac{\Delta EC}{EC} \approx \frac{\Delta D}{D} + \frac{\Delta A}{A} + \frac{\Delta P}{P}
+          \frac{\Delta EC}{EC} \approx \frac{\Delta D}{D} + \frac{\Delta A}{A} + \frac{\Delta P}{P} + \frac{\Delta Q}{Q}
         \]
         <p>
-          This is a very important result. It means that a 10% increase in effective capacity can
-          potentially be achieved through different combinations:
+          This means that a 10% increase in effective capacity can be achieved through various
+          combinations of smaller improvements.
+        </p>
+
+        <h4>Illustrative Example Based on Real Data</h4>
+        <p>
+          We use data from a photo‑timing study of abdominal surgeons at City Clinical Hospital No. 6
+          in Penza (RMANPO, 2024–2026). The study measured actual working time allocation.
         </p>
         <ul>
-          <li>Option A: \(D +10\%\);</li>
-          <li>Option B: \(A +10\%\);</li>
-          <li>Option C: \(P +10\%\);</li>
-          <li>Option D: \(D +3\%,\ A +3\%,\ P +4\%\).</li>
+          <li><strong>Direct patient care (clinical work):</strong> 62.3% for daytime surgeons,
+            67.8% for on‑call surgeons.</li>
+          <li><strong>Documentation and administrative tasks:</strong> ~9–12%.</li>
+          <li><strong>Auxiliary processes (transfers, waiting):</strong> ~18–20%.</li>
         </ul>
         <p>
-          That is, the state's task is not necessarily to maximize the number of physicians. It is
-          necessary to find the cheapest and fastest way to increase the product of three factors.
+          For our example, we take a conservative <strong>\(A = 0.62\)</strong> (62% of working time
+          spent on direct clinical activity). This is a midpoint between daytime and on‑call values.
+          Note that this value applies to <em>this specific group</em>; for other specialties or
+          regions, \(A\) may differ significantly (e.g., primary care physicians may have lower
+          \(A\) due to higher documentation burden).
+        </p>
+        <p>
+          Assume a department with \(D = 100\) surgeons, \(P = 1.0\) (baseline productivity),
+          and \(Q = 1.0\) (all meet quality standards).
+        </p>
+        <p>
+          Current effective capacity:
+          \[
+            EC = 100 \times 0.62 \times 1.0 \times 1.0 = 62
+          \]
+        </p>
+        <p>
+          To increase \(EC\) by 10% (to 68.2), we compare three strategies:
+        </p>
+        <table>
+          <thead>
+            <tr><th>Strategy</th><th>Change</th><th>New EC</th><th>Time to effect</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>A</strong> (reduce bureaucracy)</td><td>\(A: 0.62 \to 0.682\)</td><td>68.2</td><td>months</td></tr>
+            <tr><td><strong>P</strong> (boost productivity)</td><td>\(P: 1.0 \to 1.1\)</td><td>68.2</td><td>1–3 years</td></tr>
+            <tr><td><strong>D</strong> (hire more surgeons)</td><td>\(D: 100 \to 110\)</td><td>68.2</td><td>7+ years</td></tr>
+          </tbody>
+        </table>
+        <p>
+          All three yield the same gain, but the time horizons are drastically different.
+          A combined approach (\(D+3.3\%,\ A+3.3\%,\ P+3.3\%\)) also gives ~10.2% gain
+          (\(1.033^3 \approx 1.102\)) with moderate efforts on each front.
+        </p>
+        <p>
+          <strong>Important caveat:</strong> The \(A=0.62\) value is specific to the studied
+          surgeons. In regions with higher administrative burden (as reported by the Audit Chamber,
+          up to 50% of working time lost to non‑clinical tasks), \(A\) could be as low as 0.50.
+          Therefore, the model must be calibrated locally.
+        </p>
+        <p>
+          Also, the study did not capture 36‑hour on‑call shifts (which exist in practice but were
+          not measured). Such extended shifts may reduce effective \(A\) due to fatigue, but they
+          are not reflected in the data. This underlines the need for further empirical work.
         </p>
       </section>
 
@@ -630,6 +690,29 @@ modified_time: '2026-08-23'
         </ul>
         <p>
           Therefore, a rational strategy must use a portfolio of levers with different time horizons.
+        </p>
+      </section>
+
+      <!-- ========== 17.5 BUFFER ========== -->
+      <section>
+        <h3>17.5. Sustainability Buffer</h3>
+        <p>
+          A simple but powerful derived indicator is the <strong>buffer \(B_t\)</strong>:
+        </p>
+        \[
+          B_t = \frac{D_t - D_{min}}{D_{min}}
+        \]
+        <p>
+          where \(D_{min}\) is the minimum number of physicians required to provide essential care
+          (estimated from demand models).
+        </p>
+        <ul>
+          <li>\(B < 0.1\) — the system is in the danger zone;</li>
+          <li>\(B < 0\) — critical deficit.</li>
+        </ul>
+        <p>
+          This helps distinguish between "shortage" and "crisis" and provides an early warning
+          signal that is easy to communicate.
         </p>
       </section>
 
@@ -704,6 +787,8 @@ modified_time: '2026-08-23'
           <li>Age risk — proportion of physicians above a given threshold;</li>
           <li>Clinical employment share \(A = \text{Clinical time} / \text{Total working time}\);</li>
           <li>Productivity \(P\);</li>
+          <li>Quality coefficient \(Q\);</li>
+          <li>Buffer \(B\);</li>
           <li>Knowledge loss index — proportion of critical competencies associated with physicians
             approaching retirement;</li>
           <li>Regional \(RR\) for each region‑specialty combination.</li>
@@ -774,6 +859,13 @@ modified_time: '2026-08-23'
           increased enrollment because working conditions, prestige, alternative professions,
           educational requirements, and regional mobility may change simultaneously. Therefore,
           model parameters must be empirically validated.
+        </p>
+
+        <h4>22.4. Generality of the Example</h4>
+        <p>
+          The illustrative example in Section 15 is based on a specific study of abdominal surgeons
+          in Penza. It should not be extrapolated to other specialties or regions without local
+          calibration. The model is designed to be adaptable, but the numbers are not universal.
         </p>
       </section>
 
@@ -919,6 +1011,20 @@ modified_time: '2026-08-23'
           <li>Which parameter has the greatest impact on effective capacity?</li>
           <li>Which measures yield results most quickly?</li>
         </ul>
+
+        <h4>Concrete pilot question</h4>
+        <p>
+          <em>
+            "In Sverdlovsk Oblast, for the surgery specialty, 40% of surgeons are older than 55,
+            and residency enrollment is only 60% of the target. What is the effect of increasing
+            retention of young surgeons by 10 percentage points compared to increasing enrollment
+            by 20%?"
+          </em>
+        </p>
+        <p>
+          The model should be able to simulate both scenarios and compare them in terms of time,
+          cost, and impact on \(RR\) and \(EC\).
+        </p>
         <p>
           The pilot is considered successful if it allows ranking 3–5 specific measures by the
           ratio of "effect / lag / cost" for selected specialties and regions.
@@ -954,7 +1060,7 @@ modified_time: '2026-08-23'
         </p>
         <p>
           To achieve this, it is necessary to simultaneously manage: quantity + age + specialty +
-          geography + retention + conditions + productivity + technology + knowledge.
+          geography + retention + conditions + productivity + technology + quality + knowledge.
         </p>
       </section>
 
@@ -985,8 +1091,8 @@ modified_time: '2026-08-23'
             of the existing corps.
           </li>
           <li>
-            <strong>3–7 years:</strong> \(Retention\uparrow,\ KnowledgeRetention\uparrow\) —
-            preserve people and experience.
+            <strong>3–7 years:</strong> \(Retention\uparrow,\ KnowledgeRetention\uparrow,\ Q\uparrow\) —
+            preserve people, quality, and experience.
           </li>
           <li>
             <strong>7–15+ years:</strong> \(N\uparrow,\ RR \ge 1\) — ensure generational
