@@ -1,0 +1,473 @@
+---
+layout: post
+title: 'Lightweight BI system for university, part II: how the analytics is built'
+date: '2026-08-29'
+author: Gelassen
+tags: BI, custom software development, decision making support, xAI
+modified_time: '2026-08-29'
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lightweight BI system for university, part II: how the analytics is built</title>
+<link rel="stylesheet" href=".css/general.css">
+</head>
+<body>
+<article>
+<section>
+<h3>Executive summary</h3>
+
+<p>
+                Part I described the constraints of the project, the synthetic LMS dataset,
+                and the overall shape of a lightweight BI system for university instructors:
+                reduce group review from roughly <strong>40 minutes to 5–10 minutes</strong>,
+                without black-box LLMs for educational decisions, and with
+                <strong>explainable AI (xAI)</strong> as a hard requirement.
+</p>
+
+<p>
+                This part focuses on <strong>how analytics is actually constructed</strong> —
+                not on another catalogue of charts, but on the path from raw LMS facts
+                to findings that an instructor can accept, reject, or act on.
+</p>
+
+<p>
+                The system separates two concerns that are often mixed in “AI dashboards”:
+</p>
+
+<ul>
+<li><strong>Visual panels</strong> — the same kinds of facts that already live in Moodle-like systems,
+                    organised for teaching decisions (themes, questions, scores, trends, effort, attendance);</li>
+<li><strong>Rule-based insights</strong> — findings with evidence, hypotheses, alternative explanations,
+                    confidence, limitations, and recommended interventions.</li>
+</ul>
+
+<p>
+                Analytics runs in a dedicated <strong>analytics-engine</strong>: incremental batches over
+                changed topics, snapshot rules on topic metrics, trend rules on time series,
+                student-risk signals, and persisted explanations. The Streamlit dashboard is mostly a
+                <strong>reader</strong> of facts and of the latest completed analytics run.
+</p>
+
+<p>
+                The dashboard exposes <strong>nine tabs</strong>. Together they cover level-1 “flower”
+                overviews and level-2 panels aligned with LMS queries (scores, dynamics, score structure,
+                deadlines and attempts, difficulty extremes, attendance and activity), plus an insights
+                layer and an at-risk group report.
+</p>
+
+<p>
+                Roughly <strong>thirty</strong> finding types and a separate student-risk signal set
+                implement the extraction logic. Listing every rule would turn this post into a reference
+                manual. The value is in the <em>extraction pattern</em>. Below, that pattern is shown
+                end-to-end, then illustrated with <strong>non-trivial</strong> rules and with three
+                screenshots from a live run on synthetic Economics data.
+</p>
+
+<p>
+                The design principle stays the same as in part I: the system supports judgment;
+                it does not replace the instructor.
+</p>
+</section>
+
+<section>
+<h3>Relation to part I</h3>
+
+<table>
+<thead>
+<tr>
+<th>Part I</th>
+<th>Part II</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Customer, ethics, synthetic data, high-level components</td>
+<td>Pipeline of metrics → rules → explanations</td>
+</tr>
+<tr>
+<td>Dashboard mentioned as UI shell</td>
+<td>All nine tabs and what each is for</td>
+</tr>
+<tr>
+<td>“Decision support, not charts only”</td>
+<td>Concrete finding families, non-trivial rules, screenshots</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+                For context on constraints, synthetic generation, and the first version of the UI,
+                see
+                <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">Lightweight BI system for university, part I</a>.
+</p>
+</section>
+
+<section>
+<h3>Architectural principle: visualisation vs interpretation</h3>
+
+<p>
+                Instructors do not need another dump of averages. They need a short path from
+                <em>observation</em> to <em>possible intervention</em>.
+</p>
+
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Role</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Facts</strong></td>
+<td>LMS-derived tables in the AI database</td>
+<td>attempts, question results, attendance, weekly activity</td>
+</tr>
+<tr>
+<td><strong>Metrics</strong></td>
+<td>Aggregates per topic / student / period</td>
+<td>accuracy, error shares, on-time rate, median attempts, engagement</td>
+</tr>
+<tr>
+<td><strong>Findings</strong></td>
+<td>Rule matches with evidence</td>
+<td>low accuracy, missed deadline vs did not understand, declining mastery</td>
+</tr>
+<tr>
+<td><strong>Explanations</strong></td>
+<td>xAI text structure</td>
+<td>observation, hypothesis, alternatives, actions, uncertainty</td>
+</tr>
+<tr>
+<td><strong>UI</strong></td>
+<td>Tabs</td>
+<td>explore facts; read findings on Insights and Risk</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+                Rules are <strong>thresholds + logic</strong>, not generative models.
+                Thresholds can be calibrated per course (YAML, optional admin UI) without rewriting rules.
+                Empty insights are not always a defect: if every submission is on time, deadline rules
+                correctly stay silent; if a topic spans only two weeks, decline-streak rules may not fire.
+</p>
+</section>
+
+<section>
+<h3>How the analytics engine works</h3>
+
+<h4>Incremental batch</h4>
+
+<ol>
+<li>Read unprocessed <strong>changes</strong> (topics, results, assignments, activity, …).</li>
+<li>Resolve an <strong>impact set</strong> of topic ids.</li>
+<li>Hydrate state for those topics (results, attempts, attendance, activity, students).</li>
+<li><strong>Compute</strong>: metrics → snapshot rules → trend rules → enrich → explanations → student metrics → risk flags.</li>
+<li>Persist a new analytics <strong>run</strong>; acknowledge changes.</li>
+</ol>
+
+<p>
+                Only touched topics are recomputed. A pipeline lock avoids concurrent writers.
+</p>
+
+<h4>Three families of logic</h4>
+
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Snapshot</strong> (topic / question)</td>
+<td>Topic metrics (+ question context)</td>
+<td>Findings: accuracy, errors, effort, deadlines, engagement, none/all solved, …</td>
+</tr>
+<tr>
+<td><strong>Trend</strong></td>
+<td>Per-topic time series (e.g. weekly score and attempts)</td>
+<td>Declining / improving mastery, rising effort with flat score, volatility</td>
+</tr>
+<tr>
+<td><strong>Student risk</strong></td>
+<td>Per-student metrics</td>
+<td>Signals + justification + severity (not the same object as topic findings)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+                Every topic finding is expected to carry <strong>evidence</strong> (metric values).
+                The explanation layer adds hypothesis, alternatives, recommended actions, and limitations.
+</p>
+
+<h4>What the engine deliberately does not do</h4>
+
+<ul>
+<li>It does not invent causal certainty (“this student failed because of X”).</li>
+<li>It does not replace the Moodle gradebook.</li>
+<li>It does not call an LLM to invent recommendations for production educational decisions
+                    (customer constraint described in part I).</li>
+</ul>
+</section>
+
+<section>
+<h3>From metrics to a finding: the extraction pattern</h3>
+
+<p>
+                Regardless of which of the ~30 finding types fires, the path is the same:
+</p>
+
+<ol>
+<li><strong>Aggregate</strong> raw rows into a metric row (topic or student).</li>
+<li><strong>Evaluate</strong> a pure rule: thresholds + boolean conditions + minimum sample size.</li>
+<li><strong>Attach evidence</strong> strings that a human can check against the dashboard tables.</li>
+<li><strong>Render</strong> a fixed explanation schema: observation → hypothesis → alternatives → recommendations → limitations.</li>
+</ol>
+
+<p>
+                The non-trivial part is rarely the inequality <code>accuracy &lt; 0.5</code>.
+                It is choosing <em>which combinations of signals</em> change the instructor’s next action,
+                and forcing the system to show alternatives when several stories fit the same numbers.
+</p>
+</section>
+
+<section>
+<h3>Non-trivial rules (worked examples)</h3>
+
+<p>
+                Trivial rules (“accuracy is low”) are necessary, but they are not where the design
+                effort sits. The following three families are more characteristic of the system.
+</p>
+
+<h4>1. Deadline versus understanding</h4>
+
+<p>
+                LMS attempts carry both a score and an on-time flag (and often duration).
+                Two different teaching problems produce similar “weak result” charts:
+</p>
+
+<ul>
+<li><strong>Missed deadline</strong> — share of on-time submissions is low, but accuracy is still
+                    in an “acceptable” band → time management / workload / cutoff design;</li>
+<li><strong>Did not understand</strong> — submissions are mostly on time, accuracy is weak,
+                    often with many attempts → content, prerequisites, or item design.</li>
+</ul>
+
+<p>
+                Related variants include on-time submission with very few attempts and a weak score
+                (shallow engagement) and a long single attempt with a weak score (stuck without recovery).
+                On the current synthetic set, almost all attempts are marked on time, so
+                <em>missed deadline</em> correctly does not fire. That is a data property, not a missing rule.
+</p>
+
+<h4>2. Multi-signal student risk</h4>
+
+<p>
+                Topic findings answer “what is wrong with the theme”.
+                Risk answers “who needs attention, with a short rationale”.
+</p>
+
+<p>
+                A student enters the risk set only when <strong>several</strong> independent signals
+                co-occur (weak accuracy across topics, low average score, absences, attempt patterns,
+                engagement extremes, late rate, …), above a minimum answer count.
+                Severity is derived from how deep accuracy falls and how many signals stack.
+                Justification text is assembled from the same signals so the instructor can audit the row
+                without opening a black box.
+</p>
+
+<p>
+<img src="/blog/assets/images/2026-08-29/risk-group-report.png"
+                     alt="Automatic at-risk group report: 25 students, severity counts, per-student justification with weak topics, score, absences, median attempts">
+</p>
+
+<p>
+                In the run shown above, the report lists 25 students, 22 of them at high severity,
+                with mean success around 45%. Each line combines weak topics, accuracy, average score,
+                missed sessions, and median attempts. That is the “summary report on the risk group with
+                rationale” from the original requirements — not a single red flag on one metric.
+</p>
+
+<h4>3. Score structure as a bridge to intervention</h4>
+
+<p>
+                Before recommending a seminar on a topic, the instructor needs to see
+                <em>how far</em> that topic pulls the cohort below the slice average.
+                The score-structure panel ranks themes by result and by delta to the overall mean
+                (descriptive gap, not a causal “contribution” claim).
+</p>
+
+<p>
+<img src="/blog/assets/images/2026-08-29/score-structure-themes.png"
+                     alt="Score structure by theme: Elasticity at 2.4% with −52.3 pp vs slice average, listed under what pulls the result down">
+</p>
+
+<p>
+                Elasticity sits at roughly 2% with a −52 percentage-point gap to the slice average.
+                Production Costs, Firm Theory, and Monetary Policy follow with smaller negative deltas.
+                The same numbers feed snapshot findings; the table is the visual counterpart of
+                “what to open first on Insights”.
+</p>
+
+<h4>4. Insights card: full xAI schema on a hard theme</h4>
+
+<p>
+                When a theme such as Elasticity collapses to ~2% accuracy with full completion,
+                a low-accuracy (or none-solved) rule is expected. The product value is not the label;
+                it is the structured card the instructor actually reads.
+</p>
+
+<p>
+<img src="/blog/assets/images/2026-08-29/insight-elasticity-low-accuracy.png"
+                     alt="Insights card for theme Elasticity: accuracy 2%, hypothesis, observation, evidence, alternatives, recommendations, interpretation limits">
+</p>
+
+<p>
+                The card separates:
+</p>
+
+<ul>
+<li><strong>Hypothesis</strong> — possible teaching meaning, including the hardest items (Q06, Q03, …);</li>
+<li><strong>Observation / evidence</strong> — the pattern and the supporting rate;</li>
+<li><strong>Alternatives</strong> — poor item wording, weak prerequisites, overly hard control materials
+                    (so “bad students” is not the only story);</li>
+<li><strong>Recommendations</strong> — concrete seminar focus, drills on logical errors, checks of basic concepts;</li>
+<li><strong>Limits</strong> — e.g. missing instructional context (what was taught that week).</li>
+</ul>
+
+<p>
+                That structure is applied across finding types. Adding a new rule means implementing
+                the same contract, not inventing a new prose style per metric.
+</p>
+</section>
+
+<section>
+<h3>The nine tabs</h3>
+
+<p>
+                Global sidebar filters (group, student, assignment type, period) apply across the
+                visual tabs. Insights and risk read the latest completed analytics run.
+</p>
+
+<h4>1. Themes (level-1 “flowers”)</h4>
+<p>
+                <strong>Question:</strong> where does the cohort struggle by topic?<br>
+                Performance and error structure (logical / arithmetic / terminology).
+                Snapshot rules on accuracy, error dominance, pressure, all/none solved continue
+                on the Insights tab.
+</p>
+
+<h4>2. Questions</h4>
+<p>
+                <strong>Question:</strong> which items are too hard or too easy?<br>
+                Item-level success rates; question rules such as almost nobody / almost everybody solved
+                support simplify / complicate recommendations.
+</p>
+
+<h4>3. Student</h4>
+<p>
+                <strong>Question:</strong> how is one student doing across topics?<br>
+                Drill-down in the current filter slice. Multi-signal problems surface on Risk group.
+</p>
+
+<h4>4. Insights</h4>
+<p>
+                <strong>Question:</strong> what stands out, and what might I do?<br>
+                Main surface for topic and question findings after explanation generation —
+                the “intelligent assistant” layer, not a second gradebook.
+</p>
+
+<h4>5. Risk group</h4>
+<p>
+                <strong>Question:</strong> who needs attention, and why?<br>
+                Named students with severity and justification. Complements Insights
+                (theme problems versus people).
+</p>
+
+<h4>6. Trends</h4>
+<p>
+                <strong>Question:</strong> is mastery rising or falling over time?<br>
+                Score and attempts over periods. Trend findings (decline, improve, effort up with flat score,
+                volatility) need a long enough series per topic; short sequential courses may yield few hits.
+</p>
+
+<h4>7. Score structure</h4>
+<p>
+                <strong>Question:</strong> what pulls the observed result down?<br>
+                Descriptive ranking and deltas (screenshot above). Exploration first; Insights still carry
+                formal findings.
+</p>
+
+<h4>8. Deadlines, attempts, and effort</h4>
+<p>
+                <strong>Question:</strong> did they run out of time, or fail to understand?<br>
+                On-time rate, median attempts, time-on-task, score side by side — the metric surface for
+                the deadline-versus-understanding rules.
+</p>
+
+<h4>9. Attendance and activity</h4>
+<p>
+                <strong>Question:</strong> do absences or empty LMS activity explain weak results?<br>
+                Attendance and engagement crossed with scores; topic-level patterns and student-risk signals
+                (e.g. high engagement with low results, low attendance with low results).
+</p>
+</section>
+
+<section>
+<h3>Cross-cutting behaviour</h3>
+
+<ul>
+<li><strong>Empty insights are not always a bug.</strong> Rules fire on patterns present in the facts.</li>
+<li><strong>Insights ≠ all nine tabs.</strong> Tabs 1–3 and 6–9 are exploration; 4–5 carry structured conclusions.</li>
+<li><strong>Human remains responsible.</strong> Alternatives and limitations are part of the product.</li>
+<li><strong>Production data path (forward-looking):</strong> Moodle primary → isolated replica → ETL into the AI database → engine → dashboard. Applications do not connect to the LMS primary.</li>
+</ul>
+</section>
+
+<section>
+<h3>What this implies for “AI in education” dashboards</h3>
+
+<p>
+                A large share of educational “AI” demos still jumps from a chart to a paragraph
+                of model-generated advice. This prototype takes the opposite route:
+                measurable indicators first, rule matches second, prose last — and only inside a fixed schema.
+</p>
+
+<p>
+                That is slower to market as a feature list, but it matches the customer constraint
+                (no LLM for graded educational decisions) and matches how instructors already argue
+                in staff meetings: numbers, competing explanations, then a concrete next step.
+</p>
+</section>
+
+<section>
+<h3>Next steps</h3>
+
+<ul>
+<li>Deep-links from a finding to the matching visual tab with filters preserved;</li>
+<li>Instructor auth / RBAC before wide production use;</li>
+<li>Calibration of thresholds on real course extracts once the replica + ETL path is live;</li>
+<li>Richer synthetic (or real) patterns for rare rules — e.g. late submissions, long per-topic time series.</li>
+</ul>
+</section>
+
+<section>
+<h3>Related publications</h3>
+<p>
+<a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">Lightweight BI system for university, part I</a><br>
+<a href="https://gelassen.github.io/blog/2026/06/19/artificial-intelligence-in-education-and-management.html">Artificial Intelligence in Education and Management</a><br>
+<a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">Broad vs Narrow specialisation</a>
+</p>
+</section>
+</article>
+</body>
+</html>
