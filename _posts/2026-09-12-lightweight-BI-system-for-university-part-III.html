@@ -1,13 +1,15 @@
 ---
+
 layout: post
 title: 'Lightweight BI system for university, part III: UX redesign of Teacher Analytics, targeting 5–10 minute weekly review'
 date: '2026-09-12'
 author: Gelassen
 tags: UX, BI, decision support, educational analytics, xAI, product design
 modified_time: '2026-09-12'
----
+---------------------------
 
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,654 +20,869 @@ modified_time: '2026-09-12'
 <body>
     <article>
 
-        <section>
-            <h3>Executive summary</h3>
+    <section>
+        <h3>Executive summary</h3>
 
-            <p>
-                Within a single intensive week, with AI used as a force-multiplier,
-                we moved a production educational analytics product from a flat,
-                tab-heavy interface to a layered decision-support workspace.
-                The work covered the full cycle: market and trend research,
-                a timed key-user scenario, functional information architecture,
-                a formal coverage matrix (every requirement still has an address),
-                stakeholder confirmation, visual direction, and migration of the
-                working product onto the new UX.
-            </p>
+        <p>
+            Within a single intensive week, with AI used as a force-multiplier,
+            we moved a production educational analytics product from a flat,
+            tab-heavy interface toward a layered decision-support workspace.
+            The work covered the full cycle: UX and interface trend research,
+            a timed key-user scenario, functional information architecture,
+            a formal coverage matrix, stakeholder confirmation, visual
+            direction, and migration of the working product onto the new UX.
+        </p>
 
-            <p>
-                The original baseline came from direct work in Moodle: a teacher’s
-                group performance review took roughly <strong>40 minutes</strong>
-                of navigating the LMS gradebook, reports and individual activity
-                logs. The product goal has always been to bring that down to
-                <strong>5–10 minutes</strong> with explainable analytics.
-                Bloomberg-style density remains the cautionary example — immensely
-                capable, yet frequently rejected by anyone who is not a full-time
-                power user. The redesign makes sophisticated, explainable analytics
-                feel approachable and productive rather than something users
-                quietly avoid.
-            </p>
+        <p>
+            The redesign is part of a larger transition. The first version
+            was built in <strong>Streamlit</strong> and proved the analytical
+            model, but the framework was becoming a constraint for the next
+            stage of the product. The new interface is being implemented as
+            a <strong>React</strong> workspace, providing considerably more
+            control over interaction, information hierarchy and progressive
+            disclosure.
+        </p>
 
-            <p>
-                This post is the design companion to the earlier technical write-ups:
-                <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">
-                    Lightweight BI system for university, part I
-                </a>
-                and
-                <a href="https://gelassen.github.io/blog/2026/08/29/lightweight-BI-for-university-part-II.html">
-                    part II (how the analytics is built)
-                </a>.
-                Those posts describe the data model, the rule-based engine and the
-                nine-tab Streamlit surface. Here we focus on <em>why</em> and
-                <em>how</em> the interaction model itself changed.
-            </p>
-        </section>
+        <p>
+            The original baseline came from direct work in Moodle: a teacher’s
+            group performance review took roughly <strong>40 minutes</strong>
+            of navigating the LMS gradebook, reports and individual activity
+            logs. The product goal has always been to bring that down to
+            <strong>5–10 minutes</strong> with explainable analytics.
+        </p>
 
-        <section>
-            <h3>Where UX of data-heavy apps actually went</h3>
+        <p>
+            The central UX idea is not simply “fewer tabs”. It is a shorter
+            feedback loop:
+            <strong>
+                what is happening → where is the problem →
+                what data confirms it?
+            </strong>
+            The new interface is organised around this loop. Overview
+            establishes the state of the group; Problems identify what
+            deserves attention; Data provides the evidence and detailed
+            indicators needed to verify and investigate it.
+        </p>
 
-            <p>
-                Before redesigning anything we re-checked the real trajectory of
-                professional interfaces over the last decade, not the marketing
-                slogans:
-            </p>
+        <p>
+            This post is the design and product companion to the earlier
+            technical write-ups:
+            <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">
+                Lightweight BI system for university, part I
+            </a>
+            and
+            <a href="https://gelassen.github.io/blog/2026/08/29/lightweight-BI-for-university-part-II.html">
+                part II (how the analytics is built)
+            </a>.
+            Those posts describe the data model, the rule-based engine and
+            the original nine-tab Streamlit surface. Here the focus is on
+            <em>why</em> and <em>how</em> the interaction model and technical
+            surface are changing.
+        </p>
+    </section>
 
-            <ul>
-                <li>
-                    <strong>Content before chrome.</strong>
-                    The first decisive move was rejecting heavy decorative frames
-                    and pure “chrome.” The principle is simple: the data and the
-                    task come first; the surrounding interface must recede.
-                </li>
+    <section>
+        <h3>The design problem: from analytics terminal to decision support</h3>
 
-                <li>
-                    <strong>Material Design and systemisation.</strong>
-                    Material (and parallel systems) brought shared structure —
-                    cards, elevation, consistent components, clearer hierarchy.
-                    Predictability improved; so did the temptation to over-decorate.
-                </li>
+        <p>
+            The first version already solved an important technical problem:
+            it collected a large amount of educational data and turned it
+            into structured, explainable findings. The remaining problem was
+            interaction.
+        </p>
 
-                <li>
-                    <strong>Less fancy Material, still more focused on data.</strong>
-                    The subsequent wave dialled the theatre back — fewer shadows,
-                    quieter colour, less motion — while doubling down on data
-                    legibility, progressive disclosure and task efficiency.
-                    The interface became quieter so that the information could
-                    speak louder.
-                </li>
-            </ul>
+        <p>
+            A teacher does not normally approach an analytics system with
+            the question “which dashboard should I open?” The natural
+            sequence is closer to:
+        </p>
 
-            <p>
-                For educational analytics the implication is direct: teachers do
-                not need another terminal. They need a calm, hierarchical surface
-                that answers “what needs attention this week?” in seconds, then
-                supports deeper exploration without forcing a complete mental
-                re-model of the tool.
-            </p>
-        </section>
+        <ol>
+            <li><strong>What is happening?</strong></li>
+            <li><strong>Where is the problem?</strong></li>
+            <li><strong>What data confirms or explains it?</strong></li>
+        </ol>
 
-        <section>
-            <h3>The old design (what we started from)</h3>
+        <p>
+            In the original interface these three jobs were distributed
+            across several equally weighted tabs. The user had to assemble
+            the relationship between overview, finding and supporting data
+            mentally.
+        </p>
 
-            <p>
-                The first production surface was a <strong>Streamlit</strong>
-                dashboard with a global sidebar and nine specialised tabs:
-            </p>
+        <p>
+            The redesign therefore does not primarily optimise the number
+            of screens. It optimises the <strong>feedback loop between
+            interpretation and evidence</strong>.
+        </p>
 
-            <ul>
-                <li>Themes (level-1 “flower” overview)</li>
-                <li>Questions</li>
-                <li>Student</li>
-                <li>Insights</li>
-                <li>Risk group</li>
-                <li>Trends</li>
-                <li>Score structure</li>
-                <li>Deadlines / attempts / effort</li>
-                <li>Attendance and activity</li>
-            </ul>
+        <p>
+            The intended interaction is:
+        </p>
 
-            <p>
-                It already delivered the analytical model: rule-based findings
-                with evidence, hypothesis, alternatives, recommendations and
-                limits; theme map as orientation anchor; full coverage of the
-                ТЗ queries. 
-            </p>
+        <p>
+            <strong>
+                Overview → Problems → Evidence in Data → back to the decision
+            </strong>
+        </p>
 
-            <p>
-                <img src="/blog/assets/images/2026-09-12/legacy-dashboard.png"></img>
-            </p>
+        <p>
+            This creates a natural progressive-disclosure model. The system
+            does not expose its full analytical depth immediately. It reveals
+            the next level when the user has a reason to ask for it.
+        </p>
+    </section>
 
-            <p>
-                <strong>Strengths we kept:</strong>
-                complete analytical coverage, explainable (non-LLM) findings,
-                solid incremental engine, theme map as the central orientation
-                device.
-            </p>
+    <section>
+        <h3>The design direction</h3>
 
-            <p>
+        <p>
+            Before redesigning anything we re-checked the trajectory of
+            professional interfaces for data-heavy applications over the
+            last decade, focusing on what actually improves usability rather
+            than on visual trends alone.
+        </p>
+
+        <ul>
+            <li>
+                <strong>Content before chrome.</strong>
+                The data and the task come first; surrounding interface
+                elements should recede.
+            </li>
+
+            <li>
+                <strong>Systemisation.</strong>
+                Design systems such as Material brought shared structure,
+                consistent components and clearer hierarchy. Predictability
+                improved, although the same vocabulary could also lead to
+                unnecessary visual decoration.
+            </li>
+
+            <li>
+                <strong>Quieter interfaces for information-heavy work.</strong>
+                More recent interfaces increasingly reduce visual theatre:
+                fewer shadows, quieter colour, less motion and greater
+                emphasis on data legibility, progressive disclosure and
+                task efficiency.
+            </li>
+        </ul>
+
+        <p>
+            For educational analytics the implication is direct: teachers
+            do not need another terminal. They need a calm, hierarchical
+            surface that answers “what needs attention this week?” quickly,
+            while preserving the ability to investigate the underlying data.
+        </p>
+    </section>
+
+    <section>
+        <h3>The old design — what we started from</h3>
+
+        <p>
+            The first production surface was a <strong>Streamlit</strong>
+            dashboard with a global sidebar and nine specialised tabs:
+        </p>
+
+        <ul>
+            <li>Themes (level-1 “flower” overview)</li>
+            <li>Questions</li>
+            <li>Student</li>
+            <li>Insights</li>
+            <li>Risk group</li>
+            <li>Trends</li>
+            <li>Score structure</li>
+            <li>Deadlines / attempts / effort</li>
+            <li>Attendance and activity</li>
+        </ul>
+
+        <p>
+            It already delivered the analytical model: rule-based findings
+            with evidence, hypothesis, alternatives, recommendations and
+            limits; theme map as orientation anchor; and full coverage of
+            the ТЗ queries.
+        </p>
+
+        <p>
+            <img
+                src="/blog/assets/images/2026-09-12/legacy-dashboard.png"
+                alt="Legacy Streamlit dashboard"
+                style="max-width: 100%; border: 1px solid #ccc;"
+            >
+        </p>
+
+        <p>
+            <strong>Strengths we kept:</strong>
+            complete analytical coverage, explainable (non-LLM) findings,
+            a solid incremental engine, and the theme map as the central
+            orientation device.
+        </p>
+
+        <p>
+            <strong>
+                Pain points that still stood in the way of the 5–10 minute
+                target:
+            </strong>
+        </p>
+
+        <ul>
+            <li>
+                <strong>Flat information architecture.</strong>
+                Nine equally weighted tabs forced constant context
+                reconstruction.
+            </li>
+
+            <li>
+                <strong>Cognitive overload.</strong>
+                Dense tables and uniform visual weight made the tool feel
+                closer to a terminal than to decision support.
+            </li>
+
+            <li>
+                <strong>Weak progressive disclosure.</strong>
+                Findings and full BI lived on the same mental plane; the
+                weekly path had no privileged short route.
+            </li>
+
+            <li>
+                <strong>Context reconstruction.</strong>
+                Moving between tabs could feel like starting over;
+                filters lived in a sidebar that was easy to forget.
+            </li>
+
+            <li>
+                <strong>Technology constraint.</strong>
+                Streamlit was useful for validating the analytical concept
+                and getting the first working product running quickly.
+                As the interaction model became more sophisticated,
+                however, it provided less flexibility and control than the
+                product required for the next stage.
+            </li>
+        </ul>
+
+        <p>
+            The ~40-minute baseline itself was measured in direct work with
+            Moodle (gradebook, reports, activity logs), not on this first
+            dashboard. The Streamlit surface was already an attempt to
+            shrink that time; the UX redesign removes the remaining
+            interaction friction while the technology migration provides
+            the flexibility needed to implement the new model properly.
+        </p>
+    </section>
+
+    <section>
+        <h3>Key user scenario broken down by timing</h3>
+
+        <p>
+            The primary job is a weekly (or post-control) performance review.
+            The original cost was measured in Moodle; the first product
+            version reduced part of that cost; the redesign targets the
+            remaining friction so the intended path fits the 5–10 minute
+            band.
+        </p>
+
+        <h4>Baseline — direct work in Moodle (~40 minutes)</h4>
+
+        <ol>
+            <li>
+                <strong>0–10 min.</strong>
+                Open course, gradebook and multiple reports; locate the
+                relevant group and period.
+            </li>
+
+            <li>
+                <strong>10–25 min.</strong>
+                Cross-check topic results, individual attempts, attendance
+                and activity logs; open students individually where needed.
+            </li>
+
+            <li>
+                <strong>25–40 min.</strong>
+                Mentally synthesise what needs attention — which topics,
+                which students, which items to simplify or repeat — and
+                form an action list.
+            </li>
+        </ol>
+
+        <h4>First product version — structured, but still flat</h4>
+
+        <p>
+            Nine flat tabs and sidebar filters already replaced raw Moodle
+            navigation with structured panels and explainable findings.
+            Orientation and cross-referencing, however, still cost time:
+            the user had to reconstruct “what is still relevant for this
+            slice” after every tab switch.
+        </p>
+
+        <h4>After redesign — the intended 5–10 minute path</h4>
+
+        <ol>
+            <li>
+                <strong>0–30 sec.</strong>
+                Global context shows the active slice
+                (course › theme › student › work type). Three KPI cards
+                and the theme map answer:
+                <em>“What is the state of the group?”</em>
+            </li>
+
+            <li>
+                <strong>30 sec – 3 min.</strong>
+                Open Problems (Findings). Prioritised signals show severity,
+                a short rationale and “Подробнее”. The user does not need
+                to hunt across several analytical tabs.
+            </li>
+
+            <li>
+                <strong>3–7 min.</strong>
+                Open one or two findings into full xAI cards:
+                hypothesis, evidence, alternatives, recommendations and
+                limits. Drill into a theme or student while the global
+                context remains intact.
+            </li>
+
+            <li>
+                <strong>7–10 min.</strong>
+                If a specific indicator or additional confirmation is
+                required, move to Data and open the corresponding panel.
+                Every ТЗ query still has an address, but the default path
+                does not require visiting all of them.
+            </li>
+        </ol>
+
+        <p>
+            The time saving is therefore not simply “fewer screens”.
+            It comes from shortening the feedback loop and separating three
+            jobs that previously competed on the same flat surface:
+            <strong>
+                orient → identify the problem → verify with data
+            </strong>.
+        </p>
+    </section>
+
+    <section>
+        <h3>Functional design &amp; information architecture</h3>
+
+        <p>
+            The redesign does not delete capability. It re-sequences it
+            around the teacher's decision process.
+        </p>
+
+        <ul>
+            <li>
+                <strong>Global context</strong>
+                (course › theme › topic › student + work type) is always
+                visible and never silently reset.
+            </li>
+
+            <li>
+                <strong>Overview</strong>
+                establishes what is happening.
+            </li>
+
+            <li>
+                <strong>Problems / Findings</strong>
+                identifies where attention is required.
+            </li>
+
+            <li>
+                <strong>Data / Analytics</strong>
+                provides the evidence and detailed indicators needed to
+                confirm, investigate or challenge the finding.
+            </li>
+
+            <li>
+                <strong>Theme map (“цветочки”)</strong>
+                remains the central orientation device on Overview.
+            </li>
+
+            <li>
+                <strong>Every ТЗ query 1–14</strong>
+                has an explicit address under Data
+                (Performance / Learning process / Assessment / Students).
+            </li>
+        </ul>
+
+        <p>
+            The resulting UX contract is deliberately simple:
+        </p>
+
+        <p>
+            <strong>
+                Overview tells me what is happening.<br>
+                Problems tell me where to look.<br>
+                Data tells me what confirms it.
+            </strong>
+        </p>
+
+        <p>
+            This is the core of the redesign. The three layers are not
+            merely different navigation categories; they form a single
+            analytical feedback loop on the same data slice.
+        </p>
+
+        <p>
+            Functional wireframe of the Overview layer
+            (global context + KPIs + theme map):
+        </p>
+
+        <p>
+            <img
+                src="/blog/assets/images/2026-09-12/functional-wireframe.png"
+                alt="Functional design — Overview with context bar, KPIs and theme map"
+                style="max-width: 100%; border: 1px solid #ccc;"
+            >
+        </p>
+
+        <p>
+            <em>
+                Figure 1. Functional design — Overview. Context is persistent;
+                colour of theme cards follows thresholds (green / yellow / red).
+            </em>
+        </p>
+
+        <p>Layer responsibilities:</p>
+
+        <table
+            border="1"
+            cellpadding="6"
+            style="border-collapse: collapse; width: 100%; font-size: 0.95em;"
+        >
+            <thead style="background: #f0f0f0;">
+                <tr>
+                    <th>Layer</th>
+                    <th>What it contains</th>
+                    <th>What it deliberately does not contain</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><strong>Context</strong> (global)</td>
+                    <td>
+                        Course › Theme › Topic › Student · Work type ·
+                        Slice line + run #
+                    </td>
+                    <td>
+                        Search as primary entry; per-tab filter islands
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Overview</strong></td>
+                    <td>
+                        3 KPIs (performance / activity / attendance) +
+                        <strong>theme map</strong>
+                    </td>
+                    <td>
+                        Full tables, complete findings list, attempts
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Problems</strong> (Findings)</td>
+                    <td>
+                        Prioritised signals for the current slice ·
+                        “Подробнее” → Finding + Evidence + Action
+                    </td>
+                    <td>
+                        Full BI catalogue
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><strong>Data</strong> (Analytics)</td>
+                    <td>
+                        Performance / Learning process / Assessment /
+                        Students — all panels for queries 1–14
+                    </td>
+                    <td>
+                        Mandatory “start from a finding” workflow
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h3>Coverage matrix — requirements ↔ new UX</h3>
+
+        <p>
+            A formal matrix was produced so stakeholders could verify that
+            a navigation change does not equal functional loss. Two
+            independent acceptance criteria were kept separate:
+        </p>
+
+        <ul>
+            <li>
+                <strong>UX coverage</strong>
+                — is the 30-second / 2-minute / 5–10-minute path comfortable?
+            </li>
+
+            <li>
+                <strong>Requirement coverage</strong>
+                — where does each US / ТЗ item live physically?
+            </li>
+        </ul>
+
+        <p>
+            This distinction matters. A simpler interface is not a successful
+            redesign if it achieves simplicity by hiding or removing
+            required analytical capabilities.
+        </p>
+
+        <p>Excerpt (US → UX location in IA v3):</p>
+
+        <table
+            border="1"
+            cellpadding="6"
+            style="border-collapse: collapse; width: 100%; font-size: 0.9em;"
+        >
+            <thead style="background: #f0f0f0;">
+                <tr>
+                    <th>Requirement</th>
+                    <th>UX location (v3)</th>
+                    <th>Coverage</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>US-1.1 Overview by themes</td>
+                    <td>Overview → Theme map</td>
+                    <td><strong>yes</strong></td>
+                </tr>
+
+                <tr>
+                    <td>US-1.4 Short interpretation</td>
+                    <td>
+                        Problems (Findings); optional signal under map
+                    </td>
+                    <td><strong>yes</strong></td>
+                </tr>
+
+                <tr>
+                    <td>US-2.1–2.6 Queries 1–14</td>
+                    <td>
+                        Data → Performance / Learning / Assessment /
+                        Students
+                    </td>
+                    <td><strong>yes</strong></td>
+                </tr>
+
+                <tr>
+                    <td>US-3.1–3.4 Context continuity</td>
+                    <td>
+                        Global context bar + “never silent reset” contract
+                    </td>
+                    <td><strong>yes</strong></td>
+                </tr>
+
+                <tr>
+                    <td>US-4.1–4.3 Student / Risk</td>
+                    <td>
+                        Data → Students / Risk · Student card
+                    </td>
+                    <td><strong>yes</strong></td>
+                </tr>
+
+                <tr>
+                    <td>US-5.1–5.2 XAI / patterns</td>
+                    <td>
+                        Problems → detail → Finding + Evidence + Action
+                    </td>
+                    <td><strong>yes</strong></td>
+                </tr>
+
+                <tr>
+                    <td>ТЗ §3.1–3.2 Interpretation &amp; risk</td>
+                    <td>
+                        Problems · Difficulty · Risk
+                    </td>
+                    <td><strong>yes</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            Current → Proposed mapping of the nine Streamlit surfaces was
+            also documented: themes → Overview flowers; insights → Problems;
+            remaining tabs → Data groups; sidebar → global context.
+        </p>
+
+        <p>
+            The principle communicated to stakeholders was simple:
+            <em>“navigation changed, requirements not lost.”</em>
+        </p>
+    </section>
+
+    <section>
+        <h3>From Streamlit to React</h3>
+
+        <p>
+            The UX redesign also exposed a technology decision. The first
+            version was intentionally built in Streamlit because it provided
+            a fast route from analytical code to a working interface.
+            That was appropriate for validating the product concept.
+        </p>
+
+        <p>
+            As the product evolved, however, the interface itself became
+            part of the engineering problem. Persistent context, layered
+            navigation, progressive disclosure, richer interactions and
+            precise control over the visual hierarchy required more flexibility
+            than the original framework comfortably provided.
+        </p>
+
+        <p>
+            The product is therefore moving from
+            <strong>Streamlit to React</strong>.
+            This is not a cosmetic technology replacement. It is a migration
+            from a rapid analytical surface to a UI architecture capable of
+            supporting the intended interaction model.
+        </p>
+
+        <p>
+            The migration is already more than halfway complete. The remaining
+            <strong>Data</strong> layer is deliberately not being redesigned
+            from scratch: its role is primarily to bring the existing
+            first-version dashboards into the new information architecture.
+            This keeps the migration focused on the parts where UX change
+            creates the greatest value.
+        </p>
+
+        <p>
+            In other words, the new architecture changes the route through
+            the analytics without requiring the analytical depth itself to
+            be rebuilt.
+        </p>
+    </section>
+
+    <section>
+        <h3>Applying the new design — current product</h3>
+
+        <p>
+            The new workspace is already implemented for the main interaction
+            path. The visible outcomes are:
+        </p>
+
+        <ul>
+            <li>
+                Calm, modern visual system — content before chrome,
+                without unnecessary decoration.
+            </li>
+
+            <li>
+                Persistent global context + three clear layers:
+                <strong>Overview / Problems / Data</strong>.
+            </li>
+
+            <li>
+                Theme map retained as the orientation anchor.
+            </li>
+
+            <li>
+                Findings list established as the attention layer.
+            </li>
+
+            <li>
+                xAI cards with hypothesis, evidence, alternatives,
+                recommendations and limits remain first-class.
+            </li>
+
+            <li>
+                The full analytical catalogue remains accessible through
+                the Data layer.
+            </li>
+
+            <li>
                 <strong>
-                    Pain points that still stood in the way of the 5–10 minute target:
+                    Core weekly review path is designed around a
+                    5–10 minute target, against a ~40-minute Moodle baseline.
                 </strong>
-            </p>
+            </li>
+        </ul>
 
-            <ul>
-                <li>
-                    <strong>Flat information architecture.</strong>
-                    Nine equally weighted tabs forced constant context reconstruction.
-                </li>
+        <h4>Overview — what is happening?</h4>
 
-                <li>
-                    <strong>Cognitive overload.</strong>
-                    Dense tables and uniform visual weight made the tool feel
-                    closer to a terminal than to decision support.
-                </li>
-
-                <li>
-                    <strong>Weak progressive disclosure.</strong>
-                    Findings and full BI lived on the same mental plane; the
-                    weekly path had no privileged short route.
-                </li>
-
-                <li>
-                    <strong>Silent context-loss risk.</strong>
-                    Moving between tabs could feel like starting over; filters
-                    lived in a sidebar that was easy to forget.
-                </li>
-            </ul>
-
-            <p>
-                The ~40-minute baseline itself was measured in direct work with
-                Moodle (gradebook, reports, activity logs), not on this first
-                dashboard. The Streamlit surface was already an attempt to shrink
-                that time; the UX redesign removes the remaining friction that
-                kept the real path longer than the target.
-            </p>
-        </section>
-
-        <section>
-            <h3>Key user scenario broken down by timing</h3>
-
-            <p>
-                The primary job is a weekly (or post-control) performance review.
-                The original cost was measured in Moodle; the first product version
-                reduced part of that cost; the redesign targets the remaining
-                friction so the full path lands in the 5–10 minute band.
-            </p>
-
-            <h4>Baseline — direct work in Moodle (~40 minutes)</h4>
-
-            <ol>
-                <li>
-                    <strong>0–10 min.</strong>
-                    Open course, gradebook, multiple reports; locate the relevant
-                    group and period.
-                </li>
-
-                <li>
-                    <strong>10–25 min.</strong>
-                    Cross-check topic results, individual attempts, attendance
-                    and activity logs; open student by student where needed.
-                </li>
-
-                <li>
-                    <strong>25–40 min.</strong>
-                    Mentally synthesise what needs attention (which topics,
-                    which students, which items to simplify or repeat) and form
-                    an action list.
-                </li>
-            </ol>
-
-            <h4>First product version — still longer than the target</h4>
-
-            <p>
-                Nine flat tabs + sidebar filters already replaced raw Moodle
-                navigation with structured panels and explainable findings.
-                Orientation and cross-referencing, however, still cost time:
-                the user had to reconstruct “what is still relevant for this
-                slice” after every tab switch.
-            </p>
-
-            <h4>After redesign — designed 5–10 minute path</h4>
-
-            <ol>
-                <li>
-                    <strong>0–30 sec.</strong>
-                    Global context already shows the active slice
-                    (course › theme › student › work type). Three KPI cards +
-                    theme map answer “what is the state of the group?”
-                </li>
-
-                <li>
-                    <strong>30 sec – 3 min.</strong>
-                    Switch to Problems (Findings). Prioritised signals with
-                    severity, short rationale and “Подробнее”. No need to hunt
-                    across tabs.
-                </li>
-
-                <li>
-                    <strong>3–7 min.</strong>
-                    Open one or two findings into full xAI cards
-                    (hypothesis, evidence, alternatives, recommendations,
-                    limits). Drill into theme or student while the global
-                    context stays intact.
-                </li>
-
-                <li>
-                    <strong>7–10 min.</strong>
-                    If a specific indicator is required, jump to Data →
-                    the matching panel. Every ТЗ query still has an address;
-                    the default path no longer forces visiting all of them.
-                </li>
-            </ol>
-
-            <p>
-                The time saving is not “fewer screens.” It is the removal of
-                repeated re-orientation and the separation of three jobs that
-                used to compete on the same flat surface:
-                <strong>orient → attend to problems → fetch a specific number</strong>.
-            </p>
-        </section>
-
-        <section>
-            <h3>Functional design &amp; information architecture</h3>
-
-            <p>
-                The redesign does not delete capability. It re-sequences it.
-                The new contract is:
-            </p>
-
-            <ul>
-                <li>
-                    <strong>Global context</strong>
-                    (course › theme › topic › student + work type) is always
-                    visible and never silently reset.
-                </li>
-
-                <li>
-                    <strong>Three layers of work on the same slice:</strong>
-                    Overview (orient) → Problems / Findings (attend) →
-                    Data / Analytics (fetch any indicator).
-                </li>
-
-                <li>
-                    <strong>Theme map (“цветочки”)</strong>
-                    remains the central orientation device on Overview.
-                </li>
-
-                <li>
-                    <strong>Every ТЗ query 1–14</strong>
-                    has an explicit address under Data
-                    (Performance / Learning process / Assessment / Students).
-                </li>
-            </ul>
-
-            <p>
-                UX contract in short: Overview orients; Findings attract attention;
-                Data is the full address book of indicators. Search is secondary
-                to hierarchical context.
-            </p>
-
-            <p>
-                Functional wireframe of the Overview layer
-                (global context + KPIs + theme map):
-            </p>
-
-            <p>
-                <img
-                    src="/blog/assets/images/2026-09-12/functional-wireframe.png"
-                    alt="Functional design — Overview with context bar, KPIs and theme map"
-                    style="max-width: 100%; border: 1px solid #ccc;"
-                >
-            </p>
-
-            <p>
-                <em>
-                    Figure 1. Functional design — Overview. Context is persistent;
-                    color of theme cards follows thresholds (green / yellow / red).
-                </em>
-            </p>
-
-            <p>Layer responsibilities:</p>
-
-            <table
-                border="1"
-                cellpadding="6"
-                style="border-collapse: collapse; width: 100%; font-size: 0.95em;"
+        <p>
+            <img
+                src="/blog/assets/images/2026-09-12/promo-1.png"
+                alt="Product Overview — KPIs and theme map"
+                style="max-width: 100%; border: 1px solid #ccc;"
             >
-                <thead style="background: #f0f0f0;">
-                    <tr>
-                        <th>Layer</th>
-                        <th>What it contains</th>
-                        <th>What it deliberately does not contain</th>
-                    </tr>
-                </thead>
+        </p>
 
-                <tbody>
-                    <tr>
-                        <td><strong>Context</strong> (global)</td>
-                        <td>
-                            Course › Theme › Topic › Student · Work type ·
-                            Slice line + run #
-                        </td>
-                        <td>
-                            Search as primary entry; per-tab filter islands
-                        </td>
-                    </tr>
+        <p>
+            <em>
+                Figure 2. Production Overview: KPI strip + colour-coded
+                theme map.
+            </em>
+        </p>
 
-                    <tr>
-                        <td><strong>Overview</strong></td>
-                        <td>
-                            3 KPIs (performance / activity / attendance) +
-                            <strong>theme map</strong>
-                        </td>
-                        <td>
-                            Full tables, complete findings list, attempts
-                        </td>
-                    </tr>
+        <h4>Problems — where is the problem?</h4>
 
-                    <tr>
-                        <td><strong>Problems</strong> (Findings)</td>
-                        <td>
-                            Prioritised signals for the current slice ·
-                            “Подробнее” → Finding + Evidence + Action
-                        </td>
-                        <td>
-                            Full BI catalogue
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>Data</strong> (Analytics)</td>
-                        <td>
-                            Performance / Learning process / Assessment /
-                            Students — all panels for queries 1–14
-                        </td>
-                        <td>
-                            Mandatory “start from a finding” workflow
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section>
-            <h3>Coverage matrix — requirements ↔ new UX</h3>
-
-            <p>
-                A formal matrix was produced so stakeholders could verify that
-                a navigation change does not equal functional loss. Two
-                independent acceptance criteria were kept separate:
-            </p>
-
-            <ul>
-                <li>
-                    <strong>UX coverage</strong>
-                    — is the 30-second / 2-minute / 5–10-minute path comfortable?
-                </li>
-
-                <li>
-                    <strong>Requirement coverage</strong>
-                    — where does each US / ТЗ item live physically?
-                </li>
-            </ul>
-
-            <p>Excerpt (US → UX location in IA v3):</p>
-
-            <table
-                border="1"
-                cellpadding="6"
-                style="border-collapse: collapse; width: 100%; font-size: 0.9em;"
+        <p>
+            <img
+                src="/blog/assets/images/2026-09-12/promo-2.png"
+                alt="Findings list with severity"
+                style="max-width: 100%; border: 1px solid #ccc;"
             >
-                <thead style="background: #f0f0f0;">
-                    <tr>
-                        <th>Requirement</th>
-                        <th>UX location (v3)</th>
-                        <th>Coverage</th>
-                    </tr>
-                </thead>
+        </p>
 
-                <tbody>
-                    <tr>
-                        <td>US-1.1 Overview by themes</td>
-                        <td>Overview → Theme map</td>
-                        <td><strong>yes</strong></td>
-                    </tr>
+        <p>
+            <em>
+                Figure 3. Problems layer: prioritised findings with
+                severity and short rationale.
+            </em>
+        </p>
 
-                    <tr>
-                        <td>US-1.4 Short interpretation</td>
-                        <td>
-                            Problems (Findings); optional signal under map
-                        </td>
-                        <td><strong>yes</strong></td>
-                    </tr>
+        <h4>
+            Finding detail — why does the system think this is a problem?
+        </h4>
 
-                    <tr>
-                        <td>US-2.1–2.6 Queries 1–14</td>
-                        <td>
-                            Data → Performance / Learning / Assessment /
-                            Students
-                        </td>
-                        <td><strong>yes</strong></td>
-                    </tr>
+        <p>
+            <img
+                src="/blog/assets/images/2026-09-12/promo-2-deep.png"
+                alt="xAI finding detail card"
+                style="max-width: 100%; border: 1px solid #ccc;"
+            >
+        </p>
 
-                    <tr>
-                        <td>US-3.1–3.4 Context continuity</td>
-                        <td>
-                            Global context bar + “never silent reset” contract
-                        </td>
-                        <td><strong>yes</strong></td>
-                    </tr>
+        <p>
+            <em>
+                Figure 4. Full xAI card: hypothesis, evidence, alternatives,
+                recommendations and limits.
+            </em>
+        </p>
 
-                    <tr>
-                        <td>US-4.1–4.3 Student / Risk</td>
-                        <td>
-                            Data → Students / Risk · Student card
-                        </td>
-                        <td><strong>yes</strong></td>
-                    </tr>
+        <h4>Data — what confirms it?</h4>
 
-                    <tr>
-                        <td>US-5.1–5.2 XAI / patterns</td>
-                        <td>
-                            Problems → detail → Finding + Evidence + Action
-                        </td>
-                        <td><strong>yes</strong></td>
-                    </tr>
+        <p>
+            <img
+                src="/blog/assets/images/2026-09-12/promo-3.png"
+                alt="Data layer catalogue"
+                style="max-width: 100%; border: 1px solid #ccc;"
+            >
+        </p>
 
-                    <tr>
-                        <td>ТЗ §3.1–3.2 Interpretation &amp; risk</td>
-                        <td>Problems · Difficulty · Risk</td>
-                        <td><strong>yes</strong></td>
-                    </tr>
-                </tbody>
-            </table>
+        <p>
+            <em>
+                Figure 5. Data layer: Performance, Learning process,
+                Assessment quality, Students — full coverage without
+                forcing a findings-first workflow.
+            </em>
+        </p>
 
-            <p>
-                Current → Proposed mapping of the nine Streamlit surfaces was
-                also documented (themes → Overview flowers; insights → Problems;
-                remaining tabs → Data groups; sidebar → global context).
-                Message to stakeholders:
-                <em>“navigation changed, requirements not lost.”</em>
-            </p>
-        </section>
+        <p>
+            The Data layer shown here is currently a design concept.
+            Its implementation is the remaining major part of the UX
+            migration and is expected to reuse the existing first-version
+            dashboards rather than introduce another analytical redesign.
+        </p>
+    </section>
 
-        <section>
-            <h3>Applying the final design — current product</h3>
+    <section>
+        <h3>Value delivered</h3>
 
-            <p>
-                Implementation moved from the functional concept and matrix to
-                a production React workspace in the same intensive cycle.
-                Visible outcomes:
-            </p>
+        <p>
+            The product is moving from a dense analytical terminal toward
+            a decision-support environment built around a much more natural
+            sequence of work:
+        </p>
 
-            <ul>
-                <li>
-                    Calm, modern visual system — content before chrome,
-                    without early-Material decoration.
-                </li>
+        <ul>
+            <li>
+                <strong>What is happening?</strong>
+                Overview provides fast orientation.
+            </li>
 
-                <li>
-                    Persistent global context + three clear layers
-                    (Overview / Problems / Data).
-                </li>
+            <li>
+                <strong>Where is the problem?</strong>
+                Problems prioritises the signals that deserve attention.
+            </li>
 
-                <li>
-                    Theme map retained as the orientation anchor; Findings list
-                    as the attention layer; full indicator catalogue under Data.
-                </li>
+            <li>
+                <strong>What confirms it?</strong>
+                Data provides the underlying indicators and detailed evidence.
+            </li>
+        </ul>
 
-                <li>
-                    xAI cards with hypothesis, evidence, alternatives,
-                    recommendations and limits remain first-class.
-                </li>
+        <p>
+            This preserves the analytical depth of the original product while
+            reducing the amount of mental work required to use it.
+        </p>
 
-                <li>
-                    <strong>
-                        Core weekly review path designed for 5–10 minutes
-                        (from the Moodle baseline of ~40 minutes).
-                    </strong>
-                </li>
-            </ul>
+        <ul>
+            <li>
+                Respects limited attention through progressive disclosure.
+            </li>
 
-            <h4>Overview — state of the group at a glance</h4>
+            <li>
+                Keeps every requirement reachable
+                (the coverage matrix provides the traceability).
+            </li>
 
-            <p>
-                <img
-                    src="/blog/assets/images/2026-09-12/promo-1.png"
-                    alt="Product Overview — KPIs and theme map"
-                    style="max-width: 100%; border: 1px solid #ccc;"
-                >
-            </p>
+            <li>
+                Builds trust through transparent, rule-based xAI findings.
+            </li>
 
-            <p>
-                <em>
-                    Figure 2. Production Overview: KPI strip + colour-coded
-                    theme map.
-                </em>
-            </p>
+            <li>
+                Preserves analytical depth while making the default path short.
+            </li>
 
-            <h4>Problems — what needs attention</h4>
+            <li>
+                Provides a clear route from observation to problem to evidence.
+            </li>
 
-            <p>
-                <img
-                    src="/blog/assets/images/2026-09-12/promo-2.png"
-                    alt="Findings list with severity"
-                    style="max-width: 100%; border: 1px solid #ccc;"
-                >
-            </p>
+            <li>
+                Moves the UI from Streamlit to React to support the required
+                interaction model and future product development.
+            </li>
+        </ul>
 
-            <p>
-                <em>
-                    Figure 3. Problems layer: prioritised findings with
-                    severity and short rationale.
-                </em>
-            </p>
+        <p>
+            The target is a focused 5–10 minute weekly review, starting from
+            a ~40-minute Moodle baseline. This is a design and product target,
+            not yet a post-redesign user-test result.
+        </p>
 
-            <h4>
-                Finding detail — explainability as a first-class citizen
-            </h4>
+        <p>
+            The redesign therefore is not simply a visual refresh. It is a
+            change in the interaction model of the product:
+            <strong>
+                orient → identify → verify → decide.
+            </strong>
+        </p>
 
-            <p>
-                <img
-                    src="/blog/assets/images/2026-09-12/promo-2-deep.png"
-                    alt="xAI finding detail card"
-                    style="max-width: 100%; border: 1px solid #ccc;"
-                >
-            </p>
+        <p>
+            The remaining work is intentionally narrower than the redesign
+            already completed: migrate the existing analytical dashboards
+            into the Data layer and complete the React migration. The main
+            UX architecture and decision-support path are already in place.
+        </p>
+    </section>
 
-            <p>
-                <em>
-                    Figure 4. Full xAI card: hypothesis, evidence, alternatives,
-                    recommendations, limits.
-                </em>
-            </p>
+    <section>
+        <h3>Related publications</h3>
 
-            <h4>Data — every indicator still has an address</h4>
+        <p>
+            <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">
+                Lightweight BI system for university, part I
+            </a>
+            <br>
 
-            <p>
-                <img
-                    src="/blog/assets/images/2026-09-12/promo-3.png"
-                    alt="Data layer catalogue"
-                    style="max-width: 100%; border: 1px solid #ccc;"
-                >
-            </p>
+            <a href="https://gelassen.github.io/blog/2026/08/29/lightweight-BI-for-university-part-II.html">
+                Lightweight BI system for university, part II:
+                how the analytics is built
+            </a>
+            <br>
 
-            <p>
-                <em>
-                    Figure 5. Data layer: Performance, Learning process,
-                    Assessment quality, Students — full coverage without
-                    forcing a findings-first workflow.
-                </em>
-            </p>
-            <p>
-                This part hasn't implemented yet. Just a design concept 
-                prepared to mock up missing part of the product UI.
-            </p>
-        </section>
+            <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">
+                Broad vs Narrow specialisation
+            </a>
+        </p>
+    </section>
 
-        <section>
-            <h3>Value delivered</h3>
+</article>
 
-            <p>
-                The product is no longer a dense analytical terminal that users
-                must learn to tolerate. It is a decision-support environment that:
-            </p>
-
-            <ul>
-                <li>
-                    Respects limited attention — orient, attend, then fetch.
-                </li>
-
-                <li>
-                    Keeps every requirement reachable
-                    (the coverage matrix is the proof).
-                </li>
-
-                <li>
-                    Builds trust through transparent, rule-based xAI cards.
-                </li>
-
-                <li>
-                    Preserves analytical depth while making the default path short.
-                </li>
-
-                <li>
-                    <strong>
-                        Brings the weekly review from the Moodle baseline of
-                        ~40 minutes into a focused 5–10 minute decision loop.
-                    </strong>
-                </li>
-            </ul>
-
-            <p>
-                The whole cycle — trend research, timed scenario, functional IA,
-                coverage matrix, stakeholder alignment, visual design and
-                functional migration — was executed in one intensive week with
-                AI as a core productivity partner. That combination of depth
-                and speed is the skill the work demonstrates.
-            </p>
-        </section>
-
-        <section>
-            <h3>Related publications</h3>
-
-            <p>
-                <a href="https://gelassen.github.io/blog/2026/07/11/bi-system-for-university-part-I.html">
-                    Lightweight BI system for university, part I
-                </a>
-                <br>
-
-                <a href="https://gelassen.github.io/blog/2026/08/29/lightweight-BI-for-university-part-II.html">
-                    Lightweight BI system for university, part II:
-                    how the analytics is built
-                </a>
-                <br>
-
-                <a href="https://gelassen.github.io/blog/2021/02/27/broad-vs-narrow-specialisation.html">
-                    Broad vs Narrow specialisation
-                </a>
-            </p>
-        </section>
-
-    </article>
 </body>
 </html>
